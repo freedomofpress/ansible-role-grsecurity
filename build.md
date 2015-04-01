@@ -34,6 +34,7 @@ on the online and offine servers.
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
+sudo reboot  # to use the upgraded kernel from dist-upgrade
 ```
 
 ## Install dependencies on the offline server
@@ -63,7 +64,10 @@ gpg --with-fingerprint spender-gpg-key.asc
 gpg --fingerprint 647F28654894E3BD457199BE38DBBDC86092693E
 ```
 
-Bradley Spengler should have a fingerprint of "DE94 52CE 46F4 2094 907F 108B 44D1 C0F8 2525 FE49" and Greg Kroah-Hartman should have a fingerprint of "647F 2865 4894 E3BD 4571 99BE 38DB BDC8 6092 693E". If either of the fingerprints do not match what you see here, please get in touch at securedrop@freedom.press.
+Bradley Spengler should have a fingerprint of "DE94 52CE 46F4 2094 907F 108B
+44D1 C0F8 2525 FE49" and Greg Kroah-Hartman should have a fingerprint of "647F
+2865 4894 E3BD 4571 99BE 38DB BDC8 6092 693E". If either of the fingerprints do
+not match what you see here, please get in touch at securedrop@freedom.press.
 
 At this point, you should disconnect this server from the Internet and
 treat it as an offline (air-gapped) server.
@@ -98,13 +102,20 @@ Download the Ubuntu kernel overlay and the keys to verifying the archive.
 
 ```
 git clone git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
-gpg --keyserver pool.sks-keyservers.net --recv-key DD14FC2A1EA5E51369635AD73D76C845FA1447CA
-gpg --keyserver pool.sks-keyservers.net --recv-key D4E1E31744709144B0F8101ADB74AEB8FDCE24FC
-gpg --fingerprint DD14FC2A1EA5E51369635AD73D76C845FA1447CA
-gpg --fingerprint D4E1E31744709144B0F8101ADB74AEB8FDCE24FC
+gpg --keyserver pool.sks-keyservers.net --recv-key 2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
+gpg --fingerprint 2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
 ```
 
-Tim Gardner should have a fingerprint of "DD14 FC2A 1EA5 E513 6963  5AD7 3D76 C845 FA14 47CA" and Luis Henriques should have a fingerprint of "D4E1 E317 4470 9144 B0F8  101A DB74 AEB8 FDCE 24FC". If either of the fingerprints do not match what you see here, please get in touch at securedrop@freedom.press.
+Seth Forshee should have a fingerprint of `2ABC A749 8D83 E1D3 2D51 D3B5 AB48
+00A6 2DB9 F73A`. It might seem unnecessary to verify the fingerprint of a key
+that was downloaded by specifying the full fingerprint, but gpg [did not][1]
+actually verify the fingerprint of keys downloaded with --recv-keys until
+recently. This issue was fixed in gpg 1.4.17, but the current release of gpg in
+Ubuntu is 1.4.16 so we still need to verify the fingerprint manually.
+
+[1]: http://bugs.gnupg.org/gnupg/issue1579
+
+If the fingerprint of the key you downloaded does not match the fingerprint listed here, please get in touch at securedrop@freedom.press.
 
 Verify the archive and move on to the next step if you see "Good Signature" in the output.
 
@@ -113,6 +124,15 @@ cd ubuntu-trusty/
 git checkout `git describe --abbrev=0 --tags`
 git tag -v `git describe --abbrev=0 --tags`
 ```
+
+Note that the particular developer who signs the tags for the ubuntu-trusty repo
+changes from time to time. If it is not Seth Forshee at the time of this
+writing, `gpg tag -v ...` will exit with the error message `gpg: Can't check
+signature: public key not found`. In this case, inspect the error message to
+deduce which GPG key was used to sign the signature. Depending on your level of
+paranoia, you may wish to do additional verification (e.g. by checking the key
+against other online sources, asking some Ubuntu developers that you know, ...)
+before continuing with such a key.
 
 Transfer all the files in the *grsec* directory from the online server
 to the offline server using a USB stick.
