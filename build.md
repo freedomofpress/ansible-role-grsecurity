@@ -144,6 +144,14 @@ If verifying the repo fails, please get in touch at
 securedrop@freedom.press. Only continue if you have a "Good signature" from a
 trusted key.
 
+Once you have verified the most recent tag, check it out before
+continuing. `HEAD` on master is usually the same commit that the most recent tag
+points to, but better safe than sorry.
+
+```
+git checkout `git describe`
+```
+
 Transfer all the files in the *grsec* directory from the online server
 to the offline server using a USB stick.
 
