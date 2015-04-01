@@ -98,41 +98,59 @@ wget https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410131959.patch
 wget https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410131959.patch.sig
 ```
 
-Download the Ubuntu kernel overlay and the keys to verifying the archive.
+Download the Ubuntu kernel overlay.
 
 ```
 git clone git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
-gpg --keyserver pool.sks-keyservers.net --recv-key 2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
-gpg --fingerprint 2ABCA7498D83E1D32D51D3B5AB4800A62DB9F73A
 ```
 
-Seth Forshee should have a fingerprint of `2ABC A749 8D83 E1D3 2D51 D3B5 AB48
-00A6 2DB9 F73A`. It might seem unnecessary to verify the fingerprint of a key
-that was downloaded by specifying the full fingerprint, but gpg [did not][1]
-actually verify the fingerprint of keys downloaded with --recv-keys until
-recently. This issue was fixed in gpg 1.4.17, but the current release of gpg in
-Ubuntu is 1.4.16 so we still need to verify the fingerprint manually.
+This repo is very large, so cloning it will take a while.
 
-[1]: http://bugs.gnupg.org/gnupg/issue1579
+### Verifying the Ubuntu kernel overlay
 
-If the fingerprint of the key you downloaded does not match the fingerprint listed here, please get in touch at securedrop@freedom.press.
+Verifying the Ubuntu kernel overlay is a little tricker than the other things
+we've verified so far because the latest tag may be signed by one of several
+Ubuntu developers. Unfortunately, there is nothing we can do about this. You
+will need to determine how to establish trust in the key that signed the repo
+for yourself.
 
-Verify the archive and move on to the next step if you see "Good Signature" in the output.
+Basically, you should check out the most recent signed tag and look up the
+developer who signed it. You can do this easily by running:
 
 ```
 cd ubuntu-trusty/
-git checkout `git describe --abbrev=0 --tags`
-git tag -v `git describe --abbrev=0 --tags`
+git tag -v `git describe`
 ```
 
-Note that the particular developer who signs the tags for the ubuntu-trusty repo
-changes from time to time. If it is not Seth Forshee at the time of this
-writing, `gpg tag -v ...` will exit with the error message `gpg: Can't check
-signature: public key not found`. In this case, inspect the error message to
-deduce which GPG key was used to sign the signature. Depending on your level of
-paranoia, you may wish to do additional verification (e.g. by checking the key
-against other online sources, asking some Ubuntu developers that you know, ...)
-before continuing with such a key.
+`git describe` finds the most recent annotated tag (all signed tags are
+annotated tags), and `git tag -v` verifies it. It will check the keyid that made
+the signature, automatically download the public key from the keyservers if it
+is not available in your local keyring, and use it to check the signature.
+
+The difficult thing is establishing trust in the automatically downloaded public
+key. Even if you get a "Good signature", you should still make sure the key is
+that of an actual Ubuntu developer and not from an impostor. Depending on your
+level of paranoia, you may wish to check the key against other online sources,
+ask some Ubuntu developers that you know, meet the developer in question in
+person and sign their key, etc. Most Ubuntu developers appear to use the Web of
+Trust (WoT), so you should be able to meet *some* Ubuntu developer(s), sign
+their key(s), and use the WoT to verify the key that signed the kernel overlay
+repo tag.
+
+Verifying this repo is especially important because it is only available via the
+unauthenticated `git://` protocol, so MITM-ing the download is trivial.
+
+If verifying the repo fails, please get in touch at
+securedrop@freedom.press. Only continue if you have a "Good signature" from a
+trusted key.
+
+Once you have verified the most recent tag, check it out before
+continuing. `HEAD` on master is usually the same commit that the most recent tag
+points to, but better safe than sorry.
+
+```
+git checkout `git describe`
+```
 
 Transfer all the files in the *grsec* directory from the online server
 to the offline server using a USB stick.
