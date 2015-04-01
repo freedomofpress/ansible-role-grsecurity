@@ -98,7 +98,7 @@ wget https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410131959.patch
 wget https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410131959.patch.sig
 ```
 
-Download the Ubuntu kernel overlay and the keys to verify the archive.
+Download the Ubuntu kernel overlay.
 
 ```
 git clone git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
@@ -125,14 +125,17 @@ git tag -v `git describe`
 `git describe` finds the most recent annotated tag (all signed tags are
 annotated tags), and `git tag -v` verifies it. It will check the keyid that made
 the signature, automatically download the public key from the keyservers if it
-is not available, and check the signature.
+is not available in your local keyring, and use it to check the signature.
 
 The difficult thing is establishing trust in the automatically downloaded public
 key. Even if you get a "Good signature", you should still make sure the key is
 that of an actual Ubuntu developer and not from an impostor. Depending on your
 level of paranoia, you may wish to check the key against other online sources,
 ask some Ubuntu developers that you know, meet the developer in question in
-person and sign their key, etc.
+person and sign their key, etc. Most Ubuntu developers appear to use the Web of
+Trust (WoT), so you should be able to meet *some* Ubuntu developer(s), sign
+their key(s), and use the WoT to verify the key that signed the kernel overlay
+repo tag.
 
 Verifying this repo is especially important because it is only available via the
 unauthenticated `git://` protocol, so MITM-ing the download is trivial.
