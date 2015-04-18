@@ -22,6 +22,12 @@ required_kernel_files = [
   },
 ]
 # ensure kernel files have been downloaded
+required_kernel_files.each do |required_kernel_file|
+  describe file(required_kernel_file[:filename]) do
+    it { should be_file }
+    its(:sha256sum) { should eq required_kernel_file[:sha256sum] }
+  end
+end
 
 
 
