@@ -1,0 +1,13 @@
+---
+- name: install required packages for building kernel
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - libncurses5-dev
+    - build-essential
+    - kernel-package
+    - git-core
+    - gcc-4.8
+    - gcc-4.8-plugin-dev
+    - make
