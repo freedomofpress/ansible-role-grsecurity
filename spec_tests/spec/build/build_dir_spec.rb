@@ -1,10 +1,17 @@
 # ensure build directory is present
-describe file('/home/vagrant/grsec') do
-  it { should be_directory }
+ubuntu_git_dir = '/home/vagrant/ubuntu-trusty'
+required_build_directories = [
+  ubuntu_git_dir,
+  '/tmp/build',
+  '/home/vagrant/ubuntu-package',
+]
+required_build_directories.each do |required_build_directory|
+  describe file(required_build_directory) do
+    it { should be_directory }
+  end
 end
 
 # check for presence of git dir for ubuntu source
-ubuntu_git_dir = '/home/vagrant/ubuntu-trusty'
 describe file(ubuntu_git_dir) do
   it { should be_directory }
 end
