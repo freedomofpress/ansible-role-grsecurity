@@ -21,9 +21,10 @@ required_kernel_files = [
     :sha256 => 'fc7cb30b0f603c698a1485077f7b6868931d0fc79c32ef26379d50f261443d48',
   },
 ]
+
 # ensure kernel files have been downloaded
 required_kernel_files.each do |required_kernel_file|
-  describe file(required_kernel_file[:filename]) do
+  describe file("/home/vagrant/#{required_kernel_file[:filename]}") do
     it { should be_file }
     its(:sha256sum) { should eq required_kernel_file[:sha256sum] }
   end
