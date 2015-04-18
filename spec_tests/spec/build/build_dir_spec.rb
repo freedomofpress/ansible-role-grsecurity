@@ -17,7 +17,7 @@ describe file(ubuntu_git_dir) do
 end
 
 # declare base command to re-use over several checks
-git_base_command = "git --git-dir #{ubuntu_dir_dir}/.git --work-tree #{ubuntu_git_dir}"
+git_base_command = "git --git-dir #{ubuntu_git_dir}/.git --work-tree #{ubuntu_git_dir}"
 
 # ensure git checkout completed successfully
 describe command("#{git_base_command} fsck") do
