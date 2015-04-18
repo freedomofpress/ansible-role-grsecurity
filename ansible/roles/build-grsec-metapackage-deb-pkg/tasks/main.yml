@@ -1,3 +1,5 @@
 ---
+- include: packages.yml
+
 - name: run bash script to build the grsecurity metapackage
   command: "{{ pkg_build_script }}"
