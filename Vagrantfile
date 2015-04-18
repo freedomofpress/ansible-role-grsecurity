@@ -14,6 +14,9 @@ Vagrant.configure("2") do |config|
     build.vm.provider "virtualbox" do |v|
       v.name = "grsec-build"
     end
+    build.vm.provision :ansible do |ansible|
+      ansible.playbook = 'ansible/build-deb-pkg.yml'
+    end
   end
 
 end
