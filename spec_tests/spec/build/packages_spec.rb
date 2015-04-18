@@ -26,3 +26,8 @@ Would download/install/remove packages.
 eos
   its(:stdout) { should eq expected_output }
 end
+
+# make sure a reboot is not required
+describe command("/bin/bash -c '[[ ! -e /var/run/reboot-required ]]'") do
+  its(:exit_status) { should eq 0 }
+end
