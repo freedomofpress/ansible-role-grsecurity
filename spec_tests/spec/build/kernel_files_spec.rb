@@ -11,14 +11,14 @@ required_kernel_files = [
     :sha256 => '73e23328fac00de1fe60153e15399244b8f71996c5b9d5b087a41f01d6eb8e3d',
   },
   {
-    :filename => 'grsecurity-3.0-3.14.21-201410131959.patch',
-    :url => 'https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410131959.patch',
-    :sha256 => '',
+    :filename => 'grsecurity-3.1-3.14.38-201504142259.patch',
+    :url => 'https://grsecurity.net/stable/grsecurity-3.1-3.14.38-201504142259.patch',
+    :sha256 => '1abe9f4209d3af9b5dc6d63685502cb1af30097927c756cea3b42e25d677637e',
   },
   {
-    :filename => 'grsecurity-3.0-3.14.21-201410131959.patch.sig',
-    :url => 'https://grsecurity.net/stable/grsecurity-3.0-3.14.21-201410131959.patch.sig',
-    :sha256 => '',
+    :filename => 'grsecurity-3.1-3.14.38-201504142259.patch.sig',
+    :url => 'https://grsecurity.net/stable/grsecurity-3.1-3.14.38-201504142259.patch.sig',
+    :sha256 => 'fc7cb30b0f603c698a1485077f7b6868931d0fc79c32ef26379d50f261443d48',
   },
 ]
 # ensure kernel files have been downloaded
