@@ -12,6 +12,13 @@
     repo: git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
     dest: "{{download_directory}}/ubuntu-trusty"
     force: yes
+    # since this clone takes a long time, just grab
+    # the first layer. can then pull manually to update.
+    depth: 1
+    # definitely don't want to do this, but only 
+    # other option is scanning kernel.ubuntu.com
+    # and accepting whatever is returned
+    accept_hostkey: yes
 
 - name: copy kernel package files
   shell: cp -a /usr/share/kernel-package {{download_directory}}/ubuntu-package
