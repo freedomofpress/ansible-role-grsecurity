@@ -1,9 +1,10 @@
 ---
 # fetch required kernel packages for compilation
-- name: fetch linux kernel tarball
+- name: fetch fetch files
   get_url:
-      url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.21.tar.xz"
-      dest: /home/vagrant/linux-3.14.21.tar.xz 
-      sha256sum: fb12f6972e115cb7ea1bfff359ca2d7cb7210a28030b8516c79ceb86009d2e26
+      url: "{{item.url}}"
+      dest: "{{download_directory}}/{{item.filename}}"
+      sha256sum: "{{item.sha256sum}}"
+  with_items: required_kernel_files
     
 
