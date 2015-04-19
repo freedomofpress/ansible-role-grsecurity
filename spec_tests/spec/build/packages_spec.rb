@@ -24,7 +24,7 @@ No packages will be installed, upgraded, or removed.
 Need to get 0 B of archives. After unpacking 0 B will be used.
 Would download/install/remove packages.
 eos
-  its(:stdout) { should eq expected_output }
+  its(:stdout) { should contain(expected_output) }
 end
 
 # make sure a reboot is not required
