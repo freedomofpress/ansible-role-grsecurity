@@ -13,4 +13,8 @@
     dest: "{{download_directory}}/ubuntu-trusty"
     force: yes
 
+- name: copy kernel package files
+  shell: cp -a /usr/share/kernel-package {{download_directory}}/ubuntu-package
+  args:
+    creates: "{{download_directory}}/ubuntu-package"
 
