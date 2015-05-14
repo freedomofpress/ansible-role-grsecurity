@@ -1,8 +1,8 @@
 ---
-- hosts: [ 'build' ]
+- hosts: grsec-build
 
   vars:
-    pkg_build_script: "/vagrant/build_grsec_metapackage.sh"
+    pkg_build_script: /vagrant/build_grsec_metapackage.sh
 
   roles:
     - { role: build-grsec-metapackage-deb-pkg }
