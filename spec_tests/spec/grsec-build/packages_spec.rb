@@ -16,7 +16,7 @@ required_packages.each do |required_package|
 end
 
 # ensure safe-upgrade has been performed
-describe command('aptitude -s safe-upgrade') do
+describe command('aptitude --simulate safe-upgrade -y') do
   its(:exit_status) { should eq 0 }
   expected_output = <<-eos
 No packages will be installed, upgraded, or removed.
