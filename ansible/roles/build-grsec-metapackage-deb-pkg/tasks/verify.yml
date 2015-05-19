@@ -1,0 +1,17 @@
+---
+- name: unxz linux tarball
+  command: unxz {{download_directory}}/{{linux_tarball.filename}}
+  args:
+    creates: "{{download_directory}}/{{linux_tarball.filename|regex_replace('(.*)\\.xz$', '\\\\1')}}"
+
+- name: verify linux tarball signature
+  command: gpg --verify {{download_directory}}/{{linux_tarball_signature.filename}}
+
+- name: verify grsecurity patch signature
+  command: gpg --verify {{download_directory}}/{{grsecurity_path_signature.filename}}
+
+
+
+
+
+
