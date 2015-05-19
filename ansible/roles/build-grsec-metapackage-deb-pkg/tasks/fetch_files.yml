@@ -6,7 +6,7 @@
       dest: "{{download_directory}}/{{item.filename}}"
       sha256sum: "{{item.sha256sum}}"
   with_items: required_kernel_files
-    
+
 - name: clone ubuntu overlay git repository (slow!)
   git:
     repo: git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
@@ -15,7 +15,7 @@
     # since this clone takes a long time, just grab
     # the first layer. can then pull manually to update.
     depth: 1
-    # definitely don't want to do this, but only 
+    # definitely don't want to do this, but only
     # other option is scanning kernel.ubuntu.com
     # and accepting whatever is returned
     accept_hostkey: yes
