@@ -1,5 +1,6 @@
 ---
-download_directory: /home/vagrant
+download_directory: /home/vagrant/grsec
+
 required_kernel_files:
   - {
     filename: linux-3.14.21.tar.xz,
