@@ -4,11 +4,42 @@
   args:
     creates: "{{download_directory}}/{{linux_tarball.filename|regex_replace('(.*)\\.xz$', '\\\\1')}}"
 
+- name: import kroatman key
+  command: gpg --recv-keys 6092693E
+  register: gpg_kroatman_import
+  changed_when: "'imported: 1' in gpg_kroatman_import.stderr"
+  failed_when: gpg_kroatman_import.rc != 0
+
+- name: import spender key
+  command: gpg --recv-keys 2525FE49
+  register: gpg_spender_import
+  changed_when: "'imported: 1' in gpg_spender_import.stderr"
+  failed_when: gpg_spender_import.rc != 0
+
+- name: import figg key (for ubuntu overlay)
+  command: gpg --recv-keys 105BE7F7
+  register: gpg_figg_import
+  changed_when: "'imported: 1' in gpg_figg_import.stderr"
+  failed_when: gpg_figg_import.rc != 0
+
 - name: verify linux tarball signature
   command: gpg --verify {{download_directory}}/{{linux_tarball_signature.filename}}
+  changed_when: false
+  failed_when: false
 
 - name: verify grsecurity patch signature
-  command: gpg --verify {{download_directory}}/{{grsecurity_path_signature.filename}}
+  command: gpg --verify {{download_directory}}/{{grsecurity_patch_signature.filename}}
+  changed_when: false
+  failed_when: false
+
+- name: verify ubuntu overlay signature
+  shell: git tag --verify $(git describe)
+  register: ubuntu_overlay_verify_result
+  args:
+    chdir: "{{download_directory}}/ubuntu-trusty"
+  failed_when: ubuntu_overlay_verify_result.rc != 0
+
+
 
 
 
