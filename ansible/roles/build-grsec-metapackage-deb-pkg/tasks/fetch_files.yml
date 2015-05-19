@@ -29,3 +29,12 @@
   args:
     creates: "{{download_directory}}/ubuntu-package"
 
+- name: copy ubuntu overlay control files
+  shell: >
+     cp {{download_directory}}/ubuntu-trusty/debian/control-scripts/p* \
+        {{download_directory}}/ubuntu-package/pkg/image/
+
+- name: copy ubuntu overlay header files
+  command: >
+     cp {{download_directory}}/ubuntu-trusty/debian/control-scripts/headers-postinst \
+        {{download_directory}}/ubuntu-package/pkg/headers/
