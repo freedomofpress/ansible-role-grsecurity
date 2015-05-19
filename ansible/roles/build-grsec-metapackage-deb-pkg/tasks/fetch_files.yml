@@ -5,7 +5,11 @@
       url: "{{item.url}}"
       dest: "{{download_directory}}/{{item.filename}}"
       sha256sum: "{{item.sha256sum}}"
-  with_items: required_kernel_files
+  with_items:
+    - "{{linux_tarball}}"
+    - "{{linux_tarball_signature}}"
+    - "{{grsecurity_patch}}"
+    - "{{grsecurity_patch_signature}}"
 
 - name: clone ubuntu overlay git repository (slow!)
   git:
