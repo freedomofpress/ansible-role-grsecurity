@@ -1,11 +1,11 @@
 ---
 - name: extract linux tarball
-  command: tar -xf linux-3.14.21.tar
+  command: tar -xf linux-3.14.43.tar
   args:
     chdir: "{{download_directory}}"
-    creates: "{{download_directory}}/linux-3.14.21"
+    creates: "{{download_directory}}/linux-3.14.43"
 
 - name: apply grsecurity patch
   shell: patch -p1 < ../{{grsecurity_patch.filename}}
   args:
-    chdir: "{{download_directory}}/linux-3.14.21"
+    chdir: "{{download_directory}}/linux-3.14.43"

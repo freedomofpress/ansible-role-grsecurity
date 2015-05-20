@@ -22,6 +22,12 @@
   changed_when: "'imported: 1' in gpg_figg_import.stderr"
   failed_when: gpg_figg_import.rc != 0
 
+- name: import henriques key (for ubuntu overlay)
+  command: gpg --recv-keys FDCE24FC
+  register: gpg_henriques_import
+  changed_when: "'imported: 1' in gpg_henriques_import.stderr"
+  failed_when: gpg_henriques_import.rc != 0
+
 - name: verify linux tarball signature
   command: gpg --verify {{download_directory}}/{{linux_tarball_signature.filename}}
   changed_when: false
