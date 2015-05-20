@@ -1,10 +1,8 @@
 ---
 - hosts: grsec-build
 
-  vars:
-    pkg_build_script: /vagrant/build_grsec_metapackage.sh
-
   roles:
-    - { role: build-grsec-metapackage-deb-pkg }
+    - { role: build-grsec-metapackage, tags: "metapackage" }
+    - { role: build-grsec-kernel, tags: "kernel" }
 
   sudo: yes
