@@ -1,33 +1,32 @@
 ---
 download_directory: /home/vagrant/grsec
 
-
 linux_tarball:
   {
-    filename: linux-3.14.21.tar.xz,
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.21.tar.xz",
-    sha256sum: fb12f6972e115cb7ea1bfff359ca2d7cb7210a28030b8516c79ceb86009d2e26,
+    filename: linux-3.14.43.tar.xz,
+    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.43.tar.xz",
+    sha256sum: 6ecfa347c78b31b96a2ad282e2835315bc94d4ec52955e2e11b51be2dc6fafd4,
   }
 
 linux_tarball_signature:
   {
-    filename: linux-3.14.21.tar.sign,
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.21.tar.sign",
-    sha256sum: 73e23328fac00de1fe60153e15399244b8f71996c5b9d5b087a41f01d6eb8e3d,
+    filename: linux-3.14.43.tar.sign,
+    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.43.tar.sign",
+    sha256sum: 3afcf653649645f6d439fa8e69f425b0e25ae9b4d6888d283baed5c7bbfcaba1,
   }
 
 grsecurity_patch:
   {
-    filename: grsecurity-3.1-3.14.43-201505171736.patch,
-    url: 'https://grsecurity.net/stable/grsecurity-3.1-3.2.69-201505171733.patch',
-    sha256sum: 9632cba1775d8f73069b95ea03985c464209174570d3a44ea0d706d87aa8dc9e,
+    filename: grsecurity-3.1-3.14.43-201505191737.patch,
+    url: 'https://grsecurity.net/stable/grsecurity-3.1-3.14.43-201505191737.patch',
+    sha256sum: 3cba23a6592deb29ccea06bf5e364a4d000fb6ae884b4841b873b5cb5bc559c6,
   }
 
 grsecurity_patch_signature:
   {
-    filename: grsecurity-3.1-3.14.43-201505171736.patch.sig,
-    url: 'https://grsecurity.net/stable/grsecurity-3.1-3.2.69-201505171733.patch.sig',
-    sha256sum: fa1ad9547bd35edb9807fd1412c1cfa19298fa89a295c9521274509f7f134d97,
+    filename: grsecurity-3.1-3.14.43-201505191737.patch.sig,
+    url: 'https://grsecurity.net/stable/grsecurity-3.1-3.14.43-201505191737.patch.sig',
+    sha256sum: 619ccd465555767d09accf31394d7effd9265753545420d6299def928a346efb,
   }
 
 required_kernel_files:
