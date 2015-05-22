@@ -43,7 +43,8 @@ Run the following command to install the package dependencies required
 to compile the new kernel with Grsecurity.
 
 ```
-sudo apt-get install libncurses5-dev build-essential kernel-package git-core gcc-4.8 gcc-4.8-plugin-dev make
+sudo apt-get install libncurses5-dev build-essential kernel-package git-core \
+                     gcc-4.8 gcc-4.8-plugin-dev make
 ```
 
 Create a directory for Grsecurity and download the public keys that you
