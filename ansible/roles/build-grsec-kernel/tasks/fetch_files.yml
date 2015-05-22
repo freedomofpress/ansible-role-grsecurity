@@ -23,6 +23,8 @@
     # other option is scanning kernel.ubuntu.com
     # and accepting whatever is returned
     accept_hostkey: yes
+  tags:
+    - git
 
 - name: copy kernel package files
   shell: cp -a /usr/share/kernel-package {{download_directory}}/ubuntu-package
