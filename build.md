@@ -252,6 +252,15 @@ linux-image-3.14.21-grsec_3.2.61-grsec-10.00.Custom_amd64.deb
 Put the packages on a USB stick and transfer them to the SecureDrop App
 and Monitor servers.
 
+## Speeding up Repeated Builds
+
+If you are testing different kernel configurations, or otherwise plan to
+build a Linux kernel multiple times on the same hardware, you can speed up
+subsequent builds by using `ccache`. Read this [blog post][] to see how to
+install and configure it specifically for kernel builds.
+
+[blog post]: http://linuxdeveloper.blogspot.com/2012/05/using-ccache-to-speed-up-kernel.html
+
 ## Set up PaX on App and Monitor servers
 
 Proceed with the following steps only if the SecureDrop App and Monitor
