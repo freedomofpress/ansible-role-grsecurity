@@ -232,13 +232,15 @@ correct options.
 
 ### Compile the kernel with Grsecurity
 
-Switch to root, since you will need to be root to build the kernel with `make-kpkg`. We recommend setting `CONCURRENCY_LEVEL` to use all available cores when compiling the kernel. Finally, compile the kernel with the Ubuntu overlay. Note that this step may fail if you are using a small VPS/virtual machine.
+We recommend setting `CONCURRENCY_LEVEL` to use all available cores when
+compiling the kernel. Note that this step may fail if you are using a small
+VPS/virtual machine. In our experience you will need at least 20GB of free
+storage to build the kernel.
 
 ```sh
-sudo su
 export CONCURRENCY_LEVEL="$(grep -c '^processor' /proc/cpuinfo)"
-make-kpkg clean
-make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image kernel_headers
+make-kpkg --rootcmd fakeroot clean
+make-kpkg --rootcmd fakeroot --initrd --overlay-dir=../ubuntu-package kernel_image kernel_headers
 ```
 
 When the build process is done, you will have the following Debian
