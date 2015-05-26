@@ -1,5 +1,9 @@
 ---
-# fetch required kernel packages for compilation
+- name: ensure download dir exists
+  file:
+    state: directory
+    dest: "{{download_directory}}"
+
 - name: fetch linux kernel and grsecurity patches
   get_url:
       url: "{{item.url}}"
