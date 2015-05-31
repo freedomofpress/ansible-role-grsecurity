@@ -43,7 +43,8 @@ Run the following command to install the package dependencies required
 to compile the new kernel with Grsecurity.
 
 ```
-sudo apt-get install libncurses5-dev build-essential kernel-package git-core gcc-4.8 gcc-4.8-plugin-dev make
+sudo apt-get install libncurses5-dev build-essential kernel-package git-core \
+                     gcc-4.8 gcc-4.8-plugin-dev make
 ```
 
 Create a directory for Grsecurity and download the public keys that you
@@ -231,13 +232,15 @@ correct options.
 
 ### Compile the kernel with Grsecurity
 
-Switch to root, since you will need to be root to build the kernel with `make-kpkg`. We recommend setting `CONCURRENCY_LEVEL` to use all available cores when compiling the kernel. Finally, compile the kernel with the Ubuntu overlay. Note that this step may fail if you are using a small VPS/virtual machine.
+We recommend setting `CONCURRENCY_LEVEL` to use all available cores when
+compiling the kernel. Note that this step may fail if you are using a small
+VPS/virtual machine. In our experience you will need at least 20GB of free
+storage to build the kernel.
 
 ```sh
-sudo su
 export CONCURRENCY_LEVEL="$(grep -c '^processor' /proc/cpuinfo)"
-make-kpkg clean
-make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image kernel_headers
+make-kpkg --rootcmd fakeroot clean
+make-kpkg --rootcmd fakeroot --initrd --overlay-dir=../ubuntu-package kernel_image kernel_headers
 ```
 
 When the build process is done, you will have the following Debian
@@ -250,6 +253,15 @@ linux-image-3.14.21-grsec_3.2.61-grsec-10.00.Custom_amd64.deb
 
 Put the packages on a USB stick and transfer them to the SecureDrop App
 and Monitor servers.
+
+## Speeding up Repeated Builds
+
+If you are testing different kernel configurations, or otherwise plan to
+build a Linux kernel multiple times on the same hardware, you can speed up
+subsequent builds by using `ccache`. Read this [blog post][] to see how to
+install and configure it specifically for kernel builds.
+
+[blog post]: http://linuxdeveloper.blogspot.com/2012/05/using-ccache-to-speed-up-kernel.html
 
 ## Set up PaX on App and Monitor servers
 
