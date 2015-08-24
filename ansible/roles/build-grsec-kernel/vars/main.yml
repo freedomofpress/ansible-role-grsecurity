@@ -1,5 +1,6 @@
 ---
 download_directory: /usr/src
+linux_version: linux-3.14.51
 
 linux_tarball:
   {

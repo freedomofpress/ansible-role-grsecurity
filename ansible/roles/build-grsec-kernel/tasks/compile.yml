@@ -1,23 +1,22 @@
 ---
 - name: extract linux tarball
-  command: tar -xf linux-3.14.51.tar
+  command: tar -xf {{linux_tarball.filename}}
   args:
     chdir: "{{download_directory}}"
-    creates: "{{download_directory}}/linux-3.14.51"
+    creates: "{{download_directory}}/{{linux_version}}"
 
 - name: apply grsecurity patch
   shell: patch -p1 < ../{{grsecurity_patch.filename}}
   args:
-    chdir: "{{download_directory}}/linux-3.14.51"
+    chdir: "{{download_directory}}/{{linux_version}}"
 
 - name: put kernel config
   template: 
     src: config 
-    dest: "{{download_directory}}/linux-3.14.51/.config"
+    dest: "{{download_directory}}/{{linux_version}}/.config"
 
 - name: clean kernel source tree
-  shell: cd /usr/src/linux-3.14.51 && make-kpkg clean creates=/usr/src/linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_{{ (ansible_architecture == 'x86_64') | ternary('amd64', ansible_architecture) }}.deb
+  shell: cd {{download_directory}}/{{linux_version}} && make-kpkg clean
 
 - name: build the kernel
-  shell: cd /usr/src/linux-3.14.51 && make-kpkg --initrd kernel_image kernel_headers creates=/usr/src/linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_{{ (ansible_architecture == 'x86_64') | ternary('amd64', ansible_architecture) }}.deb
-
+  shell: cd {{download_directory}}/{{linux_version}} && make-kpkg --initrd kernel_image kernel_headers
