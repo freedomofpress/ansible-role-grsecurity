@@ -5,13 +5,13 @@
     creates: "{{download_directory}}/{{linux_tarball.filename|regex_replace('(.*)\\.xz$', '\\\\1')}}"
 
 - name: import kroatman key
-  command: gpg --recv-keys 6092693E
+  command: gpg --keyserver pool.sks-keyservers.net --recv-keys 38DBBDC86092693E
   register: gpg_kroatman_import
   changed_when: "'imported: 1' in gpg_kroatman_import.stderr"
   failed_when: gpg_kroatman_import.rc != 0
 
 - name: import spender key
-  command: gpg --recv-keys 2525FE49
+  command: gpg --keyserver pool.sks-keyservers.net --recv-keys 44D1C0F82525FE49
   register: gpg_spender_import
   changed_when: "'imported: 1' in gpg_spender_import.stderr"
   failed_when: gpg_spender_import.rc != 0
