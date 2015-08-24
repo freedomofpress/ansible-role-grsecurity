@@ -19,6 +19,16 @@
   shell: grep menuentry /boot/grub/grub.cfg | grep grsec | grep -v recovery | head -1 | cut -d "'" -f2
   register: grsec_str
 
+- name: set grsec kernel as default
+  lineinfile: 
+    dest: /etc/default/grub
+    regexp: '^GRUB_DEFAULT='
+    state: present
+    line: 'GRUB_DEFAULT="Advanced options for Debian GNU/Linux>{{ grsec_str.stdout }}"'
+
+- name: run update-grub
+  command: update-grub
+
 - name: set grsec kernel as default for next boot
   command: grub-reboot "Advanced options for Debian GNU/Linux>{{ grsec_str.stdout }}"
 
@@ -33,7 +43,7 @@
     module: wait_for
       host={{ ansible_ssh_host }}
       port={{ ansible_ssh_port }}
-      delay=60
+      delay=30
       state=started
 
 - name: set sysctl flags for grsecurity
