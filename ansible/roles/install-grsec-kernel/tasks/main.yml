@@ -3,7 +3,7 @@
   copy: src={{package_filename}} dest=/root/{{package_filename}}
 
 - name: install paxctl
-  apt: pkg=paxctl state=resent
+  apt: pkg=paxctl state=present
 
 - name: install paxtest
   apt: pkg=paxtest state=present
@@ -22,7 +22,8 @@
 - name: set grsec kernel as default for next boot
   command: grub-reboot "Advanced options for Debian GNU/Linux>{{ grsec_str.stdout }}"
 
-- stat:
+- name: check if running grsec already
+  stat:
     path: /proc/sys/kernel/grsecurity/grsec_lock
   register: running_grsec
 

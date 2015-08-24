@@ -19,4 +19,4 @@
   shell: cd {{download_directory}}/{{linux_version}} && make-kpkg clean
 
 - name: build the kernel
-  shell: cd {{download_directory}}/{{linux_version}} && make-kpkg --initrd kernel_image kernel_headers
+  shell: cd {{download_directory}}/{{linux_version}} && make-kpkg --initrd kernel_image
