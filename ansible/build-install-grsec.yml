@@ -1,0 +1,12 @@
+---
+#- hosts: grsec-build
+
+#  roles:
+#    - { role: build-grsec-kernel }
+
+#  sudo: yes
+
+- hosts: grsec-install
+
+  roles:
+    - { role: install-grsec-kernel }
