@@ -1,0 +1,17 @@
+---
+- name: ensure download dir exists
+  file:
+    state: directory
+    dest: "{{download_directory}}"
+
+- name: fetch linux kernel and grsecurity patches
+  get_url:
+      url: "{{item.url}}"
+      dest: "{{download_directory}}/{{item.filename}}"
+      sha256sum: "{{item.sha256sum}}"
+  with_items:
+    - "{{linux_tarball}}"
+    - "{{linux_tarball_signature}}"
+    - "{{grsecurity_patch}}"
+    - "{{grsecurity_patch_signature}}"
+

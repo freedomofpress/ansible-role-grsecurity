@@ -1,0 +1,5 @@
+---
+- include: packages.yml
+- include: fetch_files.yml
+- include: verify.yml
+- include: compile.yml

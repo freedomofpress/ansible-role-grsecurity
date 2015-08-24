@@ -1,0 +1,14 @@
+---
+- name: install required packages for building kernel
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  with_items:
+    - libncurses5-dev
+    - build-essential
+    - kernel-package
+    - gcc-4.9
+    - gcc-4.9-plugin-dev
+    - make

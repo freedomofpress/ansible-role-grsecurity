@@ -1,0 +1,7 @@
+---
+- hosts: grsec-build
+
+  roles:
+    - { role: build-grsec-kernel, tags: "kernel" }
+
+  sudo: yes

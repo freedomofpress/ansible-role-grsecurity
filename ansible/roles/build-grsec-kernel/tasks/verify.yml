@@ -1,0 +1,27 @@
+---
+- name: unxz linux tarball
+  command: unxz {{download_directory}}/{{linux_tarball.filename}}
+  args:
+    creates: "{{download_directory}}/{{linux_tarball.filename|regex_replace('(.*)\\.xz$', '\\\\1')}}"
+
+- name: import kroatman key
+  command: gpg --recv-keys 38DBBDC86092693E
+  register: gpg_kroatman_import
+  changed_when: "'imported: 1' in gpg_kroatman_import.stderr"
+  failed_when: gpg_kroatman_import.rc != 0
+
+- name: import spender key
+  command: gpg --recv-keys 44D1C0F82525FE49
+  register: gpg_spender_import
+  changed_when: "'imported: 1' in gpg_spender_import.stderr"
+  failed_when: gpg_spender_import.rc != 0
+
+- name: verify linux tarball signature
+  command: gpg --verify {{download_directory}}/{{linux_tarball_signature.filename}}
+  changed_when: false
+  failed_when: false
+
+- name: verify grsecurity patch signature
+  command: gpg --verify {{download_directory}}/{{grsecurity_patch_signature.filename}}
+  changed_when: false
+  failed_when: false
