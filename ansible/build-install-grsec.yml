@@ -1,4 +1,7 @@
 ---
+- vars:
+  package_fileame: linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_amd64.deb
+
 #- hosts: grsec-build
 
 #  roles:
@@ -10,3 +13,4 @@
 
   roles:
     - { role: install-grsec-kernel }
+

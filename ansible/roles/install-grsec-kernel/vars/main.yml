@@ -1,5 +1,4 @@
 ---
-package_filename: linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_amd64.deb
 grsec_sysctl_flags:
   - name: "kernel.grsecurity.rwxmap_logging"
     value: "0"
@@ -9,6 +8,5 @@ grsec_sysctl_flags:
 grub_pax:
   - /usr/sbin/grub-probe
   - /usr/sbin/grub-mkdevicemap
-  - /usr/sbin/grub-setup
   - /usr/bin/grub-script-check
   - /usr/bin/grub-mount
