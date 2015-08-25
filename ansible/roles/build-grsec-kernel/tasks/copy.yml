@@ -1,3 +1,3 @@
 ---
 - name: copy kernel package to local machine
-  fetch: /usr/src/{{package_filename}} dest={{package_filename}} validate_checksum=yes fail_on_missing=yes
+  fetch: src=/usr/src/{{package_filename}} dest={{package_filename}} validate_checksum=yes fail_on_missing=yes
