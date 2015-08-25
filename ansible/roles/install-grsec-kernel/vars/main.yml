@@ -1,10 +1,4 @@
 ---
-grsec_sysctl_flags:
-  - name: "kernel.grsecurity.rwxmap_logging"
-    value: "0"
-  - name: "kernel.grsecurity.grsec_lock"
-    value: "1"
-
 grub_pax:
   - /usr/sbin/grub-probe
   - /usr/sbin/grub-mkdevicemap
