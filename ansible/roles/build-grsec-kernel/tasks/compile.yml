@@ -15,8 +15,14 @@
     src: config
     dest: "{{download_directory}}/{{linux_version}}/.config"
 
+- name: get number of CPUs
+  shell: grep -c '^processor' /proc/cpuinfo
+  register: num_cpus
+
 - name: clean kernel source tree
   shell: cd {{download_directory}}/{{linux_version}} && make-kpkg clean
 
 - name: build the kernel
   shell: cd {{download_directory}}/{{linux_version}} && make-kpkg --initrd kernel_image
+  environment:
+    CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
