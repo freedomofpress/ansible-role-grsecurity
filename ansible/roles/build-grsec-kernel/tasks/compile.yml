@@ -1,6 +1,6 @@
 ---
 - name: extract linux tarball
-  command: tar -xf {{linux_tarball.filename}}
+  command: tar -xf {{linux_version}}.tar
   args:
     chdir: "{{download_directory}}"
     creates: "{{download_directory}}/{{linux_version}}"
