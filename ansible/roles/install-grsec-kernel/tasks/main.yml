@@ -33,25 +33,16 @@
   command: grub-reboot "Advanced options for Debian GNU/Linux>{{ grsec_str.stdout }}"
 
 - name: reboot into the grsec kernel
-  command: shutdown -r now "Rebooting into the grsec kernel..."
-  async: 0
+  shell: sleep 3 && shutdown -r now "Rebooting into the grsec kernel..."
+  async: 1
   poll: 0
   ignore_errors: true
+  sudo: yes
 
 - name: waiting for server to come back
-  local_action:
-    module: wait_for
-      host={{ ansible_ssh_host }}
-      port={{ ansible_ssh_port }}
-      delay=30
-      state=started
+  local_action: wait_for host={{ ansible_ssh_host }} port={{ ansible_ssh_port }} delay=30 state=started
 
-- name: set sysctl flags for grsecurity
-  sysctl:
-    name: "{{ item.name }}"
-    value: "{{ item.value }}"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  with_items: grsec_sysctl_flags
-  sudo: yes
+- name: check that grsec is running
+  command: uname -r
+  register: uname_output
+  failed_when: uname_output.stdout.find('grsec') == -1
