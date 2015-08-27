@@ -20,17 +20,17 @@
   register: grsec_str
 
 - name: set grsec kernel as default
-  lineinfile: 
+  lineinfile:
     dest: /etc/default/grub
     regexp: '^GRUB_DEFAULT='
     state: present
-    line: 'GRUB_DEFAULT="Advanced options for Debian GNU/Linux>{{ grsec_str.stdout }}"'
+    line: 'GRUB_DEFAULT="Advanced options for {% if target_os == "ubuntu" %}Ubuntu{% elif target_os == "debian"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
 
 - name: run update-grub
   command: update-grub
 
 - name: set grsec kernel as default for next boot
-  command: grub-reboot "Advanced options for Debian GNU/Linux>{{ grsec_str.stdout }}"
+  command: grub-reboot "Advanced options for {% if target_os == "ubuntu" %}Ubuntu{% elif target_os == "debian"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
 
 - name: reboot into the grsec kernel
   shell: sleep 3 && shutdown -r now "Rebooting into the grsec kernel..."

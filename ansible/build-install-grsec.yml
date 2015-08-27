@@ -3,12 +3,12 @@
   roles:
     - { role: build-grsec-kernel }
   sudo: yes
-  vars:
-    package_filename: linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_amd64.deb
+  vars_files: 
+    - vars.yml
 
 - hosts: grsec-install
   roles:
     - { role: install-grsec-kernel }
   sudo: yes
-  vars:
-    package_filename: linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_amd64.deb
+  vars_files: 
+    - vars.yml

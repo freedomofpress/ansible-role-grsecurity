@@ -13,6 +13,8 @@
 - name: put kernel config
   template:
     src: config
+  template:
+    src: config-{{ target_os }}
     dest: "{{download_directory}}/{{linux_version}}/.config"
 
 - name: get number of CPUs
@@ -22,7 +24,14 @@
 - name: clean kernel source tree
   shell: cd {{download_directory}}/{{linux_version}} && make-kpkg clean
 
-- name: build the kernel
+- name: build the kernel for debian
   shell: cd {{download_directory}}/{{linux_version}} && make-kpkg --initrd kernel_image
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
+  when: target_os == 'debian'
+
+- name: build the kernel for ubuntu
+  shell: cd {{download_directory}}/{{linux_version}} && make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+  environment:
+    CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
+  when: target_os == 'ubuntu'
