@@ -1,4 +1,4 @@
-# Building grsec-patched kernel for Debian 8.1 on Digital Ocean
+# Build a grsec-patched kernel for a Debian jessie server
 
 Install dependencies:
 
