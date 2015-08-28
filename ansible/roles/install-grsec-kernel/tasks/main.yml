@@ -33,6 +33,9 @@
   command: grub-reboot "Advanced options for {% if target_os == "ubuntu" %}Ubuntu{% elif target_os == "debian"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
 
 - name: reboot into the grsec kernel
+  # Simply rebooting causes the subsequent wait_for task to fail. See here:
+  # https://github.com/ansible/ansible/issues/10616
+  # Sleeping and then shutting down, via the shell module, is a workaround.
   shell: sleep 3 && shutdown -r now "Rebooting into the grsec kernel..."
   async: 1
   poll: 0
