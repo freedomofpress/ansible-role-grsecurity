@@ -40,7 +40,7 @@
   sudo: yes
 
 - name: waiting for server to come back
-  local_action: wait_for host={{ ansible_ssh_host }} port={{ ansible_ssh_port }} delay=30 state=started
+  local_action: wait_for host={{ ansible_ssh_host }} port={{ ansible_ssh_port | default('22')}} delay=30 state=started
 
 - name: check that grsec is running
   command: uname -r
