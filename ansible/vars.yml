@@ -1,3 +1,5 @@
 ---
 package_filename: linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_amd64.deb
-target_os: ubuntu
+# target operating system can be 'debian' (8.x) or 'ubuntu' (14.04.x)
+target_os: debian
+
