@@ -1,0 +1,48 @@
+---
+- name: copy kernel package to destination server
+  copy: src={{package_filename}} dest=/root/{{package_filename}}
+
+- name: install paxctl
+  apt: pkg=paxctl state=present
+
+- name: install paxtest
+  apt: pkg=paxtest state=present
+
+- name: make the required grub paxctl changes
+  command: paxctl -Cpm {{ item }}
+  with_items: grub_pax
+
+- name: install grsec kernel
+  apt: deb="/root/{{package_filename}}"
+
+- name: get grsec kernel string
+  shell: grep menuentry /boot/grub/grub.cfg | grep grsec | grep -v recovery | head -1 | cut -d "'" -f2
+  register: grsec_str
+
+- name: set grsec kernel as default
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: '^GRUB_DEFAULT='
+    state: present
+    line: 'GRUB_DEFAULT="Advanced options for {% if target_os == "ubuntu" %}Ubuntu{% elif target_os == "debian"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
+
+- name: run update-grub
+  command: update-grub
+
+- name: set grsec kernel as default for next boot
+  command: grub-reboot "Advanced options for {% if target_os == "ubuntu" %}Ubuntu{% elif target_os == "debian"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
+
+- name: reboot into the grsec kernel
+  shell: sleep 3 && shutdown -r now "Rebooting into the grsec kernel..."
+  async: 1
+  poll: 0
+  ignore_errors: true
+  sudo: yes
+
+- name: waiting for server to come back
+  local_action: wait_for host={{ ansible_ssh_host }} port={{ ansible_ssh_port }} delay=30 state=started
+
+- name: check that grsec is running
+  command: uname -r
+  register: uname_output
+  failed_when: uname_output.stdout.find('grsec') == -1
