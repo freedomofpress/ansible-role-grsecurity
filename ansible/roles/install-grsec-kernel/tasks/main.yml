@@ -1,6 +1,6 @@
 ---
 - name: copy kernel package to destination server
-  copy: src={{package_filename}} dest=/root/{{package_filename}}
+  copy: src={{package_filename}} dest=/root/{{package_filename|basename}}
 
 - name: install paxctl
   apt: pkg=paxctl state=present
@@ -13,7 +13,7 @@
   with_items: grub_pax
 
 - name: install grsec kernel
-  apt: deb="/root/{{package_filename}}"
+  apt: deb="/root/{{package_filename|basename}}"
 
 - name: get grsec kernel string
   shell: grep menuentry /boot/grub/grub.cfg | grep grsec | grep -v recovery | head -1 | cut -d "'" -f2
