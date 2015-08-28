@@ -1,0 +1,14 @@
+---
+- hosts: grsec-build
+  roles:
+    - { role: build-grsec-kernel }
+  sudo: yes
+  vars_files: 
+    - vars.yml
+
+- hosts: grsec-install
+  roles:
+    - { role: install-grsec-kernel }
+  sudo: yes
+  vars_files: 
+    - vars.yml
