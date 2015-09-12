@@ -61,7 +61,16 @@
   sudo: false
   when: "'grsec' not in uname_initial_result.stdout"
 
+  # Adding extra wait time to prevent timeouts
+  # during debugging. Likely not necessary, but test
+  # before removing.
+- name: wait extra time for server to come back up
+  pause:
+    seconds: 30
+
 - name: check that grsec is running
   command: uname -r
-  register: uname_output
-  failed_when: uname_output.stdout.find('grsec') == -1
+  register: uname_final_result
+  changed_when: false
+  failed_when: "'grsec' not in uname_final_result.stdout"
+
