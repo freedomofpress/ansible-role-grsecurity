@@ -90,6 +90,7 @@
 - name: wait extra time for server to come back up
   pause:
     seconds: 30
+  when: "'grsec' not in uname_initial_result.stdout"
 
 - name: check that grsec is running
   command: uname -r
