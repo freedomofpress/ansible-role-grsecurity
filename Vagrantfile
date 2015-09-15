@@ -11,6 +11,12 @@ Vagrant.configure("2") do |config|
     build.vm.provision :ansible do |ansible|
       ansible.playbook = 'ansible/build-deb-pkg.yml'
       ansible.verbose = 'v'
+      # The grsec build playbook defaults to targeting
+      # the Debian kernel. Since we want packages for Ubuntu,
+      # provide an extra var.
+      ansible.extra_vars = {
+        'target_os' => 'ubuntu',
+      }
     end
 
     build.vm.provider "virtualbox" do |v|
