@@ -12,4 +12,13 @@
 - name: Create build subdirectory.
   file:
     state: directory
-    path: "{{ grsec_build_directory }}"
+    path: "{{ grsec_build_directory }}/DEBIAN"
+
+- name: Copy DEBIAN control file.
+  template:
+    src: control
+    path: "{{ grsec_build_directory }}/DEBIAN/control"
+
+- name: Build the Debian package.
+  command: dpkg-deb --build {{ grsec_build_directory }}
+
