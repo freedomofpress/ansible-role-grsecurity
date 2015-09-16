@@ -1,0 +1,9 @@
+---
+grsec_package_name: securedrop-grsec
+grsec_build_path: /tmp/build
+grsec_kernel_version: "3.14.36"
+securedrop_version: "0.3"
+securedrop_architecture: amd64
+
+grsec_build_dir: "{{ grsec_build_path }}/{{ grsec_package_name }}-{{ grsec_kernel_version }}-{{ securedrop_architecture }}"
+
