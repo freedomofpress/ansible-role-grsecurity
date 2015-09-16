@@ -22,3 +22,9 @@
 - name: Build the Debian package.
   command: dpkg-deb --build {{ grsec_build_directory }}
 
+- name: Fetch metapackage back to localhost.
+  fetch:
+    src: "{{ grsec_build_parent_directory }}/{{ grsec_package_name_verbose }}.deb"
+    dest: built-packages/
+    flat: yes
+
