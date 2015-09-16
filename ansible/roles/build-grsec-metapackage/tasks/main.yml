@@ -16,7 +16,7 @@
 
 - name: Copy DEBIAN control file.
   template:
-    src: control
+    src: debian-control-file
     dest: "{{ grsec_build_directory }}/DEBIAN/control"
 
 - name: Build the Debian package.
