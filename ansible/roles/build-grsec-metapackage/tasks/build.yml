@@ -1,3 +1,15 @@
 ---
-- name: run bash script to build the grsecurity metapackage
-  script: build_grsec_metapackage.sh
+- name: Create parent build directory.
+  file:
+    state: directory
+    path: "{{ grsec_build_parent_directory }}"
+
+- name: Clean build subdirectory.
+  file:
+    state: absent
+    path: "{{ grsec_build_directory }}"
+
+- name: Create build subdirectory.
+  file:
+    state: directory
+    path: "{{ grsec_build_directory }}"
