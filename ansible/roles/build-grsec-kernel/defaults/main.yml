@@ -1,4 +1,10 @@
 ---
+# Can be "stable" or "test". Note that stable patches
+# requires authentication to download. See the grsecurity
+# blog for more information:
+# https://grsecurity.net/announce.php
+grsecurity_patch_type: test
+
 download_directory: /usr/src
 linux_version: linux-3.14.51
 
