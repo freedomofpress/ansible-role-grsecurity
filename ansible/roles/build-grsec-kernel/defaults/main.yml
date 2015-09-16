@@ -31,7 +31,7 @@ grsecurity_patch_signature:
   }
 
 required_kernel_files:
-  - "{{linux_tarball}}"
-  - "{{linux_tarball_signature}}"
-  - "{{grsecurity_patch}}"
-  - "{{grsecurity_patch_signature}}"
+  - "{{ linux_tarball }}"
+  - "{{ linux_tarball_signature }}"
+  - "{{ grsecurity_patch }}"
+  - "{{ grsecurity_patch_signature }}"
