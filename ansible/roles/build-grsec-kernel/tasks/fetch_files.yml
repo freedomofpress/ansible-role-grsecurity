@@ -1,13 +1,10 @@
 ---
-- name: Include grsecurity download URLs.
-  include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
-
-- name: ensure download dir exists
+- name: Create directory for downloaded files.
   file:
     state: directory
     dest: "{{ download_directory  }}"
 
-- name: fetch linux kernel and grsecurity patches
+- name: Fetch Linux kernel tarball and signature.
   get_url:
       url: "{{ item.url  }}"
       dest: "{{ download_directory }}/{{ item.filename }}"
@@ -15,39 +12,13 @@
   with_items:
     - "{{ linux_tarball }}"
     - "{{ linux_tarball_signature }}"
-    - "{{ grsecurity_patch }}"
-    - "{{ grsecurity_patch_signature }}"
 
-- name: clone ubuntu overlay git repository (slow!)
-  git:
-    repo: git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
-    dest: "{{ download_directory }}/ubuntu-trusty"
-    force: yes
-    # since this clone takes a long time, just grab
-    # the first layer. can then pull manually to update.
-    depth: 1
-    # definitely don't want to do this, but only
-    # other option is scanning kernel.ubuntu.com
-    # and accepting whatever is returned
-    accept_hostkey: yes
-  tags:
-    - git
-  when: target_os == 'ubuntu'
+- name: Fetch grsecurity patch and signature.
+  debug: msg=hello
 
-- name: copy kernel package files
-  shell: cp -a /usr/share/kernel-package {{ download_directory }}/ubuntu-package
-  args:
-    creates: "{{ download_directory }}/ubuntu-package"
-  when: target_os == 'ubuntu'
 
-- name: copy ubuntu overlay control files
-  shell: >
-     cp {{ download_directory }}/ubuntu-trusty/debian/control-scripts/p* \
-        {{ download_directory }}/ubuntu-package/pkg/image/
-  when: target_os == 'ubuntu'
+- name: Fetch grsecurity patch and signature.
+  debug: msg=hello
 
-- name: copy ubuntu overlay header files
-  command: >
-     cp {{ download_directory }}/ubuntu-trusty/debian/control-scripts/headers-postinst \
-        {{ download_directory }}/ubuntu-package/pkg/headers/
-  when: target_os == 'ubuntu'
+- name: Include grsecurity download URLs.
+  include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
