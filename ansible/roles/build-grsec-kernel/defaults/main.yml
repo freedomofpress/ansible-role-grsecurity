@@ -14,20 +14,20 @@ supported_linux_distributions:
   - Ubuntu
 
 download_directory: /usr/src
-linux_version: linux-3.14.51
+linux_kernel_version: linux-3.14.52
 
 linux_tarball:
   {
-    filename: linux-3.14.51.tar.xz,
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.51.tar.xz",
-    sha256sum: b306bc95cab19be0b77b356fe33d6846082a596d9ee44518714e46cc92691abf,
+    filename: "{{ linux_kernel_version }}.tar.xz",
+    url: "https://www.kernel.org/pub/linux/kernel/v3.x/{{ linux_kernel_version }}.tar.xz",
+    sha256sum: 1bba61c76fdabb4a707832fd0eeecbf98a2ac149864442005004378ed2edf2e9,
   }
 
 linux_tarball_signature:
   {
-    filename: linux-3.14.51.tar.sign,
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.51.tar.sign",
-    sha256sum: c4bbe53fae6a4fe2dfd7ec2a0fc66daa7762fa53a94ce4ffb26b537d6bac489e,
+    filename: "{{ linux_kernel_version }}.tar.sign",
+    url: "https://www.kernel.org/pub/linux/kernel/v3.x/{{ linux_kernel_version }}.tar.sign",
+    sha256sum: 66c043ae1751da05f355e9089c0056085aebf05f788c6450187e2b05d3e48948,
   }
 
 required_kernel_files:
