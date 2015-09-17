@@ -1,0 +1,9 @@
+---
+apt_packages:
+    - libncurses5-dev
+    - build-essential
+    - kernel-package
+    - gcc-4.8
+    - gcc-4.8-plugin-dev
+    - git-core
+    - make
