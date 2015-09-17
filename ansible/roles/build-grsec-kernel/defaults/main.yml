@@ -14,20 +14,20 @@ supported_linux_distributions:
   - Ubuntu
 
 download_directory: /usr/src
-linux_version: linux-3.14.51
+linux_kernel_version: linux-3.14.52
 
 linux_tarball:
   {
-    filename: linux-3.14.49.tar.xz,
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.49.tar.xz",
-    sha256sum: fa8343d7f40d3531030240677fc72ee3299f50ae9f33a9e1d916b092c23737f5,
+    filename: "{{ linux_kernel_version }}.tar.xz",
+    url: "https://www.kernel.org/pub/linux/kernel/v3.x/{{ linux_kernel_version }}.tar.xz",
+    sha256sum: 1bba61c76fdabb4a707832fd0eeecbf98a2ac149864442005004378ed2edf2e9,
   }
 
 linux_tarball_signature:
   {
-    filename: linux-3.14.49.tar.sign,
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.14.49.tar.sign",
-    sha256sum: 0fc91671207ac4ba75d23132f5910d0eafb38fcd422f18f4df73b6d166c974ef,
+    filename: "{{ linux_kernel_version }}.tar.sign",
+    url: "https://www.kernel.org/pub/linux/kernel/v3.x/{{ linux_kernel_version }}.tar.sign",
+    sha256sum: 66c043ae1751da05f355e9089c0056085aebf05f788c6450187e2b05d3e48948,
   }
 
 grsecurity_patch:
