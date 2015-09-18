@@ -32,4 +32,4 @@ linux_tarball_signature:
     url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
   }
 
-linux_source_directory: "{{ download_directory }}/{{ linux_tarball.filename.split('.') | first }}"
+linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
