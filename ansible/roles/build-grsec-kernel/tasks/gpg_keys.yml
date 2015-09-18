@@ -4,6 +4,11 @@
   register: gpg_import_greg_result
   changed_when: "'imported: 1' in gpg_import_greg_result.stderr"
 
+- name: Import kernel.org checksum autosigner GPG key.
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 632D3A06589DA6B1
+  register: gpg_import_autosigner_result
+  changed_when: "'imported: 1' in gpg_import_autosigner_result.stderr"
+
 - name: Import Bradley Spengler GPG key (grsecurity maintainer key).
   command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 44D1C0F82525FE49
   register: gpg_import_spender_result
