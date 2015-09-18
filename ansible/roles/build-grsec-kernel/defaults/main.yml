@@ -20,16 +20,18 @@ download_directory: /usr/src
 # The test patches for grsecurity apply to the 4.x kernels,
 # and the stable patches work with 3.14.x.
 linux_kernel_version: 3.14.52
+linux_base_url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/"
+
 linux_tarball:
   {
     filename: "linux-{{ linux_kernel_version }}.tar.xz",
-    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
+    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.xz",
   }
 
 linux_tarball_signature:
   {
     filename: "linux-{{ linux_kernel_version }}.tar.sign",
-    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
+    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.xz",
   }
 
 grsecurity_patch:
@@ -52,4 +54,5 @@ required_kernel_files:
   - "{{ grsecurity_patch }}"
   - "{{ grsecurity_patch_signature }}"
 
+linux_checksums_url: "{{ linux_base_url }}/sha256sums.asc"
 linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
