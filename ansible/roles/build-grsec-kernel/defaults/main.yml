@@ -14,24 +14,22 @@ supported_linux_distributions:
   - Ubuntu
 
 download_directory: /usr/src
-linux_kernel_version: linux-3.14.52
 
+# The version of the Linux kernel is modified
+# dynamically according to `grsecurity_patch_type`.
+# The test patches for grsecurity apply to the 4.x kernels,
+# and the stable patches work with 3.14.x.
+linux_kernel_version: 3.14.52
 linux_tarball:
   {
-    filename: "{{ linux_kernel_version }}.tar.xz",
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/{{ linux_kernel_version }}.tar.xz",
-    sha256sum: 1bba61c76fdabb4a707832fd0eeecbf98a2ac149864442005004378ed2edf2e9,
+    filename: "linux-{{ linux_kernel_version }}.tar.xz",
+    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
   }
 
 linux_tarball_signature:
   {
-    filename: "{{ linux_kernel_version }}.tar.sign",
-    url: "https://www.kernel.org/pub/linux/kernel/v3.x/{{ linux_kernel_version }}.tar.sign",
-    sha256sum: 66c043ae1751da05f355e9089c0056085aebf05f788c6450187e2b05d3e48948,
+    filename: "linux-{{ linux_kernel_version }}.tar.sign",
+    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
   }
 
-required_kernel_files:
-  - "{{ linux_tarball }}"
-  - "{{ linux_tarball_signature }}"
-  - "{{ grsecurity_patch }}"
-  - "{{ grsecurity_patch_signature }}"
+linux_source_directory: "{{ download_directory }}/{{ linux_tarball.filename.split('.') | first }}"
