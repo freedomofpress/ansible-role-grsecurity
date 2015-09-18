@@ -10,6 +10,10 @@
     dest: "{{ download_directory }}"
   register: linux_source_checksums
 
+- name: Verify GPG signature on SHA256 checksum file.
+  command: gpg --verify {{ linux_source_checksums.dest }}
+  changed_when: false
+
 - name: Read checksum for kernel tarball.
   shell: >
     grep {{ linux_tarball.filename }}
