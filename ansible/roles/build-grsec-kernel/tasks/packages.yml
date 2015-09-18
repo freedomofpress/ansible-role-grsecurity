@@ -1,33 +1,20 @@
 ---
-  # TODO: we can use OS-specific variable includes
-  # to get the list of apt packages.
-- name: install required packages for building kernel on Debian
-  apt:
-    name: "{{item}}"
-    state: present
-    update_cache: true
-    cache_valid_time: 3600
-  with_items:
-    - libncurses5-dev
-    - build-essential
-    - kernel-package
-    - gcc-4.9
-    - gcc-4.9-plugin-dev
-    - make
-  when: target_os == 'debian'
+- name: Validate support for compiling kernel on current OS.
+  fail:
+    msg: >
+      Cannot compile grsecurity under {{ ansible_distribution }}.
+      The problem may be as simple as a few missing package
+      dependencies. Send a pull request to add support for your distro!
+      https://github.com/freedomofpress/grsec
+  when: 'ansible_distribution not in supported_linux_distributions'
 
-- name: install required packages for building kernel on Ubuntu
+- name: Import OS-specific dependency list.
+  include_vars: "{{ ansible_distribution }}.yml"
+
+- name: Install required packages for building kernel.
   apt:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
     update_cache: true
     cache_valid_time: 3600
-  with_items:
-    - libncurses5-dev
-    - build-essential
-    - kernel-package
-    - gcc-4.8
-    - gcc-4.8-plugin-dev
-    - git-core
-    - make
-  when: target_os == 'ubuntu'
+  with_items: apt_packages

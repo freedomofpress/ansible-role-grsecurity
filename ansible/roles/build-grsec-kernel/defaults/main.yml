@@ -1,0 +1,35 @@
+---
+# Can be "stable" or "test". Note that stable patches
+# requires authentication to download. See the grsecurity
+# blog for more information:
+# https://grsecurity.net/announce.php
+grsecurity_patch_type: test
+
+# Declaring a list of supported distributions
+# for package dependency lists. Role will fail
+# if playbook attempts to compile under a different OS,
+# with a helpful message soliciting a PR. =)
+supported_linux_distributions:
+  - Debian
+  - Ubuntu
+
+download_directory: /usr/src
+
+# The version of the Linux kernel is modified
+# dynamically according to `grsecurity_patch_type`.
+# The test patches for grsecurity apply to the 4.x kernels,
+# and the stable patches work with 3.14.x.
+linux_kernel_version: 3.14.52
+linux_tarball:
+  {
+    filename: "linux-{{ linux_kernel_version }}.tar.xz",
+    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
+  }
+
+linux_tarball_signature:
+  {
+    filename: "linux-{{ linux_kernel_version }}.tar.sign",
+    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
+  }
+
+linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"

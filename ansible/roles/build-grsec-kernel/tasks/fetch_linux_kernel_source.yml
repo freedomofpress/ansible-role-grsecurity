@@ -1,0 +1,15 @@
+---
+- name: Create directory for downloaded files.
+  file:
+    state: directory
+    dest: "{{ download_directory  }}"
+
+- name: Fetch Linux kernel tarball and signature.
+  get_url:
+      url: "{{ item.url  }}"
+      dest: "{{ download_directory }}/{{ item.filename }}"
+      sha256sum: "{{ item.sha256sum }}"
+  with_items:
+    - "{{ linux_tarball }}"
+    - "{{ linux_tarball_signature }}"
+

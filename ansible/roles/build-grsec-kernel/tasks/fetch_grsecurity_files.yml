@@ -1,0 +1,16 @@
+---
+- name: Include grsecurity download URLs.
+  include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
+
+- name: Fetch grsecurity patch and signature.
+  get_url:
+      url: "{{ item.url  }}"
+      dest: "{{ download_directory }}/{{ item.filename }}"
+      sha256sum: "{{ item.sha256sum }}"
+      # TODO: Verify that `get_url` doesn't break when providing
+      # unnecessary authentication values.
+      url_username: "{{ grsecurity_download_username | default('') }}"
+      url_password: "{{ grsecurity_download_password | default('') }}"
+  with_items:
+    - "{{ grsecurity_patch }}"
+    - "{{ grsecurity_patch_signature }}"
