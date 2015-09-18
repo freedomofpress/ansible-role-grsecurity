@@ -52,4 +52,4 @@ required_kernel_files:
   - "{{ grsecurity_patch }}"
   - "{{ grsecurity_patch_signature }}"
 
-linux_source_directory: "{{ download_directory }}/{{ linux_tarball.filename.split('.') | first }}"
+linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"

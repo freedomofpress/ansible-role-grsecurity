@@ -1,37 +1,37 @@
 ---
 - name: extract linux tarball
-  command: tar -xf {{ linux_kernel_version }}.tar
+  command: tar -xf linux-{{ linux_kernel_version }}.tar
   args:
     chdir: "{{ download_directory }}"
-    creates: "{{ download_directory }}/{{ linux_kernel_version }}"
+    creates: "{{ linux_source_directory }}"
 
 - name: apply grsecurity patch
   shell: patch -p1 < ../{{ grsecurity_patch.filename }}
   args:
-    chdir: "{{ download_directory }}/{{ linux_kernel_version }}"
+    chdir: "{{ linux_source_directory }}"
 
 - name: put kernel config
   template:
     src: config
   template:
     src: config-{{ target_os }}
-    dest: "{{ download_directory }}/{{ linux_kernel_version }}/.config"
+    dest: "{{ linux_source_directory }}/.config"
 
 - name: get number of CPUs
   shell: grep -c '^processor' /proc/cpuinfo
   register: num_cpus
 
 - name: clean kernel source tree
-  shell: cd {{ download_directory }}/{{ linux_kernel_version }} && make-kpkg clean
+  shell: cd {{ linux_source_directory }} && make-kpkg clean
 
 - name: build the kernel for debian
-  shell: cd {{ download_directory }}/{{ linux_kernel_version }} && make-kpkg --initrd kernel_image
+  shell: cd {{ linux_source_directory }} && make-kpkg --initrd kernel_image
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
   when: target_os == 'debian'
 
 - name: build the kernel for ubuntu
-  shell: cd {{ download_directory }}/{{ linux_kernel_version }} && make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+  shell: cd {{ linux_source_directory }} && make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
   when: target_os == 'ubuntu'
