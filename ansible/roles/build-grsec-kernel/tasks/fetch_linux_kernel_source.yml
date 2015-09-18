@@ -13,7 +13,7 @@
 - name: Read checksum for kernel tarball.
   shell: >
     grep {{ linux_tarball.filename }}
-    {{ linux_checksums.dest }} | cut -d' ' -f1
+    {{ linux_source_checksums.dest }} | cut -d' ' -f1
   changed_when: false
   register: linux_tarball_checksum
 
@@ -25,5 +25,5 @@
 
 - name: Fetch Linux kernel tarball signature file.
   get_url:
-      url: "{{ linux_tarball.signature  }}"
+      url: "{{ linux_tarball_signature.url }}"
       dest: "{{ download_directory }}"

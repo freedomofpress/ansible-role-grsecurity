@@ -31,7 +31,7 @@ linux_tarball:
 linux_tarball_signature:
   {
     filename: "linux-{{ linux_kernel_version }}.tar.sign",
-    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.xz",
+    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.sign",
   }
 
 linux_checksums_url: "{{ linux_base_url }}/sha256sums.asc
