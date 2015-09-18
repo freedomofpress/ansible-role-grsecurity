@@ -9,8 +9,8 @@
       sha256sum: "{{ item.sha256sum }}"
       # TODO: Verify that `get_url` doesn't break when providing
       # unnecessary authentication values.
-      url_username: "{{ grsecurity_download_username }}"
-      url_password: "{{ grsecurity_download_password }}"
+      url_username: "{{ grsecurity_download_username | default('') }}"
+      url_password: "{{ grsecurity_download_password | default('') }}"
   with_items:
     - "{{ grsecurity_patch }}"
     - "{{ grsecurity_patch_signature }}"
