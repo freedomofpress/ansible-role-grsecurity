@@ -1,26 +1,23 @@
 ---
-- name: import kroatman key
-  command: gpg --keyserver pool.sks-keyservers.net --recv-keys 38DBBDC86092693E
-  register: gpg_kroatman_import
-  changed_when: "'imported: 1' in gpg_kroatman_import.stderr"
-  failed_when: gpg_kroatman_import.rc != 0
+- name: Import Greg Kroah-Hartman GPG key (Linux stable release signing key).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 38DBBDC86092693E
+  register: gpg_import_greg_result
+  changed_when: "'imported: 1' in gpg_import_greg_result.stderr"
 
-- name: import spender key
-  command: gpg --keyserver pool.sks-keyservers.net --recv-keys 44D1C0F82525FE49
-  register: gpg_spender_import
-  changed_when: "'imported: 1' in gpg_spender_import.stderr"
-  failed_when: gpg_spender_import.rc != 0
+- name: Import Bradley Spengler GPG key (grsecurity maintainer key).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 44D1C0F82525FE49
+  register: gpg_import_spender_result
+  changed_when: "'imported: 1' in gpg_import_spender_result.stderr"
 
-- name: import figg key (for ubuntu overlay)
-  command: gpg --keyserver pool.sks-keyservers.net --recv-keys 0C7B589B105BE7F7
-  register: gpg_figg_import
-  changed_when: "'imported: 1' in gpg_figg_import.stderr"
-  failed_when: gpg_figg_import.rc != 0
+- name: Import Brad Figg GPG key (Canonical/Ubuntu Kernel Team).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 0C7B589B105BE7F7
+  register: gpg_import_figg_result
+  changed_when: "'imported: 1' in gpg_import_figg_result.stderr"
   when: target_os == 'ubuntu'
 
-- name: import henriques key (for ubuntu overlay)
-  command: gpg --keyserver pool.sks-keyservers.net --recv-keys DB74AEB8FDCE24FC
+- name: Import Luis Henriques GPG key (Canonical/LKM).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys DB74AEB8FDCE24FC
   register: gpg_henriques_import
   changed_when: "'imported: 1' in gpg_henriques_import.stderr"
-  failed_when: gpg_henriques_import.rc != 0
   when: target_os == 'ubuntu'
+

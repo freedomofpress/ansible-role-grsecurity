@@ -56,3 +56,5 @@ required_kernel_files:
 
 linux_checksums_url: "{{ linux_base_url }}/sha256sums.asc"
 linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
+
+gpg_keyserver: hkps.pool.sks-keyservers.net
