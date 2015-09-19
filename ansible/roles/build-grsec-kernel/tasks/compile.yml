@@ -12,9 +12,7 @@
 
 - name: put kernel config
   template:
-    src: config
-  template:
-    src: config-{{ target_os }}
+    src: config-{{ grsecurity_build_strategy }}
     dest: "{{ linux_source_directory }}/.config"
 
 - name: get number of CPUs
@@ -32,7 +30,7 @@
     chdir: "{{ linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
-  when: target_os == 'debian'
+  when: grsecurity_build_strategy == 'vanilla'
 
 - name: build the kernel for ubuntu
   command: make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
@@ -40,4 +38,4 @@
     chdir: "{{ linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
-  when: target_os == 'ubuntu'
+  when: grsecurity_build_strategy == 'ubuntu'
