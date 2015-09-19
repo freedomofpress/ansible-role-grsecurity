@@ -1,4 +1,7 @@
 ---
+- name: Include grsecurity download URLs.
+  include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
+
 - include: packages.yml
 
 - include: gpg_keys.yml
