@@ -1,7 +1,4 @@
 ---
-- name: Include grsecurity download URLs.
-  include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
-
 - name: Fetch grsecurity patch and signature.
   get_url:
       url: "{{ item.url  }}"
