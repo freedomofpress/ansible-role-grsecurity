@@ -20,7 +20,7 @@ supported_linux_distributions:
 # most just pre/post install hooks.
 grsecurity_build_strategy: vanilla
 
-download_directory: /usr/src
+download_directory: /usr/local/src
 
 # The version of the Linux kernel is modified
 # dynamically according to `grsecurity_patch_type`.
