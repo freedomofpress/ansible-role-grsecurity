@@ -6,7 +6,7 @@
     creates: "{{ linux_source_directory }}"
 
 - name: apply grsecurity patch
-  shell: patch -p1 < ../{{ grsecurity_patch.filename }}
+  shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}
   args:
     chdir: "{{ linux_source_directory }}"
 
@@ -18,20 +18,26 @@
     dest: "{{ linux_source_directory }}/.config"
 
 - name: get number of CPUs
-  shell: grep -c '^processor' /proc/cpuinfo
+  command: grep -c '^processor' /proc/cpuinfo
   register: num_cpus
 
 - name: clean kernel source tree
-  shell: cd {{ linux_source_directory }} && make-kpkg clean
+  command: make-kpkg clean
+  args:
+    chdir: "{{ linux_source_directory }}"
 
 - name: build the kernel for debian
-  shell: cd {{ linux_source_directory }} && make-kpkg --initrd kernel_image
+  command: make-kpkg --initrd kernel_image
+  args:
+    chdir: "{{ linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
   when: target_os == 'debian'
 
 - name: build the kernel for ubuntu
-  shell: cd {{ linux_source_directory }} && make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+  command: make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+  args:
+    chdir: "{{ linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
   when: target_os == 'ubuntu'
