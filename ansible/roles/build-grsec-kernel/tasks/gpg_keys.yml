@@ -18,11 +18,11 @@
   command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 0C7B589B105BE7F7
   register: gpg_import_figg_result
   changed_when: "'imported: 1' in gpg_import_figg_result.stderr"
-  when: target_os == 'ubuntu'
+  when: grsecurity_build_strategy == 'ubuntu'
 
 - name: Import Luis Henriques GPG key (Canonical/LKM).
   command: gpg --keyserver {{ gpg_keyserver }} --recv-keys DB74AEB8FDCE24FC
   register: gpg_henriques_import
   changed_when: "'imported: 1' in gpg_henriques_import.stderr"
-  when: target_os == 'ubuntu'
+  when: grsecurity_build_strategy == 'ubuntu'
 

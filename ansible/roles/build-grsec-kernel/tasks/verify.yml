@@ -18,11 +18,11 @@
     chdir: "{{ download_directory }}/ubuntu-trusty"
   register: ubuntu_overlay_tag_result
   changed_when: false
-  when: target_os == 'ubuntu'
+  when: grsecurity_build_strategy == 'ubuntu'
 
 - name: Verify Ubuntu overlay signature.
   command: git tag --verify {{ ubuntu_overlay_tag_result.stdout }}
   args:
     chdir: "{{ download_directory }}/ubuntu-trusty"
   changed_when: false
-  when: target_os == 'ubuntu'
+  when: grsecurity_build_strategy == 'ubuntu'
