@@ -23,7 +23,7 @@
 
 - name: Fetch Linux kernel tarball.
   get_url:
-      url: "{{ linux_tarball.url  }}"
+      url: "{{ linux_tarball.url }}"
       dest: "{{ download_directory }}/{{ linux_tarball.filename }}"
       sha256sum: "{{ linux_tarball_checksum.stdout }}"
 
