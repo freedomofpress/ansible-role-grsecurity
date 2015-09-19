@@ -1,20 +1,28 @@
 ---
-- name: unxz linux tarball
+- name: Extract Linux tarball.
   command: unxz {{ download_directory }}/{{ linux_tarball.filename }}
   args:
     creates: "{{ download_directory }}/{{ linux_tarball.filename|regex_replace('(.*)\\.xz$', '\\\\1') }}"
 
-- name: verify linux tarball signature
+- name: Verify Linux tarball GPG signature.
   command: gpg --verify {{ download_directory }}/{{ linux_tarball_signature.filename }}
   changed_when: false
 
-- name: verify grsecurity patch signature
+- name: Verify grsecurity patch GPG signature.
   command: gpg --verify {{ download_directory }}/{{ grsecurity_patch_signature.filename }}
   changed_when: false
 
-- name: verify ubuntu overlay signature
-  shell: git tag --verify $(git describe)
-  register: ubuntu_overlay_verify_result
+- name: Register current release tag for Ubuntu overlay.
+  command: git tag
   args:
     chdir: "{{ download_directory }}/ubuntu-trusty"
+  register: ubuntu_overlay_tag_result
+  changed_when: false
+  when: target_os == 'ubuntu'
+
+- name: Verify Ubuntu overlay signature.
+  command: git tag --verify {{ ubuntu_overlay_tag_result.stdout }}
+  args:
+    chdir: "{{ download_directory }}/ubuntu-trusty"
+  changed_when: false
   when: target_os == 'ubuntu'
