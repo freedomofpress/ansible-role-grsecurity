@@ -7,15 +7,15 @@ linux_kernel_version: 4.1.7
 
 grsecurity_patch:
   {
-    filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509131604.patch",
-    url: 'https://grsecurity.net/test/grsecurity-3.1-{{ linux_kernel_version }}-201509131604.patch',
-    sha256sum: 712e11695a3ccf6ee476d087354545ace340763f598f98b91a0cc77943f42ebb,
+    filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509201149.patch",
+    url: 'https://grsecurity.net/test/grsecurity-3.1-{{ linux_kernel_version }}-201509201149.patch',
+    sha256sum: 647667b44c2b2f7920a98bd13c631667f26d9cc0b9fef5a82ab06ec20643fba9,
   }
 
 grsecurity_patch_signature:
   {
     filename: "{{ grsecurity_patch.filename+'.sig' }}",
     url: "{{ grsecurity_patch.url+'.sig' }}",
-    sha256sum: 10deab6647f676b3f1d8854c0281aff20116534ecc81bafa634d2a72ab4ed665,
+    sha256sum: 09953090549ee13b61f66437857b9fdf2aff43ca63084ba9bccef6c936e0dd23,
   }
 
