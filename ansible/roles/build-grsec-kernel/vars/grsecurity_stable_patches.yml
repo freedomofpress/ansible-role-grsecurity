@@ -6,16 +6,16 @@
 linux_kernel_version: 3.14.52
 
 grsecurity_patch:
-  {
-    filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509131603.patch",
-    url: 'https://grsecurity.net/download-restrict/download-redirect.php?file=grsecurity-3.1-{{ linux_kernel_version }}-201509131603.patch',
-    sha256sum: 652a5c50e6302317f25318c5c1c004aacb7849ab370866f96a6ea11e7e687a03,
-  }
+{
+  filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509201149.patch",
+  url: 'https://grsecurity.net/download-restrict/download-redirect.php?file=grsecurity-3.1-{{ linux_kernel_version }}-201509201149.patch',
+  sha256sum: 2627fb7b4aff73f24e514bcc8a1be9b1706a6c3b0579988219ddd3e7c079da27,
+}
 
 grsecurity_patch_signature:
-  {
-    filename: "{{ grsecurity_patch.filename+'.sig' }}",
-    url: "{{ grsecurity_patch.url+'.sig' }}",
-    sha256sum: c80ff303cd6d981e732dfcf68aec8cb17f4c648512b462e7f00bab5712c68186,
-  }
+{
+  filename: "{{ grsecurity_patch.filename+'.sig' }}",
+  url: "{{ grsecurity_patch.url+'.sig' }}",
+  sha256sum: 2689e3fa370584685ef168157d1ea12055d28f455ce062c0b8be2e5ff22e2833,
+}
 
