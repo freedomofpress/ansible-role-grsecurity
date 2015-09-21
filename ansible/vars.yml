@@ -1,5 +1,7 @@
 ---
+# TODO: The package file name is currently hardcoded, and so won't
+# work automatically when the kernel version changes. Make it dynamic.
 package_filename: linux-image-3.14.51-grsec_3.14.51-grsec-10.00.Custom_amd64.deb
-# target operating system can be 'debian' (8.x) or 'ubuntu' (14.04.x)
-target_os: debian
+# Can be "vanilla" or "ubuntu". See `build-kernel-package/defaults/main.yml` for details.
+grsecurity_build_strategy: vanilla
 
