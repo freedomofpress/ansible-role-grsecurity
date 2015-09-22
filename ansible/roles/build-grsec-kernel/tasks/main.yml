@@ -1,12 +1,17 @@
 ---
+- name: Include grsecurity download URLs.
+  include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
+
 - include: packages.yml
+
+- include: gpg_keys.yml
 
 - include: fetch_linux_kernel_source.yml
 
 - include: fetch_grsecurity_files.yml
 
 - include: fetch_ubuntu_overlay.yml
-  when: 'target_os == "ubuntu"'
+  when: grsecurity_build_strategy == "ubuntu"
 
 - include: verify.yml
 - include: compile.yml

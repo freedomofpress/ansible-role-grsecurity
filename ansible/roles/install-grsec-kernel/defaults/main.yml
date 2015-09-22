@@ -1,3 +1,4 @@
 ---
-# Can be "debian" or "ubuntu".
-target_os: debian
+# Can be "vanilla" or "ubuntu".
+# See `build-kernel-package/defaults/main.yml` for details.
+grsecurity_build_strategy: vanilla

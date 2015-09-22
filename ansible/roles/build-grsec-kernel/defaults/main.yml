@@ -13,23 +13,35 @@ supported_linux_distributions:
   - Debian
   - Ubuntu
 
-download_directory: /usr/src
+# Only "vanilla" and "ubuntu" are supported. The default
+# strategy indicates a straight-up vanilla kernel with
+# grsecurity patches applied. The "ubuntu" option is largely
+# the same, with a few tricks pulled in from the ubuntu-overlay,
+# most just pre/post install hooks.
+grsecurity_build_strategy: vanilla
+
+download_directory: /usr/local/src
 
 # The version of the Linux kernel is modified
 # dynamically according to `grsecurity_patch_type`.
 # The test patches for grsecurity apply to the 4.x kernels,
 # and the stable patches work with 3.14.x.
 linux_kernel_version: 3.14.52
+linux_base_url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/"
+
 linux_tarball:
   {
     filename: "linux-{{ linux_kernel_version }}.tar.xz",
-    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
+    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.xz",
   }
 
 linux_tarball_signature:
   {
     filename: "linux-{{ linux_kernel_version }}.tar.sign",
-    url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/linux-{{ linux_kernel_version }}.tar.xz",
+    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.sign",
   }
 
+linux_checksums_url: "{{ linux_base_url }}/sha256sums.asc"
 linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
+
+gpg_keyserver: hkps.pool.sks-keyservers.net

@@ -4,12 +4,30 @@
     state: directory
     dest: "{{ download_directory  }}"
 
-- name: Fetch Linux kernel tarball and signature.
+- name: Fetch SHA256 checksums for Linux source files.
   get_url:
-      url: "{{ item.url  }}"
-      dest: "{{ download_directory }}/{{ item.filename }}"
-      sha256sum: "{{ item.sha256sum }}"
-  with_items:
-    - "{{ linux_tarball }}"
-    - "{{ linux_tarball_signature }}"
+    url: "{{ linux_checksums_url }}"
+    dest: "{{ download_directory }}"
+  register: linux_source_checksums
 
+- name: Verify GPG signature on SHA256 checksum file.
+  command: gpg --verify {{ linux_source_checksums.dest }}
+  changed_when: false
+
+- name: Read checksum for kernel tarball.
+  shell: >
+    grep {{ linux_tarball.filename | quote }}
+    {{ linux_source_checksums.dest | quote }} | cut -d' ' -f1
+  changed_when: false
+  register: linux_tarball_checksum
+
+- name: Fetch Linux kernel tarball.
+  get_url:
+      url: "{{ linux_tarball.url }}"
+      dest: "{{ download_directory }}/{{ linux_tarball.filename }}"
+      sha256sum: "{{ linux_tarball_checksum.stdout }}"
+
+- name: Fetch Linux kernel tarball signature file.
+  get_url:
+      url: "{{ linux_tarball_signature.url }}"
+      dest: "{{ download_directory }}"
