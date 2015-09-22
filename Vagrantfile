@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
       # and building the vanilla kernel. Building for
       # Ubuntu hosts requires a few tricks, so enable them.
       ansible.extra_vars = {
-        'grsecurity_build_strategy' => 'ubuntu',
+        'grsecurity_build_strategy' => 'vanilla',
       }
     end
 
