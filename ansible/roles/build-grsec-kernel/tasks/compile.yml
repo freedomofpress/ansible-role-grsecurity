@@ -20,12 +20,12 @@
     src: config-{{ grsecurity_build_strategy }}
     dest: "{{ linux_source_directory }}/.config"
 
-- name: clean kernel source tree
+- name: Clean kernel source tree.
   command: make-kpkg clean
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: build the kernel for debian
+- name: Build the patched vanilla kernel.
   shell: yes '' | make-kpkg --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
@@ -33,7 +33,7 @@
     CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
   when: grsecurity_build_strategy == 'vanilla'
 
-- name: build the kernel for ubuntu
+- name: Build the patched kernel with Ubuntu overlay files.
   shell: yes '' | make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
