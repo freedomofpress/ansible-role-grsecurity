@@ -1,4 +1,9 @@
 ---
+- name: Clean source directory prior to extraction.
+  file:
+    path: "{{ linux_source_directory }}"
+    state: absent
+
 - name: extract linux tarball
   command: tar -xf linux-{{ linux_kernel_version }}.tar
   args:
@@ -25,7 +30,7 @@
     chdir: "{{ linux_source_directory }}"
 
 - name: build the kernel for debian
-  command: make-kpkg --initrd kernel_image
+  shell: yes '' | make-kpkg --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
@@ -33,7 +38,7 @@
   when: grsecurity_build_strategy == 'vanilla'
 
 - name: build the kernel for ubuntu
-  command: make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+  shell: yes '' | make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
