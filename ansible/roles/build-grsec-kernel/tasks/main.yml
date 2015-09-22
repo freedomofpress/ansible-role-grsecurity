@@ -19,5 +19,5 @@
   when: grsecurity_build_strategy == "ubuntu"
 
 - include: verify.yml
+
 - include: compile.yml
-- include: copy.yml

@@ -1,9 +1,0 @@
----
-- name: copy kernel package to local machine
-  fetch:
-    src: "{{ download_directory }}/{{ grsecurity_deb_package }}"
-    dest: ./
-    fail_on_missing: yes
-    flat: yes
-  tags:
-    - fetch

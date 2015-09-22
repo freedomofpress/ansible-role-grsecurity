@@ -40,3 +40,12 @@
   environment:
     CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
   when: grsecurity_build_strategy == 'ubuntu'
+
+- name: Fetch built kernel package back to localhost.
+  fetch:
+    src: "{{ download_directory }}/{{ grsecurity_deb_package }}"
+    dest: ./
+    fail_on_missing: yes
+    flat: yes
+  tags:
+    - fetch
