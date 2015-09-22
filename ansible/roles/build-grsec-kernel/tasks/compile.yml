@@ -4,11 +4,11 @@
     path: "{{ linux_source_directory }}"
     state: absent
 
-- name: extract linux tarball
-  command: tar -xf linux-{{ linux_kernel_version }}.tar
-  args:
-    chdir: "{{ download_directory }}"
-    creates: "{{ linux_source_directory }}"
+- name: Extract Linux tarball (.tar -> directory).
+  unarchive:
+    copy: no
+    src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
+    dest: "{{ download_directory }}"
 
 - name: apply grsecurity patch
   shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}

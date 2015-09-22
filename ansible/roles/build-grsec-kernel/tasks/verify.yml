@@ -1,6 +1,8 @@
 ---
-- name: Extract Linux tarball.
-  command: unxz {{ download_directory }}/{{ linux_tarball.filename }}
+- name: Extract Linux tarball (.xz -> .tar).
+  # Can't use the `unarchive` module here, because it destroys
+  # the intermediary .tar file, which we need to verify the GPG sig.
+  command: xz --decompress {{ download_directory }}/{{ linux_tarball.filename }}
   args:
     creates: "{{ download_directory }}/{{ linux_tarball.filename|regex_replace('(.*)\\.xz$', '\\\\1') }}"
 
