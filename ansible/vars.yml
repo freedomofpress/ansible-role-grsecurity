@@ -4,8 +4,8 @@
 # the values to be updated throughout all roles for
 # the current play.
 
-grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_{{ linux_kernel_version }}-grsec-10.00.Custom_amd64.deb
 
+#grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_{{ linux_kernel_version }}-grsec-10.00.Custom_amd64.deb
 # Can be "vanilla" or "ubuntu". See `build-kernel-package/defaults/main.yml` for details.
 grsecurity_build_strategy: vanilla
 
