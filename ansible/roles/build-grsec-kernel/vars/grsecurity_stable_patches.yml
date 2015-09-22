@@ -3,19 +3,19 @@
 # dynamically according to `grsecurity_patch_type`.
 # The test patches for grsecurity apply to the 4.x kernels,
 # and the stable patches work with 3.14.x.
-linux_kernel_version: 3.14.52
+linux_kernel_version: 3.14.53
 
 grsecurity_patch:
-{
-  filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509201149.patch",
-  url: 'https://grsecurity.net/download-restrict/download-redirect.php?file=grsecurity-3.1-{{ linux_kernel_version }}-201509201149.patch',
-  sha256sum: 2627fb7b4aff73f24e514bcc8a1be9b1706a6c3b0579988219ddd3e7c079da27,
-}
+  {
+    filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509212108.patch",
+    url: 'https://grsecurity.net/download-restrict/download-redirect.php?file=grsecurity-3.1-{{ linux_kernel_version }}-201509212108.patch',
+    sha256sum: fea13fdb65abd9ce88d4727c491d49e6b9e16855c78893a0b91eede7b0f1c139,
+  }
 
 grsecurity_patch_signature:
-{
-  filename: "{{ grsecurity_patch.filename+'.sig' }}",
-  url: "{{ grsecurity_patch.url+'.sig' }}",
-  sha256sum: 2689e3fa370584685ef168157d1ea12055d28f455ce062c0b8be2e5ff22e2833,
-}
+  {
+    filename: "{{ grsecurity_patch.filename+'.sig' }}",
+    url: "{{ grsecurity_patch.url+'.sig' }}",
+    sha256sum: b2fd4d9e7dfb174f558bdba4e40bd10aa751dfb9d2cbe4e1161ce4e2122fcd87,
+  }
 
