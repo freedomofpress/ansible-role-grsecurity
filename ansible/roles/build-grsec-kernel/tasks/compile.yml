@@ -10,13 +10,13 @@
     src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
     dest: "{{ download_directory }}"
 
-- name: apply grsecurity patch
+- name: Apply grsecurity patch.
   shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: put kernel config
-  template:
+- name: Copy kernel config file.
+  copy:
     src: config-{{ grsecurity_build_strategy }}
     dest: "{{ linux_source_directory }}/.config"
 
