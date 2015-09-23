@@ -30,22 +30,22 @@
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: Build the patched vanilla kernel.
-  shell: >
-    fakeroot make-kpkg --initrd kernel_image
+- name: Build the grsecurity-patched kernel.
+  command: fakeroot make-kpkg --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
+    PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
   when: grsecurity_build_strategy == 'vanilla'
 
-- name: Build the patched kernel with Ubuntu overlay files.
-  shell: >
-    fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+- name: Build the grsecurity-patched kernel with Ubuntu overlay files.
+  command: fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
+    PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
   when: grsecurity_build_strategy == 'ubuntu'
 
 - name: Fetch built kernel package back to localhost.
