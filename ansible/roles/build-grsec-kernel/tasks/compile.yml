@@ -25,8 +25,14 @@
   args:
     chdir: "{{ linux_source_directory }}"
 
+- name: Generate config, accepting default choices.
+  shell: yes '' | make-kpkg configure
+  args:
+    chdir: "{{ linux_source_directory }}"
+
 - name: Build the patched vanilla kernel.
-  shell: yes '' | make-kpkg --initrd kernel_image
+  shell: >
+    fakeroot make-kpkg --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
@@ -34,7 +40,8 @@
   when: grsecurity_build_strategy == 'vanilla'
 
 - name: Build the patched kernel with Ubuntu overlay files.
-  shell: yes '' | make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+  shell: >
+    fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
