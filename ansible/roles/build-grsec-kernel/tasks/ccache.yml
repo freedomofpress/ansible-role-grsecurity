@@ -1,0 +1,10 @@
+---
+- name: Install ccache.
+  apt:
+    name: ccache
+    state: present
+
+- name: Increase ccache cache size.
+  command: ccache -M 5G
+
+

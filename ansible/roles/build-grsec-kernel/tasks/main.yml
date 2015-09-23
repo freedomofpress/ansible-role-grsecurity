@@ -20,4 +20,7 @@
 
 - include: verify.yml
 
+- include: ccache.yml
+  when: grsecurity_use_ccache == true
+
 - include: compile.yml
