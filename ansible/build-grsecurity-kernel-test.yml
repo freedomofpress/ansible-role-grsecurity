@@ -1,0 +1,13 @@
+---
+- name: Build Linux kernel with grsecurity test patches.
+  hosts: grsec-build
+  roles:
+    - { role: build-grsec-metapackage,
+        sudo: yes, # TODO: remove sudo requirement
+        tags: metapackage,
+      }
+    - { role: build-grsec-kernel,
+        grsecurity_patch_type: test,
+        tags: kernel,
+      }
+  sudo: no
