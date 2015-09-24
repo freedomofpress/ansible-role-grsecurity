@@ -1,0 +1,22 @@
+---
+- name: Build Linux kernel with grsecurity stable patches.
+  hosts: grsec-build
+  vars_prompt:
+    - name: grsecurity_download_username
+      prompt: "Username for grsecurity HTTP auth"
+      # Warning: setting `private: no` for username entry
+      # should cause the entered text to echo back, but
+      # won't work when provisioning with Vagrant. See here:
+      # https://github.com/mitchellh/vagrant/issues/2924
+    - name: grsecurity_download_password
+      prompt: "Password for grsecurity HTTP auth"
+  roles:
+    - { role: build-grsec-metapackage,
+        sudo: yes, # TODO: remove sudo requirement
+        tags: metapackage,
+      }
+    - { role: build-grsec-kernel,
+        grsecurity_patch_type: stable,
+        tags: kernel,
+      }
+  sudo: no
