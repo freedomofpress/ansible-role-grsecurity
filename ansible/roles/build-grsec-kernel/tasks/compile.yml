@@ -15,20 +15,35 @@
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: Copy kernel config file.
-  copy:
-    src: config-{{ grsecurity_build_strategy }}
-    dest: "{{ linux_source_directory }}/.config"
-
 - name: Clean kernel source tree.
   command: make-kpkg clean
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: Generate config, accepting default choices.
+- name: Generate platform-specific config, accepting default choices.
   shell: yes '' | make-kpkg configure
   args:
     chdir: "{{ linux_source_directory }}"
+
+- name: Regenerate platform config, with grsecurity settings.
+  command: make olddefconfig
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+- name: Ensure grsecurity options are enabled.
+  lineinfile:
+    dest: "{{ linux_source_directory }}/.config"
+    regexp: "# CONFIG_GRKERNSEC is not set"
+    state: absent
+  register: grsecurity_settings_check_result
+
+- name: Fail is grsecurity options are not enabled.
+  fail:
+    msg: >
+       Grsecurity options have been unset in the .config file.
+       Aborting compilation. Try running `make menuconfig` and manually
+       enabling the grsecurity options.
+  when: grsecurity_settings_check_result.changed
 
 - name: Build the grsecurity-patched kernel.
   command: fakeroot make-kpkg --initrd kernel_image
@@ -39,7 +54,8 @@
     # Conditionally enable ccache by prepending the ccache lib directory
     # to PATH, which will override the system gcc and and g++ binaries.
     PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
-  when: grsecurity_build_strategy == 'vanilla'
+  when: grsecurity_build_strategy == 'vanilla' or
+        grsecurity_build_strategy == 'digitalocean'
 
 - name: Build the grsecurity-patched kernel with Ubuntu overlay files.
   command: fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
