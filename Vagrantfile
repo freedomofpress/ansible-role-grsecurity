@@ -33,8 +33,8 @@ Vagrant.configure("2") do |config|
     install.vm.box = "ubuntu/trusty64"
     install.vm.hostname = "grsec-install"
     # If grsec install works, the shared folder mount will fail.
-    # Uncomment the line below to disable it.
-    # install.vm.synced_folder './', '/vagrant', disabled: true
+    # Set `disabled: true` below to prevent the error post-install.
+    install.vm.synced_folder './', '/vagrant', disabled: false
   end
 end
 
