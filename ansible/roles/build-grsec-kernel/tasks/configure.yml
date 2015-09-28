@@ -1,0 +1,55 @@
+---
+- name: Clean source directory prior to extraction.
+  file:
+    path: "{{ linux_source_directory }}"
+    state: absent
+
+- name: Extract Linux tarball (.tar -> directory).
+  unarchive:
+    copy: no
+    src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
+    dest: "{{ download_directory }}"
+
+- name: Apply grsecurity patch.
+  shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+  # Using `make-kpkg` wrapper script rather than core `make`
+  # for convenience. The `clean` target runs both:
+  #   make clean
+  #   make distclean
+  # but does NOT run `make mrproper`, which would destroy the .config
+  # file. See here for details:
+  #
+  #  http://askubuntu.com/questions/596120/cant-build-ubuntu-kernel-why-does-make-mrproper-get-rid-of-debian-directory
+  #  https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel
+- name: Clean kernel source tree.
+  command: make-kpkg clean
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+- name: Generate platform-specific config, accepting default choices.
+  shell: yes '' | make-kpkg configure
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+- name: Regenerate platform config, with grsecurity settings.
+  command: make olddefconfig
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+- name: Ensure grsecurity options are enabled.
+  lineinfile:
+    dest: "{{ linux_source_directory }}/.config"
+    regexp: "# CONFIG_GRKERNSEC is not set"
+    state: absent
+  register: grsecurity_settings_check_result
+
+- name: Fail is grsecurity options are not enabled.
+  fail:
+    msg: >
+       Grsecurity options have been unset in the .config file.
+       Aborting compilation. Try running `make menuconfig` and manually
+       enabling the grsecurity options.
+  when: grsecurity_settings_check_result.changed
