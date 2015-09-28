@@ -1,6 +1,11 @@
 ---
 - name: Include grsecurity download URLs.
   include_vars: grsecurity_{{ grsecurity_patch_type }}_patches.yml
+  # Setting task to "always" run, because other tasks will
+  # without the imported vars. Usually defaults would handle ensuring
+  # vars aren't missing, but we're conditionally including vars.
+  tags:
+    - always
 
 - include: packages.yml
 
@@ -14,5 +19,8 @@
   when: grsecurity_build_strategy == "ubuntu"
 
 - include: verify.yml
+
+- include: ccache.yml
+  when: grsecurity_use_ccache == true
+
 - include: compile.yml
-- include: copy.yml

@@ -1,12 +1,23 @@
 ---
+- name: Check filename for deb package.
+  fail:
+    msg: >
+      No deb package specified for installation.
+      Define the variable 'grsecurity_deb_package'
+      with the filepath to the local .deb package,
+      then rerun the playbook.
+  when: grsecurity_deb_package is not defined
+
 - name: check whether grsec is already running
   command: uname -r
   register: uname_initial_result
   changed_when: false
 
 - name: copy kernel package to destination server
-  copy: src={{package_filename}} dest=/root/{{package_filename|basename}}
-  when: "'grsec' not in uname_initial_result.stdout"
+  copy:
+    src: "{{ grsecurity_deb_package }}"
+    dest: "/root/{{ grsecurity_deb_package | basename }}"
+  when: '"grsec" not in uname_initial_result.stdout'
 
 - name: install paxctl
   apt: pkg=paxctl state=present
@@ -42,7 +53,7 @@
         grsec_disable_python_memprotect == "true"'
 
 - name: install grsec kernel
-  apt: deb="/root/{{package_filename|basename}}"
+  apt: deb="/root/{{grsecurity_deb_package|basename}}"
   when: "'grsec' not in uname_initial_result.stdout"
 
 - name: get grsec kernel string

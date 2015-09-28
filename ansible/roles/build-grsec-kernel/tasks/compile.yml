@@ -1,41 +1,60 @@
 ---
-- name: extract linux tarball
-  command: tar -xf linux-{{ linux_kernel_version }}.tar
-  args:
-    chdir: "{{ download_directory }}"
-    creates: "{{ linux_source_directory }}"
+- name: Clean source directory prior to extraction.
+  file:
+    path: "{{ linux_source_directory }}"
+    state: absent
 
-- name: apply grsecurity patch
+- name: Extract Linux tarball (.tar -> directory).
+  unarchive:
+    copy: no
+    src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
+    dest: "{{ download_directory }}"
+
+- name: Apply grsecurity patch.
   shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: put kernel config
-  template:
+- name: Copy kernel config file.
+  copy:
     src: config-{{ grsecurity_build_strategy }}
     dest: "{{ linux_source_directory }}/.config"
 
-- name: get number of CPUs
-  command: grep -c '^processor' /proc/cpuinfo
-  register: num_cpus
-
-- name: clean kernel source tree
+- name: Clean kernel source tree.
   command: make-kpkg clean
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: build the kernel for debian
-  command: make-kpkg --initrd kernel_image
+- name: Generate config, accepting default choices.
+  shell: yes '' | make-kpkg configure
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+- name: Build the grsecurity-patched kernel.
+  command: fakeroot make-kpkg --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
-    CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
+    CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
+    # Conditionally enable ccache by prepending the ccache lib directory
+    # to PATH, which will override the system gcc and and g++ binaries.
+    PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
   when: grsecurity_build_strategy == 'vanilla'
 
-- name: build the kernel for ubuntu
-  command: make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
+- name: Build the grsecurity-patched kernel with Ubuntu overlay files.
+  command: fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
-    CONCURRENCY_LEVEL: "{{ num_cpus.stdout }}"
+    CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
+    PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
   when: grsecurity_build_strategy == 'ubuntu'
+
+- name: Fetch built kernel package back to localhost.
+  fetch:
+    src: "{{ download_directory }}/{{ grsecurity_deb_package }}"
+    dest: ./
+    fail_on_missing: yes
+    flat: yes
+  tags:
+    - fetch

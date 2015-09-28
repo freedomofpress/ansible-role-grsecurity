@@ -1,0 +1,18 @@
+---
+# Separate task list for ccache-related tasks,
+# to make dynamic inclusion easier. If grsecurity_use_ccache
+# is set to `false`, then the package won't even be installed.
+- name: Install ccache.
+  apt:
+    name: ccache
+    state: present
+  sudo: yes
+
+  # Increasing the cache size from 1GB (default) to 5GB.
+  # Testing of several successive compiles showed 5GB
+  # to be a reasonable limit:
+  #   $ ccache -s | grep size
+  #   cache size                           4.5 Gbytes
+  #   max cache size                       5.0 Gbytes
+- name: Increase ccache cache size.
+  command: ccache -M 5G
