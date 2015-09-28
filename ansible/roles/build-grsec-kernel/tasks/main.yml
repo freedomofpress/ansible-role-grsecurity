@@ -23,4 +23,6 @@
 - include: ccache.yml
   when: grsecurity_use_ccache == true
 
-- include: compile.yml
+- include: configure.yml tags=configure
+
+- include: compile.yml tags=compile
