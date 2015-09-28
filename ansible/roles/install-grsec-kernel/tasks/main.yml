@@ -52,8 +52,13 @@
         grsec_disable_python_memprotect is defined and
         grsec_disable_python_memprotect == "true"'
 
-- name: install grsec kernel
-  apt: deb="/root/{{grsecurity_deb_package|basename}}"
+- name: Install grsecurity-patched kernel deb package.
+  apt:
+    deb: /root/{{ grsecurity_deb_package | basename }}
+    # Adding --skip-same-version to avoid an interactive dpkg prompt
+    # about overwriting lib modules. A subsequent task will validate
+    # that a grsec-patched kernel is actually running.
+    dpkg_options: skip-same-version,force-confdef,force-confold
   when: "'grsec' not in uname_initial_result.stdout"
 
 - name: get grsec kernel string
