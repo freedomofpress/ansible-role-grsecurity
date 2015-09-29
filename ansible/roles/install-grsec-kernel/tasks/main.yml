@@ -73,7 +73,7 @@
     # TODO: We're assuming that "vanilla" == "Debian" here.
     # We need a smarter way to set the line, possibly via backrefs
     # in the regex matching.
-    line: 'GRUB_DEFAULT="Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% elif grsecurity_build_strategy == "vanilla"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
+    line: 'GRUB_DEFAULT="Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
 
 - name: run update-grub
   command: update-grub
@@ -83,7 +83,7 @@
   # TODO: We're assuming that "vanilla" == "Debian" here.
   # We need a smarter way to set the line, possibly via backrefs
   # in the regex matching.
-  command: grub-reboot "Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% elif grsecurity_build_strategy == "debian"%}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
+  command: grub-reboot "Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
   when: "'grsec' not in uname_initial_result.stdout"
 
 - name: reboot into the grsec kernel
