@@ -39,14 +39,14 @@
   args:
     chdir: "{{ linux_source_directory }}"
 
-- name: Ensure grsecurity options are enabled.
+- name: Check that grsecurity options are enabled.
   lineinfile:
     dest: "{{ linux_source_directory }}/.config"
     regexp: "# CONFIG_GRKERNSEC is not set"
     state: absent
   register: grsecurity_settings_check_result
 
-- name: Fail is grsecurity options are not enabled.
+- name: Fail if grsecurity options are not enabled.
   fail:
     msg: >
        Grsecurity options have been unset in the .config file.
