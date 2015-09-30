@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
       ansible.verbose = 'vv'
       # Exposing the build strategy var for testing various build strategies quickly.
       ansible.extra_vars = {
-        'grsecurity_build_strategy' => 'vanilla',
+        'grsecurity_build_strategy' => 'manual',
       }
     end
     build.vm.provider "virtualbox" do |v|
