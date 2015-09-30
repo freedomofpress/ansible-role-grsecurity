@@ -13,7 +13,7 @@
 - name: Apply grsecurity patch.
   patch:
     remote_src: true
-    src: "{{ download_directory }}/{{ grsecurity_patch.filename }}"
+    src: "{{ download_directory }}/{{ grsecurity_patch_filename }}"
     basedir: "{{ linux_source_directory }}"
     strip: 1
 
