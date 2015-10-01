@@ -16,7 +16,7 @@
 - include: fetch_grsecurity_files.yml
 
 - include: fetch_ubuntu_overlay.yml
-  when: grsecurity_build_strategy == "ubuntu"
+  when: include_ubuntu_overlay == true
 
 - include: verify.yml
 
