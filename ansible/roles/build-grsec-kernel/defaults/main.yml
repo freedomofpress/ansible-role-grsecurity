@@ -13,12 +13,25 @@ supported_linux_distributions:
   - Debian
   - Ubuntu
 
-# Only "vanilla" and "ubuntu" are supported. The default
-# strategy indicates a straight-up vanilla kernel with
-# grsecurity patches applied. The "ubuntu" option is largely
-# the same, with a few tricks pulled in from the ubuntu-overlay,
-# most just pre/post install hooks.
-grsecurity_build_strategy: vanilla
+# The default "manual" strategy will prep a machine for
+# for compilation, but stop short of configuring and running
+# `make`, to allow the admin to run `make menuconfig`.
+# By setting a specific, non-manual strategy, admins can
+# leverage the static config file shipped with this role
+# to target a given platform.
+#
+# Possible options:
+#   - aws
+#   - digitalocean
+#   - gandi
+#   - linode
+#   - manual
+grsecurity_build_strategy: manual
+
+# When targeting an Ubuntu host, there are a few tricks
+# that should be pulled in via the ubuntu-overlay, mostly
+# just postinstall scripts. Off by default.
+include_ubuntu_overlay: false
 
 download_directory: /usr/local/src
 
