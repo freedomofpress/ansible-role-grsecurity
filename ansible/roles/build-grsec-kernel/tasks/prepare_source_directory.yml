@@ -11,9 +11,11 @@
     dest: "{{ download_directory }}"
 
 - name: Apply grsecurity patch.
-  shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}
-  args:
-    chdir: "{{ linux_source_directory }}"
+  patch:
+    remote_src: true
+    src: "{{ download_directory }}/{{ grsecurity_patch.filename }}"
+    basedir: "{{ linux_source_directory }}"
+    strip: 1
 
   # Using `make-kpkg` wrapper script rather than core `make`
   # for convenience. The `clean` target runs both:
