@@ -1,37 +1,10 @@
 ---
-- name: Clean source directory prior to extraction.
-  file:
-    path: "{{ linux_source_directory }}"
-    state: absent
-
-- name: Extract Linux tarball (.tar -> directory).
-  unarchive:
-    copy: no
-    src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
-    dest: "{{ download_directory }}"
-
-- name: Apply grsecurity patch.
-  shell: patch -p1 < ../{{ grsecurity_patch.filename | quote }}
-  args:
-    chdir: "{{ linux_source_directory }}"
-
-- name: Copy kernel config file.
-  copy:
-    src: config-{{ grsecurity_build_strategy }}
-    dest: "{{ linux_source_directory }}/.config"
-
-- name: Clean kernel source tree.
-  command: make-kpkg clean
-  args:
-    chdir: "{{ linux_source_directory }}"
-
-- name: Generate config, accepting default choices.
-  shell: yes '' | make-kpkg configure
-  args:
-    chdir: "{{ linux_source_directory }}"
-
 - name: Build the grsecurity-patched kernel.
-  command: fakeroot make-kpkg --initrd kernel_image
+  command: >
+    fakeroot make-kpkg
+    --revision 10.00.{{ grsecurity_build_strategy }}
+    {% if include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
+    --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
   environment:
@@ -39,16 +12,6 @@
     # Conditionally enable ccache by prepending the ccache lib directory
     # to PATH, which will override the system gcc and and g++ binaries.
     PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
-  when: grsecurity_build_strategy == 'vanilla'
-
-- name: Build the grsecurity-patched kernel with Ubuntu overlay files.
-  command: fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image
-  args:
-    chdir: "{{ linux_source_directory }}"
-  environment:
-    CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
-    PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
-  when: grsecurity_build_strategy == 'ubuntu'
 
 - name: Fetch built kernel package back to localhost.
   fetch:

@@ -1,0 +1,25 @@
+---
+- name: Copy baseline grsecurity config template.
+  copy:
+    src: config-{{ grsecurity_build_strategy }}
+    dest: "{{ linux_source_directory }}/.config"
+
+- name: Ensure any new options are updated with defaults.
+  command: make olddefconfig
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+- name: Check that grsecurity options are enabled.
+  lineinfile:
+    dest: "{{ linux_source_directory }}/.config"
+    regexp: "# CONFIG_GRKERNSEC is not set"
+    state: absent
+  register: grsecurity_settings_check_result
+
+- name: Fail if grsecurity options are not enabled.
+  fail:
+    msg: >
+       Grsecurity options have been unset in the .config file.
+       Aborting compilation. Try running `make menuconfig` and manually
+       enabling the grsecurity options.
+  when: grsecurity_settings_check_result.changed
