@@ -6,5 +6,3 @@
         grsecurity_deb_package: linux-image-3.14.55-grsec_3.14.55-grsec-10.00.Custom_amd64.deb,
       }
   sudo: yes
-  vars_files:
-    - vars.yml
