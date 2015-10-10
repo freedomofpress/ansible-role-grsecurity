@@ -1,90 +1,18 @@
 ---
 - include: set_host_facts.yml
-
-- name: Check filename for deb package.
-  fail:
-    msg: >
-      No deb package specified for installation.
-      Define the variable 'grsecurity_deb_package'
-      with the filepath to the local .deb package,
-      then rerun the playbook.
-  when: grsecurity_deb_package is not defined
+- include: packages.yml
 
 - name: Check whether grsecurity is already running.
   command: uname -r
   register: uname_initial_result
   changed_when: false
 
-- name: Copy kernel image deb package.
-  copy:
-    src: "{{ grsecurity_deb_package }}"
-    dest: "/root/{{ grsecurity_deb_package | basename }}"
-  when: '"grsec" not in uname_initial_result.stdout'
-
-- name: Install PaX utilities.
-  apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - paxctl
-    - paxtest
-
-- name: Make the required grub paxctl changes.
-  command: paxctl -Cpm {{ item }}
-  with_items: grub_pax
-
-- name: Convert python executable headers.
-  # Using the `raw` module here because otherwise
-  # Ansible would need to execute python2.7 to handle
-  # the task, which causes the paxctl command to fail
-  # with "/usr/bin/python2.7: Text file busy". By using
-  # `raw`, only localhost's ssh and the remote's sh are used.
-  raw: paxctl -c /usr/bin/python2.7
-  when: 'ansible_distribution == "Debian" and
+- include: disable_python_memprotect.yml
+  when: ansible_distribution == "Debian" and
         grsec_disable_python_memprotect is defined and
-        grsec_disable_python_memprotect == "true"'
+        grsec_disable_python_memprotect == "true"
 
-- name: Disable memprotect on python2.7.
-  raw: paxctl -m /usr/bin/python2.7
-  register: disable_memprotect_python_result
-  changed_when: '"converted" in disable_memprotect_python_result.stdout'
-  when: 'ansible_distribution == "Debian" and
-        grsec_disable_python_memprotect is defined and
-        grsec_disable_python_memprotect == "true"'
-
-- name: Install grsecurity-patched kernel deb package.
-  apt:
-    deb: /root/{{ grsecurity_deb_package | basename }}
-    # Adding --skip-same-version to avoid an interactive dpkg prompt
-    # about overwriting lib modules. A subsequent task will validate
-    # that a grsec-patched kernel is actually running.
-    dpkg_options: skip-same-version,force-confdef,force-confold
-  when: "'grsec' not in uname_initial_result.stdout"
-
-- name: Get grsecurity kernel string for grub menu.
-  shell: grep menuentry /boot/grub/grub.cfg | grep grsec | grep -v recovery | head -1 | cut -d "'" -f2
-  register: grsec_str
-
-- name: Set newly installed grsecurity kernel as default boot option in GRUB.
-  lineinfile:
-    dest: /etc/default/grub
-    regexp: '^GRUB_DEFAULT='
-    state: present
-    # TODO: We're assuming that "vanilla" == "Debian" here.
-    # We need a smarter way to set the line, possibly via backrefs
-    # in the regex matching.
-    line: 'GRUB_DEFAULT="Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
-
-- name: Update GRUB menu information.
-  command: update-grub
-  when: "'grsec' not in uname_initial_result.stdout"
-
-- name: Set grsecurity kernel as default option for next boot.
-  # TODO: We're assuming that "vanilla" == "Debian" here.
-  # We need a smarter way to set the line, possibly via backrefs
-  # in the regex matching.
-  command: grub-reboot "Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
-  when: "'grsec' not in uname_initial_result.stdout"
+- include: grub_config.yml
 
 - name: Reboot into the grsecurity kernel.
   # Simply rebooting causes the subsequent wait_for task to fail. See here:
