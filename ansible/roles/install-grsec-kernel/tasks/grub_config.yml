@@ -1,7 +1,11 @@
 ---
 - name: Make the required grub paxctl changes.
   command: paxctl -Cpm {{ item }}
-  with_items: grub_pax
+  with_items:
+    - /usr/sbin/grub-probe
+    - /usr/sbin/grub-mkdevicemap
+    - /usr/bin/grub-script-check
+    - /usr/bin/grub-mount
 
 - name: Find the menu title for the grsecurity kernel in GRUB config.
   set_fact:
