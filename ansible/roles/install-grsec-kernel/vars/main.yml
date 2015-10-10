@@ -1,7 +1,0 @@
----
-grub_pax:
-  - /usr/sbin/grub-probe
-  - /usr/sbin/grub-mkdevicemap
-  - /usr/bin/grub-script-check
-  - /usr/bin/grub-mount
-  - /usr/sbin/grub-install
