@@ -1,0 +1,13 @@
+---
+- name: Convert python executable headers.
+  # Using the `raw` module here because otherwise
+  # Ansible would need to execute python2.7 to handle
+  # the task, which causes the paxctl command to fail
+  # with "/usr/bin/python2.7: Text file busy". By using
+  # `raw`, only localhost's ssh and the remote's sh are used.
+  raw: paxctl -c /usr/bin/python2.7
+
+- name: Disable memprotect on python2.7.
+  raw: paxctl -m /usr/bin/python2.7
+  register: disable_memprotect_python_result
+  changed_when: '"converted" in disable_memprotect_python_result.stdout'

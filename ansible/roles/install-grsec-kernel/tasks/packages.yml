@@ -1,0 +1,33 @@
+---
+- name: Check filename for deb package.
+  fail:
+    msg: >
+      No deb package specified for installation.
+      Define the variable 'grsecurity_deb_package'
+      with the filepath to the local .deb package,
+      then rerun the playbook.
+  when: grsecurity_deb_package is not defined
+
+- name: Copy kernel image deb package.
+  copy:
+    src: "{{ grsecurity_deb_package }}"
+    dest: "/root/{{ grsecurity_deb_package | basename }}"
+  when: '"grsec" not in uname_initial_result.stdout'
+
+- name: Install PaX utilities.
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - paxctl
+    - paxtest
+
+- name: Install grsecurity-patched kernel deb package.
+  apt:
+    deb: /root/{{ grsecurity_deb_package | basename }}
+    # Adding --skip-same-version to avoid an interactive dpkg prompt
+    # about overwriting lib modules. A subsequent task will validate
+    # that a grsec-patched kernel is actually running.
+    dpkg_options: skip-same-version,force-confdef,force-confold
+  when: "'grsec' not in uname_initial_result.stdout"
+
