@@ -2,11 +2,6 @@
 - include: set_host_facts.yml
 - include: packages.yml
 
-- name: Check whether grsecurity is already running.
-  command: uname -r
-  register: uname_initial_result
-  changed_when: false
-
 - include: disable_python_memprotect.yml
   when: ansible_distribution == "Debian" and
         grsec_disable_python_memprotect is defined and
