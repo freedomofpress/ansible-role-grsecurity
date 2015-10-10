@@ -23,7 +23,17 @@
   sudo: yes
   lineinfile:
     regexp: '^GRUB_DEFAULT='
-    line: 'GRUB_DEFAULT="{{ grub_grsecurity_menu_entry.name }}"'
+    # Conditional logic necessary for Debian because running `update-grub`
+    # without the specific prefix results in a warning:
+
+    #   Warning: Please don't use old title `Debian GNU/Linux, with
+    #   Linux 3.14.53-grsec' for GRUB_DEFAULT, use `Advanced
+    #   options for Debian GNU/Linux>Debian GNU/Linux, with Linux
+    #   3.14.53-grsec' (for versions before 2.00) or
+    #   `gnulinux-advanced-fc2b679a-e448-4f54-b465-62735483f42f>gnul
+    #   inux-3.14.53-grsec-advanced-fc2b679a-e448-4f54-b465-62735483
+    #   f42f' (for 2.00 or later)
+    line: 'GRUB_DEFAULT="{% if ansible_distribution == "Debian" %}Advanced options for Debian GNU/Linux>{% endif %}{{ grub_grsecurity_menu_entry.name }}"'
     dest: /etc/default/grub
   notify:
     - Update GRUB.
