@@ -1,0 +1,9 @@
+---
+- name: Update GRUB.
+  command: update-grub
+
+- name: Update host facts.
+  action: "{{ item }}"
+  with_items:
+    - setup
+    - grub_menu_options

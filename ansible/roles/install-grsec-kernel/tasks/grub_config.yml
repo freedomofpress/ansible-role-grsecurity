@@ -9,8 +9,6 @@
   with_items: grub_menu_options
   when: "{{ item.name | match('.*-grsec$') }}"
 
-- debug: var=grub_grsecurity_menu_entry
-
 - name: Ensure grsecurity kernel menu entry is populated.
   fail:
     msg: >
@@ -23,12 +21,9 @@
     regexp: '^GRUB_DEFAULT='
     line: 'GRUB_DEFAULT="{{ grub_grsecurity_menu_entry.name }}"'
     dest: /etc/default/grub
+  notify:
+    - Update GRUB.
+    - Update host facts.
 
-- name: Update GRUB menu information.
-  command: update-grub
-  when: "'grsec' not in uname_initial_result.stdout"
-
-- name: Set grsecurity kernel as default option for next boot.
-  command: grub-reboot "{{ grub_grsecurity_menu_entry.name }}"
-  when: "'grsec' not in uname_initial_result.stdout"
-
+  # Force handlers to run immediatley, so grub config is updated.
+- meta: flush_handlers
