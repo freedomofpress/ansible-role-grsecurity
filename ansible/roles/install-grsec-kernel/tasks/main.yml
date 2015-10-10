@@ -18,7 +18,7 @@
   poll: 0
   ignore_errors: true
   sudo: yes
-  when: "'grsec' not in uname_initial_result.stdout"
+  when: "'grsec' not in ansible_kernel"
 
 - name: Wait for server to come back.
   local_action: wait_for
@@ -27,7 +27,7 @@
     delay=30
     state=started
   sudo: false
-  when: "'grsec' not in uname_initial_result.stdout"
+  when: "'grsec' not in ansible_kernel"
 
   # Adding extra wait time to prevent timeouts
   # during debugging. Likely not necessary, but test
@@ -35,11 +35,14 @@
 - name: Wait extra time for server to come back up.
   pause:
     seconds: 30
-  when: "'grsec' not in uname_initial_result.stdout"
+  when: "'grsec' not in ansible_kernel"
 
-- name: Check that grsecurity kernel is running.
-  command: uname -r
-  register: uname_final_result
-  changed_when: false
-  failed_when: "'grsec' not in uname_final_result.stdout"
+- name: Refresh host facts.
+  action: setup
 
+- name: Fail if grsecurity kernel not running.
+  fail:
+    msg: >
+      Grsecurity kernel is not running. Instead, found
+      kernel {{ ansible_kernel }}.
+  when: "'grsec' not in ansible_kernel"
