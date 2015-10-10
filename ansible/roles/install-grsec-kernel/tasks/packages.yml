@@ -30,4 +30,10 @@
     # that a grsec-patched kernel is actually running.
     dpkg_options: skip-same-version,force-confdef,force-confold
   when: "'grsec' not in uname_initial_result.stdout"
+  notify:
+    - Update GRUB.
+    - Update host facts.
+
+  # Force handlers to run immediatley, so grub config is updated.
+- meta: flush_handlers
 
