@@ -1,4 +1,6 @@
 ---
+- include: set_host_facts.yml
+
 - name: Check filename for deb package.
   fail:
     msg: >
