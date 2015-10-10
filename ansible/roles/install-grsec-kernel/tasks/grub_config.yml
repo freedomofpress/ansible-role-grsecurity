@@ -3,28 +3,32 @@
   command: paxctl -Cpm {{ item }}
   with_items: grub_pax
 
-- name: Get grsecurity kernel string for grub menu.
-  shell: grep menuentry /boot/grub/grub.cfg | grep grsec | grep -v recovery | head -1 | cut -d "'" -f2
-  register: grsec_str
+- name: Find the menu title for the grsecurity kernel in GRUB config.
+  set_fact:
+    grub_grsecurity_menu_entry: "{{ item }}"
+  with_items: grub_menu_options
+  when: "{{ item.name | match('.*-grsec$') }}"
 
-- name: Set newly installed grsecurity kernel as default boot option in GRUB.
+- debug: var=grub_grsecurity_menu_entry
+
+- name: Ensure grsecurity kernel menu entry is populated.
+  fail:
+    msg: >
+      Could not find GRUB menu entry for grsecurity kernel.
+  when: grub_grsecurity_menu_entry is not defined
+
+- name: Set grsecurity kernel as default option in GRUB config.
+  sudo: yes
   lineinfile:
-    dest: /etc/default/grub
     regexp: '^GRUB_DEFAULT='
-    state: present
-    # TODO: We're assuming that "vanilla" == "Debian" here.
-    # We need a smarter way to set the line, possibly via backrefs
-    # in the regex matching.
-    line: 'GRUB_DEFAULT="Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
+    line: 'GRUB_DEFAULT="{{ grub_grsecurity_menu_entry.name }}"'
+    dest: /etc/default/grub
 
 - name: Update GRUB menu information.
   command: update-grub
   when: "'grsec' not in uname_initial_result.stdout"
 
 - name: Set grsecurity kernel as default option for next boot.
-  # TODO: We're assuming that "vanilla" == "Debian" here.
-  # We need a smarter way to set the line, possibly via backrefs
-  # in the regex matching.
-  command: grub-reboot "Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
+  command: grub-reboot "{{ grub_grsecurity_menu_entry.name }}"
   when: "'grsec' not in uname_initial_result.stdout"
 

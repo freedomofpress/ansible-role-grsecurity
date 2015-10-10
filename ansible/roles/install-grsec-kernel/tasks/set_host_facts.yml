@@ -1,25 +1,9 @@
 ---
+- name: Check whether grsecurity is already running.
+  command: uname -r
+  register: uname_initial_result
+  changed_when: false
+
 - name: Get GRUB menu options as host facts.
   action: grub_menu_options
-
-- name: Find the menu title for the grsecurity kernel in GRUB config.
-  set_fact:
-    grub_grsecurity_menu_entry: "{{ item }}"
-  with_items: grub_menu_options
-  when: item | match(".*-grsec$")
-
-- debug: var=grub_grsecurity_menu_entry
-
-- name: Ensure grsecurity kernel menu entry is populated.
-  fail:
-    msg: >
-      Could not find GRUB menu entry for grsecurity kernel.
-  when: grub_grsecurity_menu_entry is not defined
-
-- name: Set grsecurity kernel as default option in GRUB config.
-  sudo: yes
-  lineinfile:
-    regexp: '^GRUB_DEFAULT='
-    line: 'GRUB_DEFAULT="{{ grub_grsecurity_menu_entry }}"'
-    dest: /etc/default/grub
 
