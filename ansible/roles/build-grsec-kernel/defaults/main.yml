@@ -80,6 +80,6 @@ linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version 
 gpg_keyserver: hkps.pool.sks-keyservers.net
 
 # Assumes 64-bit (not reading machine architecture dynamically.)
-grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_{{ linux_kernel_version }}-grsec-10.00.Custom_amd64.deb
+grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
 
 grsecurity_use_ccache: true
