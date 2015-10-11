@@ -31,10 +31,15 @@ Vagrant.configure("2") do |config|
   # with the test packages.
   config.vm.define 'grsec-install', autostart: false do |install|
     install.vm.box = "ubuntu/trusty64"
+    install.vm.box = "debian/jessie64"
     install.vm.hostname = "grsec-install"
     # If grsec install works, the shared folder mount will fail.
     # Set `disabled: true` below to prevent the error post-install.
-    install.vm.synced_folder './', '/vagrant', disabled: false
+    install.vm.synced_folder './', '/vagrant', disabled: true
+    install.vm.provider "virtualbox" do |v|
+      v.gui = false
+    end
+
   end
 end
 
