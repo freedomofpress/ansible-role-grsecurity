@@ -9,7 +9,6 @@ author:
     - Conor Schaefer (@conorsch)
     - Freedom of the Press Foundation (@freedomofpress)
 requirements:
-    - lxml
     - requests
 options:
   patch_type:
@@ -33,21 +32,19 @@ from urlparse import urljoin
 import re
 
 HAS_REQUESTS = True
-HAS_LXML = True
 try:
     import requests
 except ImportError:
     HAS_REQUESTS = False
-try:
-    from lxml import etree
-except ImportError:
-    HAS_LXML = False
 
 
 GRSECURITY_BASE_URL = 'https://grsecurity.net/'
-GRSECURITY_RSS_FEED = 'https://grsecurity.net/{}_rss.php'
-GRSECURITY_TEST_URL = 'https://grsecurity.net/test/'
-GRSECURITY_STABLE_URL = 'https://grsecurity.net/download-restrict/download-redirect.php?file='
+# The "OLD" patches use kernel version 3.2.x
+GRSECURITY_LATEST_STABLE_PATCH_OLD_URL = 'https://grsecurity.net/latest_stable_patch'
+GRSECURITY_LATEST_STABLE_PATCH_URL = 'https://grsecurity.net/latest_stable2_patch'
+GRSECURITY_LATEST_TEST_PATCH_URL = 'https://grsecurity.net/latest_test_patch'
+GRSECURITY_STABLE_URL_PREFIX = 'https://grsecurity.net/download-restrict/download-redirect.php?file='
+GRSECURITY_TEST_URL_PREFIX = 'https://grsecurity.net/test/'
 GRSECURITY_FILENAME_REGEX = re.compile(r'''
                                         grsecurity-
                                         (?P<grsecurity_version>\d+\.\d+)-
@@ -105,7 +102,7 @@ class GrsecurityURLs():
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-        self.ansible_facts = self.parse_grsecurity_rss_feed()
+        self.ansible_facts = self.parse_grsecurity_latest_patch()
 
         if not self.ansible_facts:
             msg = """Could not parse grsecurity RSS feed. Inspect manually.
@@ -114,38 +111,30 @@ class GrsecurityURLs():
 
 
     @property
-    def rss_feed_url(self):
-        feed_identifier = ''
-        if self.patch_type == "test":
-            feed_identifier = "testing"
+    def patch_name_url(self):
+        url = ''
+        if self.patch_type == "stable":
+            url = GRSECURITY_LATEST_STABLE_PATCH_URL
         else:
-            feed_identifier = "stable2"
-        return GRSECURITY_RSS_FEED.format(feed_identifier)
+            url = GRSECURITY_LATEST_TEST_PATCH_URL
+        return url
 
 
-    @property
-    def rss_feed_content(self):
-        r = requests.get(self.rss_feed_url)
-        return r.content
-
-
-    def parse_grsecurity_rss_feed(self):
+    def parse_grsecurity_latest_patch(self):
         """
-        Figure out RSS URL based on patch_type, then parse it and return facts.
+        Get latest patch name, according to sought patch type.
         """
-        doc = etree.parse(StringIO(self.rss_feed_content))
-        xmlroot = doc.getroot()
-
-        def extract_xml_element(elem):
-            try:
-                return xmlroot.xpath('.//channel/item/{}'.format(elem))[0].text
-            except IndexError:
-                msg = "Could not find element '{}' in RSS feed".format(elem)
-                raise Exception(msg=msg)
+        r = requests.get(self.patch_name_url)
+        patch_name = r.content.rstrip()
 
         config = dict()
-        config['grsecurity_patch_filename'] = extract_xml_element('title')
-        config['grsecurity_patch_url'] = extract_xml_element('link')
+        config['grsecurity_patch_filename'] = patch_name
+
+        if self.patch_type == "stable":
+            config['grsecurity_patch_url'] = GRSECURITY_STABLE_URL_PREFIX+patch_name
+        else:
+            config['grsecurity_patch_url'] = GRSECURITY_TEST_URL_PREFIX+patch_name
+
         config['grsecurity_signature_filename'] = config['grsecurity_patch_filename'] + '.sig'
         config['grsecurity_signature_url'] = config['grsecurity_patch_url'] + '.sig'
         config.update(re.match(GRSECURITY_FILENAME_REGEX,
@@ -163,9 +152,6 @@ def main():
     if not HAS_REQUESTS:
       module.fail_json(msg='requests required for this module')
 
-    if not HAS_LXML:
-      module.fail_json(msg='lxml required for this module')
-
     patch_type = module.params['patch_type']
     grsec_config = GrsecurityURLs(patch_type=patch_type)
     linux_config = LinuxKernelURLs(
@@ -180,6 +166,7 @@ def main():
     else:
         msg = "Failed to fetch grsecurity URL facts."
         module.fail_json(msg=msg)
+
 
 from ansible.module_utils.basic import *
 main()
