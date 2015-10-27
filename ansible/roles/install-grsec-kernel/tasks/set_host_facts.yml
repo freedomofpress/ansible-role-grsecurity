@@ -2,3 +2,6 @@
 - name: Get GRUB menu options as host facts.
   action: grub_menu_options
 
+- name: Set desired kernel version as host fact.
+  set_fact: grsecurity_desired_kernel_version="{{ grsecurity_deb_package | basename | regex_replace('^linux-image-([\d\.]+-grsec)_.*$', '\\1') }}"
+
