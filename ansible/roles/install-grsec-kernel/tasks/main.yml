@@ -1,5 +1,6 @@
 ---
 - include: set_host_facts.yml
+
 - include: packages.yml
 
 - include: disable_python_memprotect.yml
@@ -9,40 +10,6 @@
 
 - include: grub_config.yml
 
-- name: Reboot into the grsecurity kernel.
-  # Simply rebooting causes the subsequent wait_for task to fail. See here:
-  # https://github.com/ansible/ansible/issues/10616
-  # Sleeping and then shutting down, via the shell module, is a workaround.
-  shell: sleep 3 && shutdown -r now "Rebooting into the grsec kernel..."
-  async: 1
-  poll: 0
-  ignore_errors: true
-  sudo: yes
-  when: "'grsec' not in ansible_kernel"
+- include: validate_install.yml
+  when: grsecurity_desired_kernel_version != ansible_kernel
 
-- name: Wait for server to come back.
-  local_action: wait_for
-    host={{ ansible_ssh_host }}
-    port={{ ansible_ssh_port | default('22')}}
-    delay=30
-    state=started
-  sudo: false
-  when: "'grsec' not in ansible_kernel"
-
-  # Adding extra wait time to prevent timeouts
-  # during debugging. Likely not necessary, but test
-  # before removing.
-- name: Wait extra time for server to come back up.
-  pause:
-    seconds: 30
-  when: "'grsec' not in ansible_kernel"
-
-- name: Refresh host facts.
-  action: setup
-
-- name: Fail if grsecurity kernel not running.
-  fail:
-    msg: >
-      Grsecurity kernel is not running. Instead, found
-      kernel {{ ansible_kernel }}.
-  when: "'grsec' not in ansible_kernel"
