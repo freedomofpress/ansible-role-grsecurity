@@ -64,7 +64,16 @@ def main():
         supports_check_mode=False
     )
     grub_config = module.params['grub_config']
-    results = formatted_results(grub_config)
+
+    try:
+        results = formatted_results(grub_config)
+    except IOError:
+        msg = ("Could not find GRUB config file at {} . "
+              "Check that the file exists and is readable. "
+              "You can specify a custom filepath "
+              "via the 'grub_config' module parameter.").format(grub_config)
+        module.fail_json(msg=msg)
+
     if len(results['grub_menu_options']) >= 1:
         module.exit_json(changed=False, ansible_facts=results)
     else:
