@@ -1,92 +1,15 @@
 ---
-- name: Check filename for deb package.
-  fail:
-    msg: >
-      No deb package specified for installation.
-      Define the variable 'grsecurity_deb_package'
-      with the filepath to the local .deb package,
-      then rerun the playbook.
-  when: grsecurity_deb_package is not defined
+- include: set_host_facts.yml
+- include: packages.yml
 
-- name: check whether grsec is already running
-  command: uname -r
-  register: uname_initial_result
-  changed_when: false
-
-- name: copy kernel package to destination server
-  copy:
-    src: "{{ grsecurity_deb_package }}"
-    dest: "/root/{{ grsecurity_deb_package | basename }}"
-  when: '"grsec" not in uname_initial_result.stdout'
-
-- name: install paxctl
-  apt: pkg=paxctl state=present
-
-- name: install paxtest
-  apt: pkg=paxtest state=present
-
-- name: make the required grub paxctl changes
-  command: paxctl -Cpm {{ item }}
-  with_items: grub_pax
-
-- name: convert python executable headers
-  # Using the `raw` module here because otherwise
-  # Ansible would need to execute python2.7 to handle
-  # the task, which causes the paxctl command to fail
-  # with "/usr/bin/python2.7: Text file busy". By using
-  # `raw`, only localhost's ssh and the remote's sh are used.
-  raw: paxctl -c /usr/bin/python2.7
-  tags:
-    - jawn
-  when: 'ansible_distribution == "Debian" and
+- include: disable_python_memprotect.yml
+  when: ansible_distribution == "Debian" and
         grsec_disable_python_memprotect is defined and
-        grsec_disable_python_memprotect == "true"'
+        grsec_disable_python_memprotect == true
 
-- name: disable memprotect on python2.7
-  raw: paxctl -m /usr/bin/python2.7
-  register: disable_memprotect_python_result
-  changed_when: '"converted" in disable_memprotect_python_result.stdout'
-  tags:
-    - jawn
-  when: 'ansible_distribution == "Debian" and
-        grsec_disable_python_memprotect is defined and
-        grsec_disable_python_memprotect == "true"'
+- include: grub_config.yml
 
-- name: Install grsecurity-patched kernel deb package.
-  apt:
-    deb: /root/{{ grsecurity_deb_package | basename }}
-    # Adding --skip-same-version to avoid an interactive dpkg prompt
-    # about overwriting lib modules. A subsequent task will validate
-    # that a grsec-patched kernel is actually running.
-    dpkg_options: skip-same-version,force-confdef,force-confold
-  when: "'grsec' not in uname_initial_result.stdout"
-
-- name: get grsec kernel string
-  shell: grep menuentry /boot/grub/grub.cfg | grep grsec | grep -v recovery | head -1 | cut -d "'" -f2
-  register: grsec_str
-
-- name: set grsec kernel as default
-  lineinfile:
-    dest: /etc/default/grub
-    regexp: '^GRUB_DEFAULT='
-    state: present
-    # TODO: We're assuming that "vanilla" == "Debian" here.
-    # We need a smarter way to set the line, possibly via backrefs
-    # in the regex matching.
-    line: 'GRUB_DEFAULT="Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"'
-
-- name: run update-grub
-  command: update-grub
-  when: "'grsec' not in uname_initial_result.stdout"
-
-- name: set grsec kernel as default for next boot
-  # TODO: We're assuming that "vanilla" == "Debian" here.
-  # We need a smarter way to set the line, possibly via backrefs
-  # in the regex matching.
-  command: grub-reboot "Advanced options for {% if grsecurity_build_strategy == "ubuntu" %}Ubuntu{% else %}Debian GNU/Linux{% endif %}>{{ grsec_str.stdout }}"
-  when: "'grsec' not in uname_initial_result.stdout"
-
-- name: reboot into the grsec kernel
+- name: Reboot into the grsecurity kernel.
   # Simply rebooting causes the subsequent wait_for task to fail. See here:
   # https://github.com/ansible/ansible/issues/10616
   # Sleeping and then shutting down, via the shell module, is a workaround.
@@ -95,28 +18,31 @@
   poll: 0
   ignore_errors: true
   sudo: yes
-  when: "'grsec' not in uname_initial_result.stdout"
+  when: "'grsec' not in ansible_kernel"
 
-- name: waiting for server to come back
+- name: Wait for server to come back.
   local_action: wait_for
     host={{ ansible_ssh_host }}
     port={{ ansible_ssh_port | default('22')}}
     delay=30
     state=started
   sudo: false
-  when: "'grsec' not in uname_initial_result.stdout"
+  when: "'grsec' not in ansible_kernel"
 
   # Adding extra wait time to prevent timeouts
   # during debugging. Likely not necessary, but test
   # before removing.
-- name: wait extra time for server to come back up
+- name: Wait extra time for server to come back up.
   pause:
     seconds: 30
-  when: "'grsec' not in uname_initial_result.stdout"
+  when: "'grsec' not in ansible_kernel"
 
-- name: check that grsec is running
-  command: uname -r
-  register: uname_final_result
-  changed_when: false
-  failed_when: "'grsec' not in uname_final_result.stdout"
+- name: Refresh host facts.
+  action: setup
 
+- name: Fail if grsecurity kernel not running.
+  fail:
+    msg: >
+      Grsecurity kernel is not running. Instead, found
+      kernel {{ ansible_kernel }}.
+  when: "'grsec' not in ansible_kernel"
