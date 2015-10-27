@@ -3,7 +3,7 @@
   hosts: grsec-install
   roles:
     - { role: install-grsec-kernel,
-        grsecurity_deb_package: linux-image-3.14.54-grsec_3.14.54-grsec-10.00.Custom_amd64.deb,
+        grsecurity_deb_package: linux-image-3.14.55-grsec_3.14.55-grsec-10.00.Custom_amd64.deb,
       }
   sudo: yes
   vars_files:
