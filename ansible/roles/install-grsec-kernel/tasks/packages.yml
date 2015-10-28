@@ -1,13 +1,4 @@
 ---
-- name: Check filename for deb package.
-  fail:
-    msg: >
-      No deb package specified for installation.
-      Define the variable 'grsecurity_deb_package'
-      with the filepath to the local .deb package,
-      then rerun the playbook.
-  when: grsecurity_deb_package is not defined
-
 - name: Copy kernel image deb package.
   copy:
     src: "{{ grsecurity_deb_package }}"
