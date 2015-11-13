@@ -1,18 +1,9 @@
 ---
-- name: Check filename for deb package.
-  fail:
-    msg: >
-      No deb package specified for installation.
-      Define the variable 'grsecurity_deb_package'
-      with the filepath to the local .deb package,
-      then rerun the playbook.
-  when: grsecurity_deb_package is not defined
-
 - name: Copy kernel image deb package.
   copy:
     src: "{{ grsecurity_deb_package }}"
     dest: "/root/{{ grsecurity_deb_package | basename }}"
-  when: "'grsec' not in ansible_kernel"
+  when: grsecurity_desired_kernel_version != ansible_kernel
 
 - name: Install PaX utilities.
   apt:
@@ -29,7 +20,7 @@
     # about overwriting lib modules. A subsequent task will validate
     # that a grsec-patched kernel is actually running.
     dpkg_options: skip-same-version,force-confdef,force-confold
-  when: "'grsec' not in ansible_kernel"
+  when: grsecurity_desired_kernel_version != ansible_kernel
   notify:
     - Update GRUB.
     - Update host facts.

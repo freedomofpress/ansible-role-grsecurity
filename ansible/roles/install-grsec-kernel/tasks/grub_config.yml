@@ -18,12 +18,19 @@
   set_fact:
     grub_grsecurity_menu_entry: "{{ item }}"
   with_items: grub_menu_options
-  when: "{{ item.name | match('.*-grsec$') }}"
+  # Check for an exact match, right-aligned, for the target kernel version
+  # currently being installed. Tested on Debian. Example string to match:
+  #   Debian GNU/Linux, with Linux 3.14.54-grsec
+  # Example string NOT to match:
+  #   Debian GNU/Linux, with Linux 3.14.54-grsec (recovery mode)
+  when: "{{ item.name | match('.*'+grsecurity_desired_kernel_version+'$') }}"
 
 - name: Ensure grsecurity kernel menu entry is populated.
   fail:
     msg: >
-      Could not find GRUB menu entry for grsecurity kernel.
+      Could not find GRUB menu entry for grsecurity kernel {{ grsecurity_desired_kernel_version }}.
+      Try installing manually via `dpkg -i <package_name>` and verifying the menu
+      entry exists in the GRUB config file.
   when: grub_grsecurity_menu_entry is not defined
 
 - name: Set grsecurity kernel as default option in GRUB config.
