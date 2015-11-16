@@ -3,6 +3,6 @@
   hosts: grsec-install
   roles:
     - { role: install-grsec-kernel,
-        grsecurity_deb_package: linux-image-3.14.54-grsec_10.00.digitalocean_amd64.deb,
+        grsecurity_deb_package: linux-image-3.14.57-grsec_10.00.digitalocean_amd64.deb,
       }
   sudo: yes
