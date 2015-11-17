@@ -30,7 +30,6 @@
     regexp: '^GRUB_TIMEOUT=.*$'
     line: "GRUB_TIMEOUT={{ grub_timeout }}"
     dest: /etc/default/grub
-  when: grub_timeout != 5
 
 - name: Ensure grsecurity kernel menu entry is populated.
   fail:
