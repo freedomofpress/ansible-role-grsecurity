@@ -2,4 +2,4 @@
 # For easier console recovery and debugging, the GRUB timeout value (default: 5) 
 # can be overridden here. Without a lengthier timeout, it can be very difficult
 # to get into the GRUB menu and select a working kernel to boot.
-grub_timeout: 30
+grub_timeout: 5
