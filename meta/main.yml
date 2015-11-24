@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author:
+    - Conor Schaefer (@conorsch)
+    - Kevin Gallagher (@ageis)
+  description: Build and install roles for grsecurity Linux kernel patches
+  company: Freedom of the Press Foundation (@freedomofpress)
+  license: GPLv2
+  min_ansible_version: 1.8
+  platforms:
+  - name: Debian
+    versions:
+      - jessie
+  categories:
+    - cloud
+    - packaging
+    - system
+dependencies: []
