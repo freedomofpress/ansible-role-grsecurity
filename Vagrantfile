@@ -12,8 +12,8 @@ Vagrant.configure("2") do |config|
       # The stable playbook will prompt for HTTP auth credentials prior to running.
       # One subsequent runs of the stable playbook, you can simply hit enter to skip
       # the credential entry, since the files have already been downloaded.
-      ansible.playbook = 'ansible/build-grsecurity-kernel-test.yml'
-      ansible.playbook = 'ansible/build-grsecurity-kernel-stable.yml'
+      ansible.playbook = 'examples/build-grsecurity-kernel-stable.yml'
+      ansible.playbook = 'examples/build-grsecurity-kernel-test.yml'
       ansible.verbose = 'vv'
       # Exposing the build strategy var for testing various build strategies quickly.
       ansible.extra_vars = {
