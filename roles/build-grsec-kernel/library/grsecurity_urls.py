@@ -59,6 +59,8 @@ class LinuxKernelURLs():
     def __init__(self, linux_kernel_version):
         self.linux_kernel_version = linux_kernel_version
         self.ansible_facts = dict(
+            linux_base_url=self.linux_base_url,
+            linux_checksums_url=self.linux_checksums_url,
             linux_kernel_version=self.linux_kernel_version,
             linux_major_version=self.linux_major_version,
             linux_tarball_filename=self.linux_tarball_filename,
@@ -89,8 +91,14 @@ class LinuxKernelURLs():
 
 
     @property
+    def linux_checksums_url(self):
+        return urljoin(self.linux_base_url, "sha256sums.asc")
+
+
+    @property
     def linux_tarball_signature_filename(self):
         return "linux-{}.tar.sign".format(self.linux_kernel_version)
+
 
     @property
     def linux_tarball_signature_url(self):
