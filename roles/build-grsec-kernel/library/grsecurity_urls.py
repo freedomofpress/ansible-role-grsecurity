@@ -67,9 +67,10 @@ class LinuxKernelURLs():
             linux_tarball_url=self.linux_tarball_url,
             )
 
+
     @property
     def linux_base_url(self):
-        return urljoin(LINUX_KERNEL_BASE_URL, "v{}.x".format(self.linux_major_version))
+        return urljoin(LINUX_KERNEL_BASE_URL, "v{}.x/".format(self.linux_major_version))
 
 
     @property
