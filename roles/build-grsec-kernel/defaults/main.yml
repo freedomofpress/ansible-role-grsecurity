@@ -35,48 +35,7 @@ include_ubuntu_overlay: false
 
 download_directory: /usr/local/src
 
-# The version of the Linux kernel is modified
-# dynamically according to `grsecurity_patch_type`.
-# The test patches for grsecurity apply to the 4.x kernels,
-# and the stable patches work with 3.14.x.
-linux_kernel_version: 3.14.57
-linux_base_url: "https://www.kernel.org/pub/linux/kernel/v{{ linux_kernel_version.split('.') | first }}.x/"
-
-linux_tarball:
-  {
-    filename: "linux-{{ linux_kernel_version }}.tar.xz",
-    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.xz",
-  }
-
-linux_tarball_signature:
-  {
-    filename: "linux-{{ linux_kernel_version }}.tar.sign",
-    url: "{{ linux_base_url }}/linux-{{ linux_kernel_version }}.tar.sign",
-  }
-
-grsecurity_patch:
-  {
-    filename: grsecurity-3.1-3.14.49-201508032312.patch,
-    url: 'https://grsecurity.net/stable/grsecurity-3.1-3.14.49-201508032312.patch',
-    sha256sum: 4cdaa8464a66433bbb38e3e5c1f25f6351ae20a7a7fca6cd65f0d577c9caa027,
-  }
-
-grsecurity_patch_signature:
-  {
-    filename: grsecurity-3.1-3.14.49-201508032312.patch.sig,
-    url: 'https://grsecurity.net/stable/grsecurity-3.1-3.14.49-201508032312.patch.sig',
-    sha256sum: d0a72f991e93d27cbd48760f0bca4d5968784936cf6c44e0292c0a3bdcb3454e,
-  }
-
-required_kernel_files:
-  - "{{ linux_tarball }}"
-  - "{{ linux_tarball_signature }}"
-  - "{{ grsecurity_patch }}"
-  - "{{ grsecurity_patch_signature }}"
-
-linux_checksums_url: "{{ linux_base_url }}/sha256sums.asc"
 linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
-
 gpg_keyserver: hkps.pool.sks-keyservers.net
 
 # Assumes 64-bit (not reading machine architecture dynamically.)
