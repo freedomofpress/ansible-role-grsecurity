@@ -4,7 +4,9 @@
 Vagrant.configure("2") do |config|
 
   config.vm.define 'grsec-build', primary: true do |build|
-    build.vm.box = "ubuntu/trusty64"
+    # Using Ubuntu 15.04 rather than 14.04 LTS due to a bug in kernel-package.
+    # See #30 for details: https://github.com/freedomofpress/grsec/issues/30
+    build.vm.box = "ubuntu/vivid64"
     build.vm.hostname = "grsec-build"
 
     build.vm.provision :ansible do |ansible|
