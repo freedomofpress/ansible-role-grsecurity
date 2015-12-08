@@ -1,10 +1,11 @@
 ---
 apt_packages:
-    - build-essential
-    - fakeroot
-    - gcc-4.8
-    - gcc-4.8-plugin-dev
-    - git-core
-    - kernel-package
-    - libncurses5-dev
-    - make
+  - build-essential
+  - fakeroot
+  - gcc-4.8
+  - gcc-4.8-plugin-dev
+  - git-core
+  - kernel-package
+  - libncurses5-dev
+  - make
+  - python-requests

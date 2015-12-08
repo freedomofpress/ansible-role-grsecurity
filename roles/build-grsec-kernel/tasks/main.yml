@@ -1,4 +1,8 @@
 ---
+  # Install packages before fetching dynamic URLs, since python-requests
+  # is required by the URL-fetching Ansible module.
+- include: packages.yml
+
 - name: Include grsecurity download URLs.
   # Dynamically reference newest patch and kernel versions,
   # according to patch type 'test' or 'stable'.
@@ -9,8 +13,6 @@
   # vars aren't missing, but we're conditionally including vars.
   tags:
     - always
-
-- include: packages.yml
 
 - include: gpg_keys.yml
 
