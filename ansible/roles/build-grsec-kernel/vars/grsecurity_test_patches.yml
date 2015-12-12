@@ -1,15 +1,21 @@
 ---
+# The version of the Linux kernel is modified
+# dynamically according to `grsecurity_patch_type`.
+# The test patches for grsecurity apply to the 4.x kernels,
+# and the stable patches work with 3.14.x.
+linux_kernel_version: 4.1.7
+
 grsecurity_patch:
   {
-    filename: grsecurity-3.1-4.1.7-201509131604.patch,
-    url: 'https://grsecurity.net/test/grsecurity-3.1-4.1.7-201509131604.patch',
+    filename: "grsecurity-3.1-{{ linux_kernel_version }}-201509131604.patch",
+    url: 'https://grsecurity.net/test/grsecurity-3.1-{{ linux_kernel_version }}-201509131604.patch',
     sha256sum: 712e11695a3ccf6ee476d087354545ace340763f598f98b91a0cc77943f42ebb,
   }
 
 grsecurity_patch_signature:
   {
-    filename: grsecurity-3.1-4.1.7-201509131604.patch.sig,
-    url: 'https://grsecurity.net/test/grsecurity-3.1-4.1.7-201509131604.patch.sig',
+    filename: "{{ grsecurity_patch.filename+'.sig' }}",
+    url: "{{ grsecurity_patch.url+'.sig' }}",
     sha256sum: 10deab6647f676b3f1d8854c0281aff20116534ecc81bafa634d2a72ab4ed665,
   }
 
