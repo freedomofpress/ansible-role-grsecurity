@@ -42,6 +42,14 @@ Vagrant.configure("2") do |config|
       v.gui = false
     end
 
+    install.vm.provision :ansible do |ansible|
+      ansible.playbook = 'examples/install-grsecurity-kernel.yml'
+      ansible.extra_vars = {
+        # Add the filename for the .deb package created by the build VM.
+        # You may need to prefix the path with '../' if the .deb package is in the repo root.
+        'grsecurity_deb_package' => ''
+      }
+    end
   end
 end
 
