@@ -32,8 +32,11 @@ Vagrant.configure("2") do |config|
   # In case of problems, you don't want to pollute the build machine
   # with the test packages.
   config.vm.define 'grsec-install', autostart: false do |install|
+    # Choose the base box for testing the grsecurity-patched kernel .deb package.
+    # install.vm.box = "debian/wheezy64"
+    # install.vm.box = "debian/jessie64"
+    # install.vm.box = "ubuntu/vivid64"
     install.vm.box = "ubuntu/trusty64"
-    install.vm.box = "debian/jessie64"
     install.vm.hostname = "grsec-install"
     # If grsec install works, the shared folder mount will fail.
     # Set `disabled: true` below to prevent the error post-install.
