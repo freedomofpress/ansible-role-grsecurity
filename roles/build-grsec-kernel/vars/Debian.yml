@@ -1,0 +1,9 @@
+---
+apt_packages:
+  - build-essential
+  - fakeroot
+  - gcc-4.9
+  - gcc-4.9-plugin-dev
+  - kernel-package
+  - libncurses5-dev
+  - make

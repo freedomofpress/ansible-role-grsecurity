@@ -1,0 +1,44 @@
+---
+# Can be "stable" or "test". Note that stable patches
+# requires authentication to download. See the grsecurity
+# blog for more information:
+# https://grsecurity.net/announce.php
+grsecurity_patch_type: test
+
+# Declaring a list of supported distributions
+# for package dependency lists. Role will fail
+# if playbook attempts to compile under a different OS,
+# with a helpful message soliciting a PR. =)
+supported_linux_distributions:
+  - Debian
+  - Ubuntu
+
+# The default "manual" strategy will prep a machine for
+# for compilation, but stop short of configuring and running
+# `make`, to allow the admin to run `make menuconfig`.
+# By setting a specific, non-manual strategy, admins can
+# leverage the static config file shipped with this role
+# to target a given platform.
+#
+# Possible options:
+#   - aws
+#   - digitalocean
+#   - gandi
+#   - linode
+#   - manual
+grsecurity_build_strategy: manual
+
+# When targeting an Ubuntu host, there are a few tricks
+# that should be pulled in via the ubuntu-overlay, mostly
+# just postinstall scripts. Off by default.
+include_ubuntu_overlay: false
+
+download_directory: /usr/local/src
+
+linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
+gpg_keyserver: hkps.pool.sks-keyservers.net
+
+# Assumes 64-bit (not reading machine architecture dynamically.)
+grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
+
+grsecurity_use_ccache: true

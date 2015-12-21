@@ -1,0 +1,28 @@
+---
+- name: Import Greg Kroah-Hartman GPG key (Linux stable release signing key).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 38DBBDC86092693E
+  register: gpg_import_greg_result
+  changed_when: "'imported: 1' in gpg_import_greg_result.stderr"
+
+- name: Import kernel.org checksum autosigner GPG key.
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 632D3A06589DA6B1
+  register: gpg_import_autosigner_result
+  changed_when: "'imported: 1' in gpg_import_autosigner_result.stderr"
+
+- name: Import Bradley Spengler GPG key (grsecurity maintainer key).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 44D1C0F82525FE49
+  register: gpg_import_spender_result
+  changed_when: "'imported: 1' in gpg_import_spender_result.stderr"
+
+- name: Import Brad Figg GPG key (Canonical/Ubuntu Kernel Team).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys 0C7B589B105BE7F7
+  register: gpg_import_figg_result
+  changed_when: "'imported: 1' in gpg_import_figg_result.stderr"
+  when: include_ubuntu_overlay == true
+
+- name: Import Luis Henriques GPG key (Canonical/LKM).
+  command: gpg --keyserver {{ gpg_keyserver }} --recv-keys DB74AEB8FDCE24FC
+  register: gpg_henriques_import
+  changed_when: "'imported: 1' in gpg_henriques_import.stderr"
+  when: include_ubuntu_overlay == true
+

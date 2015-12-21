@@ -1,0 +1,23 @@
+---
+- name: Build the grsecurity-patched kernel.
+  command: >
+    fakeroot make-kpkg
+    --revision 10.00.{{ grsecurity_build_strategy }}
+    {% if include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
+    --initrd kernel_image
+  args:
+    chdir: "{{ linux_source_directory }}"
+  environment:
+    CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
+    # Conditionally enable ccache by prepending the ccache lib directory
+    # to PATH, which will override the system gcc and and g++ binaries.
+    PATH: "{% if grsecurity_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
+
+- name: Fetch built kernel package back to localhost.
+  fetch:
+    src: "{{ download_directory }}/{{ grsecurity_deb_package }}"
+    dest: ./
+    fail_on_missing: yes
+    flat: yes
+  tags:
+    - fetch

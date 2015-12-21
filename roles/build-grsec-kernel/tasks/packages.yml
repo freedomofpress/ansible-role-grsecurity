@@ -1,0 +1,21 @@
+---
+- name: Validate support for compiling kernel on current OS.
+  fail:
+    msg: >
+      Cannot compile grsecurity under {{ ansible_distribution }}.
+      The problem may be as simple as a few missing package
+      dependencies. Send a pull request to add support for your distro!
+      https://github.com/freedomofpress/grsec
+  when: 'ansible_distribution not in supported_linux_distributions'
+
+- name: Import OS-specific dependency list.
+  include_vars: "{{ ansible_distribution }}.yml"
+
+- name: Install required packages for building kernel.
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  with_items: apt_packages
+  sudo: yes

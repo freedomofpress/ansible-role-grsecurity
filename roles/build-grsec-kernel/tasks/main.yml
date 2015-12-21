@@ -1,0 +1,35 @@
+---
+- name: Include grsecurity download URLs.
+  # Dynamically reference newest patch and kernel versions,
+  # according to patch type 'test' or 'stable'.
+  grsecurity_urls:
+    patch_type: "{{ grsecurity_patch_type }}"
+  # Setting task to "always" run, because other tasks will
+  # without the imported vars. Usually defaults would handle ensuring
+  # vars aren't missing, but we're conditionally including vars.
+  tags:
+    - always
+
+- include: packages.yml
+
+- include: gpg_keys.yml
+
+- include: fetch_linux_kernel_source.yml
+
+- include: fetch_grsecurity_files.yml
+
+- include: fetch_ubuntu_overlay.yml
+  when: include_ubuntu_overlay == true
+
+- include: verify.yml
+
+- include: ccache.yml
+  when: grsecurity_use_ccache == true
+
+- include: prepare_source_directory.yml tags=prepare
+
+- include: configure.yml tags=configure
+  when: grsecurity_build_strategy != "manual"
+
+- include: compile.yml tags=compile
+  when: grsecurity_build_strategy != "manual"

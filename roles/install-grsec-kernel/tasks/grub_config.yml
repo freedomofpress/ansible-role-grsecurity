@@ -1,0 +1,63 @@
+---
+  # Not convinced this is necessary, but it doesn't break anything.
+  # Tested removing it, and installation worked fine on VirtualBox
+  # hosts for Debian and Ubuntu. Have NOT tested
+  #   - upgrading grsecurity versions
+  #   - installing and upgrading on hardware
+  # So leaving in until those cases are confirmed working without
+  # the paxctl changes to the GRUB files.
+- name: Make the required grub paxctl changes.
+  command: paxctl -Cpm {{ item }}
+  with_items:
+    - /usr/sbin/grub-probe
+    - /usr/sbin/grub-mkdevicemap
+    - /usr/bin/grub-script-check
+    - /usr/bin/grub-mount
+
+- name: Find the menu title for the grsecurity kernel in GRUB config.
+  set_fact:
+    grub_grsecurity_menu_entry: "{{ item }}"
+  with_items: grub_menu_options
+  # Check for an exact match, right-aligned, for the target kernel version
+  # currently being installed. Tested on Debian. Example string to match:
+  #   Debian GNU/Linux, with Linux 3.14.54-grsec
+  # Example string NOT to match:
+  #   Debian GNU/Linux, with Linux 3.14.54-grsec (recovery mode)
+  when: "{{ item.name | match('.*'+grsecurity_desired_kernel_version+'$') }}"
+
+- name: Update GRUB timeout for easier console recovery and debugging           
+  lineinfile:
+    regexp: '^GRUB_TIMEOUT=.*$'
+    line: "GRUB_TIMEOUT={{ grub_timeout }}"
+    dest: /etc/default/grub
+
+- name: Ensure grsecurity kernel menu entry is populated.
+  fail:
+    msg: >
+      Could not find GRUB menu entry for grsecurity kernel {{ grsecurity_desired_kernel_version }}.
+      Try installing manually via `dpkg -i <package_name>` and verifying the menu
+      entry exists in the GRUB config file.
+  when: grub_grsecurity_menu_entry is not defined
+
+- name: Set grsecurity kernel as default option in GRUB config.
+  sudo: yes
+  lineinfile:
+    regexp: '^GRUB_DEFAULT='
+    # Conditional logic necessary for Debian because running `update-grub`
+    # without the specific prefix results in a warning:
+
+    #   Warning: Please don't use old title `Debian GNU/Linux, with
+    #   Linux 3.14.53-grsec' for GRUB_DEFAULT, use `Advanced
+    #   options for Debian GNU/Linux>Debian GNU/Linux, with Linux
+    #   3.14.53-grsec' (for versions before 2.00) or
+    #   `gnulinux-advanced-fc2b679a-e448-4f54-b465-62735483f42f>gnul
+    #   inux-3.14.53-grsec-advanced-fc2b679a-e448-4f54-b465-62735483
+    #   f42f' (for 2.00 or later)
+    line: 'GRUB_DEFAULT="{% if ansible_distribution == "Debian" %}Advanced options for Debian GNU/Linux>{% endif %}{{ grub_grsecurity_menu_entry.name }}"'
+    dest: /etc/default/grub
+  notify:
+    - Update GRUB.
+    - Update host facts.
+
+  # Force handlers to run immediatley, so grub config is updated.
+- meta: flush_handlers

@@ -1,0 +1,15 @@
+---
+- include: set_host_facts.yml
+
+- include: packages.yml
+
+- include: disable_python_memprotect.yml
+  when: ansible_distribution == "Debian" and
+        grsec_disable_python_memprotect is defined and
+        grsec_disable_python_memprotect == true
+
+- include: grub_config.yml
+
+- include: validate_install.yml
+  when: grsecurity_desired_kernel_version != ansible_kernel
+

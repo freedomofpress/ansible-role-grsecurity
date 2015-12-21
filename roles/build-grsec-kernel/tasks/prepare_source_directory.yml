@@ -1,0 +1,44 @@
+---
+- name: Clean source directory prior to extraction.
+  file:
+    path: "{{ linux_source_directory }}"
+    state: absent
+
+- name: Extract Linux tarball (.tar -> directory).
+  unarchive:
+    copy: no
+    src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
+    dest: "{{ download_directory }}"
+
+- name: Apply grsecurity patch.
+  patch:
+    remote_src: true
+    src: "{{ download_directory }}/{{ grsecurity_patch_filename }}"
+    basedir: "{{ linux_source_directory }}"
+    strip: 1
+
+  # Using `make-kpkg` wrapper script rather than core `make`
+  # for convenience. The `clean` target runs both:
+  #   make clean
+  #   make distclean
+  # but does NOT run `make mrproper`, which would destroy the .config
+  # file. See here for details:
+  #  http://askubuntu.com/questions/596120/cant-build-ubuntu-kernel-why-does-make-mrproper-get-rid-of-debian-directory
+  #  https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel
+- name: Clean kernel source tree.
+  command: make-kpkg clean
+  args:
+    chdir: "{{ linux_source_directory }}"
+
+  # Bail out for interactive compilation. Override interactive mode
+  # by setting `grsecurity_build_strategy`
+- name: Advise on next steps for manually compiling kernel.
+  debug:
+    msg: >
+      Build environment ready. Kernel source is available in
+      {{ linux_source_directory }} . Run `make menuconfig` in that
+      directory to configure the build, then `make-kpkg kernel_image`
+      or similar to begin compiling the kernel.
+  when: grsecurity_build_strategy == "manual"
+
+

@@ -1,0 +1,14 @@
+---
+- name: Fetch grsecurity patch.
+  get_url:
+      url: "{{ grsecurity_patch_url  }}"
+      dest: "{{ download_directory }}/{{ grsecurity_patch_filename }}"
+      url_username: "{{ grsecurity_download_username | default('') }}"
+      url_password: "{{ grsecurity_download_password | default('') }}"
+
+- name: Fetch grsecurity signature.
+  get_url:
+      url: "{{ grsecurity_signature_url  }}"
+      dest: "{{ download_directory }}/{{ grsecurity_signature_filename }}"
+      url_username: "{{ grsecurity_download_username | default('') }}"
+      url_password: "{{ grsecurity_download_password | default('') }}"
