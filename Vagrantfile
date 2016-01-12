@@ -4,7 +4,9 @@
 Vagrant.configure("2") do |config|
 
   config.vm.define 'grsec-build', primary: true do |build|
-    build.vm.box = "ubuntu/trusty64"
+    # Using Ubuntu 15.04 rather than 14.04 LTS due to a bug in kernel-package.
+    # See #30 for details: https://github.com/freedomofpress/grsec/issues/30
+    build.vm.box = "ubuntu/vivid64"
     build.vm.hostname = "grsec-build"
 
     build.vm.provision :ansible do |ansible|
@@ -30,8 +32,11 @@ Vagrant.configure("2") do |config|
   # In case of problems, you don't want to pollute the build machine
   # with the test packages.
   config.vm.define 'grsec-install', autostart: false do |install|
+    # Choose the base box for testing the grsecurity-patched kernel .deb package.
+    # install.vm.box = "debian/wheezy64"
+    # install.vm.box = "debian/jessie64"
+    # install.vm.box = "ubuntu/vivid64"
     install.vm.box = "ubuntu/trusty64"
-    install.vm.box = "debian/jessie64"
     install.vm.hostname = "grsec-install"
     # If grsec install works, the shared folder mount will fail.
     # Set `disabled: true` below to prevent the error post-install.
@@ -40,6 +45,14 @@ Vagrant.configure("2") do |config|
       v.gui = false
     end
 
+    install.vm.provision :ansible do |ansible|
+      ansible.playbook = 'examples/install-grsecurity-kernel.yml'
+      ansible.extra_vars = {
+        # Add the filename for the .deb package created by the build VM.
+        # You may need to prefix the path with '../' if the .deb package is in the repo root.
+        'grsecurity_deb_package' => ''
+      }
+    end
   end
 end
 

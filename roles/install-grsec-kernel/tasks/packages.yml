@@ -11,7 +11,6 @@
     state: present
   with_items:
     - paxctl
-    - paxtest
 
 - name: Install grsecurity-patched kernel deb package.
   apt:
