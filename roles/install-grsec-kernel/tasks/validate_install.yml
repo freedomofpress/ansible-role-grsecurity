@@ -7,7 +7,7 @@
   async: 1
   poll: 0
   ignore_errors: true
-  sudo: yes
+  become: yes
 
 - name: Wait for server to come back.
   local_action: wait_for
@@ -15,7 +15,7 @@
     port={{ ansible_ssh_port | default('22')}}
     delay=30
     state=started
-  sudo: false
+  become: false
 
   # Adding extra wait time to prevent timeouts
   # during debugging. Likely not necessary, but test

@@ -6,7 +6,7 @@
   apt:
     name: ccache
     state: present
-  sudo: yes
+  become: yes
 
   # Increasing the cache size from 1GB (default) to 5GB.
   # Testing of several successive compiles showed 5GB

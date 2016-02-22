@@ -6,7 +6,7 @@
     owner: "{{ ansible_ssh_user }}"
     group: "{{ ansible_ssh_user }}"
     mode: "0755"
-  sudo: yes
+  become: yes
 
 - name: Fetch SHA256 checksums for Linux source files.
   get_url:
