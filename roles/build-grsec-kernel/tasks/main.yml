@@ -28,10 +28,13 @@
 - include: ccache.yml
   when: grsecurity_use_ccache == true
 
-- include: prepare_source_directory.yml tags=prepare
+- include: prepare_source_directory.yml
+  tags: prepare
 
-- include: configure.yml tags=configure
+- include: configure.yml
+  tags: configure
   when: grsecurity_build_strategy != "manual"
 
-- include: compile.yml tags=compile
+- include: compile.yml
+  tags: compile
   when: grsecurity_build_strategy != "manual"

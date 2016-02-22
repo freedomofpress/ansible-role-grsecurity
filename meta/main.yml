@@ -6,7 +6,7 @@ galaxy_info:
   description: Build and install roles for grsecurity Linux kernel patches
   company: Freedom of the Press Foundation (@freedomofpress)
   license: GPLv2
-  min_ansible_version: 1.8
+  min_ansible_version: 1.9
   platforms:
   - name: Debian
     versions:

@@ -40,7 +40,7 @@
   when: grub_grsecurity_menu_entry is not defined
 
 - name: Set grsecurity kernel as default option in GRUB config.
-  sudo: yes
+  become: yes
   lineinfile:
     regexp: '^GRUB_DEFAULT='
     # Conditional logic necessary for Debian because running `update-grub`

@@ -11,12 +11,9 @@
     - name: grsecurity_download_password
       prompt: "Password for grsecurity HTTP auth"
   roles:
-    - { role: build-grsec-metapackage,
-        sudo: yes, # TODO: remove sudo requirement
-        tags: metapackage,
-      }
-    - { role: build-grsec-kernel,
-        grsecurity_patch_type: stable,
-        tags: kernel,
-      }
-  sudo: no
+    - role: build-grsec-metapackage
+      tags: metapackage
+
+    - role: build-grsec-kernel
+      grsecurity_patch_type: stable
+      tags: kernel
