@@ -6,4 +6,4 @@
       # Add the filepath to the .deb package here. The playbook will error out
       # if the package can't be found.
       grsecurity_deb_package: ''
-  sudo: yes
+  become: yes
