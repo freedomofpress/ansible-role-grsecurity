@@ -28,7 +28,7 @@
 - name: Update GRUB timeout for easier console recovery and debugging           
   lineinfile:
     regexp: '^GRUB_TIMEOUT=.*$'
-    line: "GRUB_TIMEOUT={{ grub_timeout }}"
+    line: "GRUB_TIMEOUT={{ grsecurity_install_grub_timeout }}"
     dest: /etc/default/grub
 
 - name: Ensure grsecurity kernel menu entry is populated.
