@@ -9,9 +9,10 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
-    - paxctl
-  when: grsecurity_install_set_paxctl_flags == true
+  # Always install paxtest, but allow paxctl to be skipped, in case paxctld is used.
+  with_flattened:
+    - ['paxtest']
+    - "{{ ['paxctl'] if grsecurity_install_set_paxctl_flags else [] }}"
 
 - name: Install grsecurity-patched kernel deb package.
   apt:
