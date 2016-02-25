@@ -11,6 +11,7 @@
     state: present
   with_items:
     - paxctl
+  when: grsecurity_install_set_paxctl_flags == true
 
 - name: Install grsecurity-patched kernel deb package.
   apt:
