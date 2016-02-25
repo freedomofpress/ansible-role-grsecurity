@@ -1,4 +1,15 @@
 ---
+  # The paxctl flags only apply to a given incarnation of a binary,
+  # so updates to that binary will remove the flags. In the case of grub,
+  # that could leave a system unbootable if versions change.
+- name: Make the required grub paxctl changes.
+  command: paxctl -Cpm {{ item }}
+  with_items:
+    - /usr/sbin/grub-probe
+    - /usr/sbin/grub-mkdevicemap
+    - /usr/bin/grub-script-check
+    - /usr/bin/grub-mount
+
 - name: Convert python executable headers.
   # Using the `raw` module here because otherwise
   # Ansible would need to execute python2.7 to handle
@@ -6,8 +17,10 @@
   # with "/usr/bin/python2.7: Text file busy". By using
   # `raw`, only localhost's ssh and the remote's sh are used.
   raw: paxctl -c /usr/bin/python2.7
+  when: ansible_distribution == "Debian"
 
 - name: Disable memprotect on python2.7.
   raw: paxctl -m /usr/bin/python2.7
   register: disable_memprotect_python_result
   changed_when: '"converted" in disable_memprotect_python_result.stdout'
+  when: ansible_distribution == "Debian"

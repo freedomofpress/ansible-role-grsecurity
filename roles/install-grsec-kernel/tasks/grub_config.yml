@@ -1,16 +1,4 @@
 ---
-  # The paxctl flags only apply to a given incarnation of a binary,
-  # so updates to that binary will remove the flags. In the case of grub,
-  # that could leave a system unbootable if versions change.
-- name: Make the required grub paxctl changes.
-  command: paxctl -Cpm {{ item }}
-  with_items:
-    - /usr/sbin/grub-probe
-    - /usr/sbin/grub-mkdevicemap
-    - /usr/bin/grub-script-check
-    - /usr/bin/grub-mount
-  when: grsecurity_install_set_paxctl_flags == true
-
 - name: Find the menu title for the grsecurity kernel in GRUB config.
   set_fact:
     grub_grsecurity_menu_entry: "{{ item }}"
