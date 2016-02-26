@@ -25,7 +25,7 @@
     seconds: 30
 
   # Running the setup module will refresh the `ansible_kernel` host fact
-  # with the current value. The `grsecurity_desired_kernel_version` host fact
+  # with the current value. The `grsecurity_install_desired_kernel_version` host fact
   # persists from when it was set earlier in the role.
 - name: Refresh host facts.
   action: setup
@@ -34,5 +34,5 @@
   fail:
     msg: >
       Grsecurity kernel is not running. Expected to find
-      {{ grsecurity_desired_kernel_version }}. Instead, found
+      {{ grsecurity_install_desired_kernel_version }}. Instead, found
       kernel {{ ansible_kernel }}.

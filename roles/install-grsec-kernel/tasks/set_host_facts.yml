@@ -15,4 +15,4 @@
 - name: Set desired kernel version as host fact.
   # Intentionally using key=value syntax to support Ansible v1 and v2,
   # which have different escaping rules for the regex_replace filter.
-  set_fact: grsecurity_desired_kernel_version="{{ grsecurity_install_deb_package | basename | regex_replace('^linux-image-([\d\.]+-grsec)_.*$', '\\1') }}"
+  set_fact: grsecurity_install_desired_kernel_version="{{ grsecurity_install_deb_package | basename | regex_replace('^linux-image-([\d\.]+-grsec)_.*$', '\\1') }}"
