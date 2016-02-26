@@ -2,16 +2,17 @@
 - name: Get GRUB menu options as host facts.
   action: grub_menu_options
 
-  # Role requires that `grsecurity_deb_package` be defined.
+  # Role requires that `grsecurity_install_deb_package` be defined.
 - name: Check filename for deb package.
   fail:
     msg: >
       No deb package specified for installation.
-      Define the variable 'grsecurity_deb_package'
+      Define the variable 'grsecurity_install_deb_package'
       with the filepath to the local .deb package,
       then rerun the playbook.
-  when: grsecurity_deb_package is not defined
+  when: grsecurity_install_deb_package is not defined
 
 - name: Set desired kernel version as host fact.
-  set_fact: grsecurity_desired_kernel_version="{{ grsecurity_deb_package | basename | regex_replace('^linux-image-([\d\.]+-grsec)_.*$', '\\1') }}"
-
+  # Intentionally using key=value syntax to support Ansible v1 and v2,
+  # which have different escaping rules for the regex_replace filter.
+  set_fact: grsecurity_desired_kernel_version="{{ grsecurity_install_deb_package | basename | regex_replace('^linux-image-([\d\.]+-grsec)_.*$', '\\1') }}"
