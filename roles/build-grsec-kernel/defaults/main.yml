@@ -33,7 +33,7 @@ grsecurity_build_strategy: manual
 # just postinstall scripts. Off by default.
 include_ubuntu_overlay: false
 
-download_directory: /usr/local/src
+download_directory: "{{ ansible_env.HOME }}/linux"
 
 linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
 gpg_keyserver: hkps.pool.sks-keyservers.net
