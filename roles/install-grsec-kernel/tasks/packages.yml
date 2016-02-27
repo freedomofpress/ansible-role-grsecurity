@@ -3,7 +3,7 @@
   copy:
     src: "{{ grsecurity_install_deb_package }}"
     dest: "{{ grsecurity_install_download_dir }}/{{ grsecurity_install_deb_package | basename }}"
-  when: grsecurity_install_desired_kernel_version != ansible_kernel
+  register: grsecurity_install_copy_deb_package_result
 
 - name: Install PaX utilities.
   apt:
@@ -21,7 +21,8 @@
     # about overwriting lib modules. A subsequent task will validate
     # that a grsec-patched kernel is actually running.
     dpkg_options: skip-same-version,force-confdef,force-confold
-  when: grsecurity_install_desired_kernel_version != ansible_kernel
+  when: grsecurity_install_copy_deb_package_result.changed or
+        grsecurity_install_force_install == true
   notify:
     - Update GRUB.
     - Update host facts.
