@@ -2,9 +2,11 @@
 - name: Extract Linux tarball (.xz -> .tar).
   # Can't use the `unarchive` module here, because it destroys
   # the intermediary .tar file, which we need to verify the GPG sig.
-  command: xz --decompress {{ download_directory }}/{{ linux_tarball_filename }}
-  args:
-    creates: "{{ download_directory }}/{{ linux_tarball_filename|regex_replace('(.*)\\.xz$', '\\\\1') }}"
+  # Intentionally using key=value syntax to support Ansible v1 and v2,
+  # which have different escaping rules for the regex_replace filter.
+  command: >
+    xz --decompress {{ download_directory }}/{{ linux_tarball_filename }}
+    creates="{{ download_directory }}/{{ linux_tarball_filename|regex_replace('(.*)\\.xz$', '\\1') }}"
 
 - name: Verify Linux tarball GPG signature.
   command: gpg --verify {{ download_directory }}/{{ linux_tarball_signature_filename }}
