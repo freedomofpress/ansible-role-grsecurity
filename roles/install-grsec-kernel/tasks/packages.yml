@@ -1,9 +1,9 @@
 ---
 - name: Copy kernel image deb package.
   copy:
-    src: "{{ grsecurity_deb_package }}"
-    dest: "/root/{{ grsecurity_deb_package | basename }}"
-  when: grsecurity_desired_kernel_version != ansible_kernel
+    src: "{{ grsecurity_install_deb_package }}"
+    dest: "/root/{{ grsecurity_install_deb_package | basename }}"
+  when: grsecurity_install_desired_kernel_version != ansible_kernel
 
 - name: Install PaX utilities.
   apt:
@@ -14,12 +14,12 @@
 
 - name: Install grsecurity-patched kernel deb package.
   apt:
-    deb: /root/{{ grsecurity_deb_package | basename }}
+    deb: /root/{{ grsecurity_install_deb_package | basename }}
     # Adding --skip-same-version to avoid an interactive dpkg prompt
     # about overwriting lib modules. A subsequent task will validate
     # that a grsec-patched kernel is actually running.
     dpkg_options: skip-same-version,force-confdef,force-confold
-  when: grsecurity_desired_kernel_version != ansible_kernel
+  when: grsecurity_install_desired_kernel_version != ansible_kernel
   notify:
     - Update GRUB.
     - Update host facts.

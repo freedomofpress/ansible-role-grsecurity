@@ -23,18 +23,18 @@
   #   Debian GNU/Linux, with Linux 3.14.54-grsec
   # Example string NOT to match:
   #   Debian GNU/Linux, with Linux 3.14.54-grsec (recovery mode)
-  when: "{{ item.name | match('.*'+grsecurity_desired_kernel_version+'$') }}"
+  when: "{{ item.name | match('.*'+grsecurity_install_desired_kernel_version+'$') }}"
 
 - name: Update GRUB timeout for easier console recovery and debugging           
   lineinfile:
     regexp: '^GRUB_TIMEOUT=.*$'
-    line: "GRUB_TIMEOUT={{ grub_timeout }}"
+    line: "GRUB_TIMEOUT={{ grsecurity_install_grub_timeout }}"
     dest: /etc/default/grub
 
 - name: Ensure grsecurity kernel menu entry is populated.
   fail:
     msg: >
-      Could not find GRUB menu entry for grsecurity kernel {{ grsecurity_desired_kernel_version }}.
+      Could not find GRUB menu entry for grsecurity kernel {{ grsecurity_install_desired_kernel_version }}.
       Try installing manually via `dpkg -i <package_name>` and verifying the menu
       entry exists in the GRUB config file.
   when: grub_grsecurity_menu_entry is not defined
