@@ -17,3 +17,13 @@
   # Intentionally using key=value syntax to support Ansible v1 and v2,
   # which have different escaping rules for the regex_replace filter.
   set_fact: grsecurity_install_desired_kernel_version="{{ grsecurity_install_deb_package | basename | regex_replace('^linux-image-([\d\.]+-grsec)_.*$', '\\1') }}"
+
+  # Sanity check to ensure that the regex substitution above worked.
+- name: Fail if desired kernel version as not found.
+  fail:
+    msg: >
+      Could not find desired grsecurity kernel version. Check the filepath
+      specified by `grsecurity_install_deb_package` and make sure it matches
+      the regular expression 'linux-image-[\d.]+-grsec'.
+  when: grsecurity_install_desired_kernel_version is not defined or
+        grsecurity_install_desired_kernel_version == ''
