@@ -31,6 +31,48 @@ and the latest grsecurity patch and prepare the system for a manual build. The i
 expects a .deb package filepath on the Ansible controller, and will install that package
 on the target host.
 
+## Role variables
+
+### build-grsec-kernel
+```yaml
+# Can be "stable" or "test". Note that stable patches
+# requires authentication to download. See the grsecurity
+# blog for more information: https://grsecurity.net/announce.php
+grsecurity_build_patch_type: test
+
+# The default "manual" strategy will prep a machine for compilation,
+# but stop short of configuring and compiling. You can instead choose
+# to compile a kernel based on a static config shipped with this role,
+# for a "Look ma, no hands!" kernel compilation. See the "files" dir
+# for possible config options. The var below is interpolated as
+# "config-{{ grsecurity_build_strategy }}" when searching for files.
+grsecurity_build_strategy: manual
+
+# When building for installation on Ubuntu, one should include the
+# overlay to ensure that Ubuntu-specific options for AppArmor work.
+# Honestly this needs a lot more testing, so leaving off by default.
+grsecurity_build_include_ubuntu_overlay: false
+
+# Parent directory for storing source tarballs and signature files.
+grsecurity_build_download_directory: "{{ ansible_env.HOME }}/linux"
+
+# Extracted source directory, where you should run `make menuconfig`.
+grsecurity_build_linux_source_directory: >-
+  {{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}
+
+grsecurity_build_gpg_keyserver: hkps.pool.sks-keyservers.net
+
+# Assumes 64-bit (not reading machine architecture dynamically.)
+grsecurity_build_deb_package: >-
+  linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
+
+# Using ccache can dramatically speed up subsequent builds of the
+# same kernel source. Disable if you plan to build only once.
+grsecurity_build_use_ccache: true
+```
+
+
+
 
 
 The primary components of interest in this repository are:
