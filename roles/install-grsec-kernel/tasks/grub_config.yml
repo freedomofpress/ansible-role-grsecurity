@@ -1,19 +1,4 @@
 ---
-  # Not convinced this is necessary, but it doesn't break anything.
-  # Tested removing it, and installation worked fine on VirtualBox
-  # hosts for Debian and Ubuntu. Have NOT tested
-  #   - upgrading grsecurity versions
-  #   - installing and upgrading on hardware
-  # So leaving in until those cases are confirmed working without
-  # the paxctl changes to the GRUB files.
-- name: Make the required grub paxctl changes.
-  command: paxctl -Cpm {{ item }}
-  with_items:
-    - /usr/sbin/grub-probe
-    - /usr/sbin/grub-mkdevicemap
-    - /usr/bin/grub-script-check
-    - /usr/bin/grub-mount
-
 - name: Find the menu title for the grsecurity kernel in GRUB config.
   set_fact:
     grub_grsecurity_menu_entry: "{{ item }}"

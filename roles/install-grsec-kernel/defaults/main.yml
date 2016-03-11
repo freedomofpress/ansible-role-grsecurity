@@ -7,3 +7,8 @@ grsecurity_install_grub_timeout: 5
 # This var is required, but can't be known ahead of time. Build the Debian package
 # with the grsecurity build role, then set var to the filepath to the .deb.
 grsecurity_install_deb_package: ''
+
+# paxctld is a better alternative than paxctl for maintaining the PaX flags on binaries.
+# The paxctld role isn't a dependency yet, so assume the paxctl approach is safest.
+# If you're using the paxctld role, set this to false.
+grsecurity_install_set_paxctl_flags: true
