@@ -15,7 +15,7 @@
 
 - name: Fetch built kernel package back to localhost.
   fetch:
-    src: "{{ grsecurity_build_download_directory }}/{{ grsecurity_deb_package }}"
+    src: "{{ grsecurity_build_download_directory }}/{{ grsecurity_build_deb_package }}"
     dest: ./
     fail_on_missing: yes
     flat: yes

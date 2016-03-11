@@ -31,6 +31,6 @@ grsecurity_build_linux_source_directory: "{{ grsecurity_build_download_directory
 grsecurity_build_gpg_keyserver: hkps.pool.sks-keyservers.net
 
 # Assumes 64-bit (not reading machine architecture dynamically.)
-grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
+grsecurity_build_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
 
 grsecurity_use_ccache: true
