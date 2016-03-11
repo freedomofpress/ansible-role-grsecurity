@@ -10,7 +10,8 @@
       Define the variable 'grsecurity_install_deb_package'
       with the filepath to the local .deb package,
       then rerun the playbook.
-  when: grsecurity_install_deb_package is not defined
+  when: grsecurity_install_deb_package is not defined or
+        grsecurity_install_deb_package == ''
 
 - name: Set desired kernel version as host fact.
   # Intentionally using key=value syntax to support Ansible v1 and v2,
