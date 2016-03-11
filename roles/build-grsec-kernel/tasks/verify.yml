@@ -5,21 +5,21 @@
   # Intentionally using key=value syntax to support Ansible v1 and v2,
   # which have different escaping rules for the regex_replace filter.
   command: >
-    xz --decompress {{ download_directory }}/{{ linux_tarball_filename }}
-    creates="{{ download_directory }}/{{ linux_tarball_filename|regex_replace('(.*)\\.xz$', '\\1') }}"
+    xz --decompress {{ grsecurity_build_download_directory }}/{{ linux_tarball_filename }}
+    creates="{{ grsecurity_build_download_directory }}/{{ linux_tarball_filename|regex_replace('(.*)\\.xz$', '\\1') }}"
 
 - name: Verify Linux tarball GPG signature.
-  command: gpg --verify {{ download_directory }}/{{ linux_tarball_signature_filename }}
+  command: gpg --verify {{ grsecurity_build_download_directory }}/{{ linux_tarball_signature_filename }}
   changed_when: false
 
 - name: Verify grsecurity patch GPG signature.
-  command: gpg --verify {{ download_directory }}/{{ grsecurity_signature_filename }}
+  command: gpg --verify {{ grsecurity_build_download_directory }}/{{ grsecurity_signature_filename }}
   changed_when: false
 
 - name: Register current release tag for Ubuntu overlay.
   command: git tag
   args:
-    chdir: "{{ download_directory }}/ubuntu-trusty"
+    chdir: "{{ grsecurity_build_download_directory }}/ubuntu-trusty"
   register: ubuntu_overlay_tag_result
   changed_when: false
   when: grsecurity_build_include_ubuntu_overlay == true
@@ -27,6 +27,6 @@
 - name: Verify Ubuntu overlay signature.
   command: git tag --verify {{ ubuntu_overlay_tag_result.stdout }}
   args:
-    chdir: "{{ download_directory }}/ubuntu-trusty"
+    chdir: "{{ grsecurity_build_download_directory }}/ubuntu-trusty"
   changed_when: false
   when: grsecurity_build_include_ubuntu_overlay == true

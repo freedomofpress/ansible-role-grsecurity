@@ -7,13 +7,13 @@
 - name: Extract Linux tarball (.tar -> directory).
   unarchive:
     copy: no
-    src: "{{ download_directory }}/linux-{{ linux_kernel_version }}.tar"
-    dest: "{{ download_directory }}"
+    src: "{{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}.tar"
+    dest: "{{ grsecurity_build_download_directory }}"
 
 - name: Apply grsecurity patch.
   patch:
     remote_src: true
-    src: "{{ download_directory }}/{{ grsecurity_patch_filename }}"
+    src: "{{ grsecurity_build_download_directory }}/{{ grsecurity_patch_filename }}"
     basedir: "{{ linux_source_directory }}"
     strip: 1
 

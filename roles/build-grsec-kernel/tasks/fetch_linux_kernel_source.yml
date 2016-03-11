@@ -2,7 +2,7 @@
 - name: Create directory for downloaded files.
   file:
     state: directory
-    dest: "{{ download_directory }}"
+    dest: "{{ grsecurity_build_download_directory }}"
     owner: "{{ ansible_ssh_user }}"
     group: "{{ ansible_ssh_user }}"
     mode: "0755"
@@ -10,7 +10,7 @@
 - name: Fetch SHA256 checksums for Linux source files.
   get_url:
     url: "{{ linux_checksums_url }}"
-    dest: "{{ download_directory }}"
+    dest: "{{ grsecurity_build_download_directory }}"
   register: linux_source_checksums
 
 - name: Verify GPG signature on SHA256 checksum file.
@@ -27,10 +27,10 @@
 - name: Fetch Linux kernel tarball.
   get_url:
       url: "{{ linux_tarball_url }}"
-      dest: "{{ download_directory }}/{{ linux_tarball_filename }}"
+      dest: "{{ grsecurity_build_download_directory }}/{{ linux_tarball_filename }}"
       sha256sum: "{{ linux_tarball_checksum.stdout }}"
 
 - name: Fetch Linux kernel tarball signature file.
   get_url:
       url: "{{ linux_tarball_signature_url }}"
-      dest: "{{ download_directory }}"
+      dest: "{{ grsecurity_build_download_directory }}"
