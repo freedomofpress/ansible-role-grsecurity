@@ -2,16 +2,16 @@
 - name: Copy baseline grsecurity config template.
   copy:
     src: config-{{ grsecurity_build_strategy }}
-    dest: "{{ linux_source_directory }}/.config"
+    dest: "{{ grsecurity_build_linux_source_directory }}/.config"
 
 - name: Ensure any new options are updated with defaults.
   command: make olddefconfig
   args:
-    chdir: "{{ linux_source_directory }}"
+    chdir: "{{ grsecurity_build_linux_source_directory }}"
 
 - name: Check that grsecurity options are enabled.
   lineinfile:
-    dest: "{{ linux_source_directory }}/.config"
+    dest: "{{ grsecurity_build_linux_source_directory }}/.config"
     regexp: "# CONFIG_GRKERNSEC is not set"
     state: absent
   register: grsecurity_settings_check_result

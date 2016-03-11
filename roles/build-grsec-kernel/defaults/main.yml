@@ -27,7 +27,7 @@ grsecurity_build_include_ubuntu_overlay: false
 
 grsecurity_build_download_directory: "{{ ansible_env.HOME }}/linux"
 
-linux_source_directory: "{{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}"
+grsecurity_build_linux_source_directory: "{{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}"
 gpg_keyserver: hkps.pool.sks-keyservers.net
 
 # Assumes 64-bit (not reading machine architecture dynamically.)

@@ -1,7 +1,7 @@
 ---
 - name: Clean source directory prior to extraction.
   file:
-    path: "{{ linux_source_directory }}"
+    path: "{{ grsecurity_build_linux_source_directory }}"
     state: absent
 
 - name: Extract Linux tarball (.tar -> directory).
@@ -14,7 +14,7 @@
   patch:
     remote_src: true
     src: "{{ grsecurity_build_download_directory }}/{{ grsecurity_patch_filename }}"
-    basedir: "{{ linux_source_directory }}"
+    basedir: "{{ grsecurity_build_linux_source_directory }}"
     strip: 1
 
   # Using `make-kpkg` wrapper script rather than core `make`
@@ -28,7 +28,7 @@
 - name: Clean kernel source tree.
   command: make-kpkg clean
   args:
-    chdir: "{{ linux_source_directory }}"
+    chdir: "{{ grsecurity_build_linux_source_directory }}"
 
   # Bail out for interactive compilation. Override interactive mode
   # by setting `grsecurity_build_strategy`
@@ -36,7 +36,7 @@
   debug:
     msg: >
       Build environment ready. Kernel source is available in
-      {{ linux_source_directory }} . Run `make menuconfig` in that
+      {{ grsecurity_build_linux_source_directory }} . Run `make menuconfig` in that
       directory to configure the build, then `make-kpkg kernel_image`
       or similar to begin compiling the kernel.
   when: grsecurity_build_strategy == "manual"

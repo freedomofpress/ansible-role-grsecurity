@@ -6,7 +6,7 @@
     {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
     --initrd kernel_image
   args:
-    chdir: "{{ linux_source_directory }}"
+    chdir: "{{ grsecurity_build_linux_source_directory }}"
   environment:
     CONCURRENCY_LEVEL: "{{ ansible_processor_vcpus }}"
     # Conditionally enable ccache by prepending the ccache lib directory
