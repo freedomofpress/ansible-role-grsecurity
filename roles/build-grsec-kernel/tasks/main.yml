@@ -36,7 +36,7 @@
 - include: verify.yml
 
 - include: ccache.yml
-  when: grsecurity_use_ccache == true
+  when: grsecurity_build_use_ccache == true
 
 - include: prepare_source_directory.yml
   tags: prepare
