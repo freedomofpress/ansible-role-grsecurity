@@ -23,7 +23,7 @@ grsecurity_build_strategy: manual
 # When targeting an Ubuntu host, there are a few tricks
 # that should be pulled in via the ubuntu-overlay, mostly
 # just postinstall scripts. Off by default.
-include_ubuntu_overlay: false
+grsecurity_build_include_ubuntu_overlay: false
 
 download_directory: "{{ ansible_env.HOME }}/linux"
 

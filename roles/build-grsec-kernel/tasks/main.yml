@@ -31,7 +31,7 @@
 - include: fetch_grsecurity_files.yml
 
 - include: fetch_ubuntu_overlay.yml
-  when: include_ubuntu_overlay == true
+  when: grsecurity_build_include_ubuntu_overlay == true
 
 - include: verify.yml
 

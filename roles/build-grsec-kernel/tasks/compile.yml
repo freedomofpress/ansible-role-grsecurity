@@ -3,7 +3,7 @@
   command: >
     fakeroot make-kpkg
     --revision 10.00.{{ grsecurity_build_strategy }}
-    {% if include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
+    {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
     --initrd kernel_image
   args:
     chdir: "{{ linux_source_directory }}"
