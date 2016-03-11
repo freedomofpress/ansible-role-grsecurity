@@ -17,7 +17,7 @@
   # Dynamically reference newest patch and kernel versions,
   # according to patch type 'test' or 'stable'.
   grsecurity_urls:
-    patch_type: "{{ grsecurity_patch_type }}"
+    patch_type: "{{ grsecurity_build_patch_type }}"
   # Setting task to "always" run, because other tasks will
   # without the imported vars. Usually defaults would handle ensuring
   # vars aren't missing, but we're conditionally including vars.

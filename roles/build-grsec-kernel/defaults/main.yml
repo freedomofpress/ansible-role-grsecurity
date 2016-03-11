@@ -3,7 +3,7 @@
 # requires authentication to download. See the grsecurity
 # blog for more information:
 # https://grsecurity.net/announce.php
-grsecurity_patch_type: test
+grsecurity_build_patch_type: test
 
 # Declaring a list of supported distributions
 # for package dependency lists. Role will fail
