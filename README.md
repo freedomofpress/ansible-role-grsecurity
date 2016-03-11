@@ -1,6 +1,15 @@
-# grsec
+# ansible-role-grsecurity
 
-This repository contains all of the code and documentation related to the grsecurity kernels maintained by the Freedom of the Press Foundation for all SecureDrop instances.
+Build and install Linux kernels with the grsecurity patches applied.
+Supports "test" and "stable" grsecurity patches. Using the "stable"
+patches will [require subscription](https://grsecurity.net/business_support.php).
+
+These configurations were developed by [Freedom of the Press Foundation] for
+use in all [SecureDrop] instances. Experienced sysadmins can leverage these
+configuration roles to compile custom kernels for SecureDrop or non-SecureDrop
+architecture.
+
+
 
 The primary components of interest in this repository are:
 
@@ -16,3 +25,8 @@ This repository contains code and documentation related to the grsecurity kernel
 There is a role for building the kernel and one for the host to install it on.
 
 The Ansible playbook is compatible with both Debian jessie and Ubuntu trusty — just modify the `target_os` in `./ansible/vars/main.yml`.
+
+
+[Freedom of the Press Foundation]: https://freedom.press
+[SecureDrop]: https://securedrop.org
+[grsecurity]: https://grsecurity.net/
