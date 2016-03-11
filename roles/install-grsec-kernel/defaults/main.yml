@@ -1,21 +1,24 @@
 ---
-# For easier console recovery and debugging, the GRUB timeout value (default: 5) 
+# This var is required, but can't be known ahead of time. Build the Debian package
+# with the grsecurity build role, then set var to the filepath to the .deb.
+# The role will fail if this var is not updated.
+grsecurity_install_deb_package: ''
+
+# For easier console recovery and debugging, the GRUB timeout value (default: 5)
 # can be overridden here. Without a lengthier timeout, it can be very difficult
 # to get into the GRUB menu and select a working kernel to boot.
 grsecurity_install_grub_timeout: 5
-
-# This var is required, but can't be known ahead of time. Build the Debian package
-# with the grsecurity build role, then set var to the filepath to the .deb.
-grsecurity_install_deb_package: ''
 
 # paxctld is a better alternative than paxctl for maintaining the PaX flags on binaries.
 # The paxctld role isn't a dependency yet, so assume the paxctl approach is safest.
 # If you're using the paxctld role, set this to false.
 grsecurity_install_set_paxctl_flags: true
 
+# Location where the .deb files will be copied on the target host, prior to install.
 grsecurity_install_download_dir: /usr/local/src
 
-# The role skip installation if the kernel version, e.g. "4.4.2-grsec", for the deb
-# packages matches that of the target host, provided the checksum for the deb file
-# is the same.
+# The role will skip installation if the kernel version, e.g. "4.4.2-grsec",
+# of the deb package matches that of the target host, provided the checksum
+# for the deb file is the same. If you want to reinstall the same kernel version,
+# for example while developing a new kernel config, set this to true.
 grsecurity_install_force_install: false
