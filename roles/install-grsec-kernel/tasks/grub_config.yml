@@ -11,6 +11,7 @@
   when: "{{ item.name | match('.*'+grsecurity_install_desired_kernel_version+'$') }}"
 
 - name: Update GRUB timeout for easier console recovery and debugging           
+  become: yes
   lineinfile:
     regexp: '^GRUB_TIMEOUT=.*$'
     line: "GRUB_TIMEOUT={{ grsecurity_install_grub_timeout }}"

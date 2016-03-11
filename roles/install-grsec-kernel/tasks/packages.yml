@@ -1,11 +1,13 @@
 ---
 - name: Copy kernel image deb package.
+  become: yes
   copy:
     src: "{{ grsecurity_install_deb_package }}"
     dest: "{{ grsecurity_install_download_dir }}/{{ grsecurity_install_deb_package | basename }}"
   register: grsecurity_install_copy_deb_package_result
 
 - name: Install PaX utilities.
+  become: yes
   apt:
     name: "{{ item }}"
     state: present
@@ -15,6 +17,7 @@
     - "{{ ['paxctl'] if grsecurity_install_set_paxctl_flags else [] }}"
 
 - name: Install grsecurity-patched kernel deb package.
+  become: yes
   apt:
     deb: "{{ grsecurity_install_download_dir }}/{{ grsecurity_install_deb_package | basename }}"
     # Adding --skip-same-version to avoid an interactive dpkg prompt

@@ -4,6 +4,6 @@
   roles:
     - role: install-grsec-kernel
       # Add the filepath to the .deb package here. The playbook will error out
-      # if the package can't be found.
-      #grsecurity_install_deb_package: ''
-  become: yes
+      # if the package can't be found. If you're referencing this playbook while it's
+      # still inside the "examples" directory, you may have to precede the filename with "../".
+      # grsecurity_install_deb_package: ''

@@ -4,6 +4,7 @@
   # that could leave a system unbootable if versions change.
 - name: Make the required grub paxctl changes.
   command: paxctl -Cpm {{ item }}
+  become: yes
   with_items:
     - /usr/sbin/grub-probe
     - /usr/sbin/grub-mkdevicemap
@@ -17,10 +18,12 @@
   # with "/usr/bin/python2.7: Text file busy". By using
   # `raw`, only localhost's ssh and the remote's sh are used.
   raw: paxctl -c /usr/bin/python2.7
+  become: yes
   when: ansible_distribution == "Debian"
 
 - name: Disable memprotect on python2.7.
   raw: paxctl -m /usr/bin/python2.7
+  become: yes
   register: disable_memprotect_python_result
   changed_when: '"converted" in disable_memprotect_python_result.stdout'
   when: ansible_distribution == "Debian"
