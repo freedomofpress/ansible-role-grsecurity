@@ -103,7 +103,18 @@ The primary components of interest in this repository are:
 1. `securedrop-grsec`, the kernel metapackage
 2. `build.md`, the guide for building the grsecurity kernel for SecureDrop
 
+## Quickstart
+Use the Vagrant VMs to build a grsecurity-patched kernel:
 
+```
+vagrant up grsec-build
+vagrant ssh
+cd linux/linux-<version>
+make menuconfig
+export CONCURRENCY_LEVEL="$(nproc)"
+export PATH="/usr/lib/ccache:$PATH" # recommended if you plan to recompile
+fakeroot make-kpkg --initrd kernel_image
+```
 
 [Freedom of the Press Foundation]: https://freedom.press
 [SecureDrop]: https://securedrop.org
