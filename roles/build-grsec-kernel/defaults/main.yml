@@ -5,14 +5,6 @@
 # https://grsecurity.net/announce.php
 grsecurity_build_patch_type: test
 
-# Declaring a list of supported distributions
-# for package dependency lists. Role will fail
-# if playbook attempts to compile under a different OS,
-# with a helpful message soliciting a PR. =)
-supported_linux_distributions:
-  - Debian
-  - Ubuntu
-
 # The default "manual" strategy will prep a machine for
 # for compilation, but stop short of configuring and running
 # `make`, to allow the admin to run `make menuconfig`.
