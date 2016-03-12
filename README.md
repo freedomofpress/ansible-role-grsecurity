@@ -120,15 +120,17 @@ grsecurity_build_use_ccache: true
 ```
 
 ### install-grsec-kernel
+
 ```yaml
-# This var is required, but can't be known ahead of time. Build the Debian package
-# with the grsecurity build role, then set var to the filepath to the .deb.
-# The role will fail if this var is not updated.
+# The filepath of the .deb package on the Ansible controller. This var is required,
+# but can't be known ahead of time, so you must specify it manually. The role will
+# fail if this var is not updated. Use the build role to create a package first.
 grsecurity_install_deb_package: ''
 
 # For easier console recovery and debugging, the GRUB timeout value (default: 5)
 # can be overridden here. Without a lengthier timeout, it can be very difficult
-# to get into the GRUB menu and select a working kernel to boot.
+# to get into the GRUB menu and select a working kernel to boot. Debian uses 5
+# by default, which we're replicating here for consistency and predictability.
 grsecurity_install_grub_timeout: 5
 
 # paxctld is a better alternative than paxctl for maintaining the PaX flags on binaries.
