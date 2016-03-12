@@ -116,6 +116,24 @@ export PATH="/usr/lib/ccache:$PATH" # recommended if you plan to recompile
 fakeroot make-kpkg --initrd kernel_image
 ```
 
+When the build is finished, copy the .deb file in `~/linux` back to
+your host machine. You can then use the install role to apply it.
+Make sure to update the `examples/install-grsecurity-kernel.yml` playbook
+and set the `grsecurity_install_deb_package` variable to the path
+where you saved the deb package.
+
+```
+vagrant up grsec-install
+```
+
+The role will automatically fail if the desired kernel version (inferred
+from the package name) with grsecurity patches was not installed.
+
+## Further reading
+
+* [Official grsecurity website](https://grsecurity.net/)
+* [Grsecurity/PaX wikibook](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options)
+
 [Freedom of the Press Foundation]: https://freedom.press
 [SecureDrop]: https://securedrop.org
 [grsecurity]: https://grsecurity.net/
