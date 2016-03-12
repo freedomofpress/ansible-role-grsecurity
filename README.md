@@ -31,6 +31,24 @@ and the latest grsecurity patch and prepare the system for a manual build. The i
 expects a .deb package filepath on the Ansible controller, and will install that package
 on the target host.
 
+To add to your project:
+
+```
+ansible-galaxy install freedomofpress.grsecurity
+```
+
+Then use in playbooks like so:
+
+```
+- hosts: server
+  roles:
+    - role: freedomofpress.grsecurity/roles/build-grsecurity-kernel
+```
+
+In the future, these roles may be broken out into separate repositories. Feel free to
+[open an issue](https://github.com/freedomofpress/ansible-role-grsecurity/issues)
+to discuss how such a change might affect your workflow.
+
 ## Role variables
 
 ### build-grsec-kernel
