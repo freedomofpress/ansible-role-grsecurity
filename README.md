@@ -16,6 +16,31 @@ For compiling the kernel, 2GB and 2 VCPUs is plenty. Depending on the config opt
 you specify, the compilation should take two to three hours on that hardware.
 Naturally, you can speed up the build by providing more resources.
 
+## Quickstart
+Use the Vagrant VMs to build a grsecurity-patched kernel:
+
+```
+vagrant up grsec-build
+vagrant ssh
+cd linux/linux-<version>
+make menuconfig
+export CONCURRENCY_LEVEL="$(nproc)"
+export PATH="/usr/lib/ccache:$PATH" # recommended if you plan to recompile
+fakeroot make-kpkg --initrd kernel_image
+```
+
+When the build is finished, copy the .deb file in `~/linux` back to
+your host machine. You can then use the install role to apply it.
+Make sure to update the `examples/install-grsecurity-kernel.yml` playbook
+and set the `grsecurity_install_deb_package` variable to the path
+where you saved the deb package.
+
+```
+vagrant up grsec-install
+```
+
+The role will automatically fail if the desired kernel version (inferred
+from the package name) with grsecurity patches was not installed.
 
 ## Role structure
 
@@ -120,37 +145,6 @@ grsecurity_install_download_dir: /usr/local/src
 # for example while developing a new kernel config, set this to true.
 grsecurity_install_force_install: false
 ```
-
-The primary components of interest in this repository are:
-
-1. `securedrop-grsec`, the kernel metapackage
-2. `build.md`, the guide for building the grsecurity kernel for SecureDrop
-
-## Quickstart
-Use the Vagrant VMs to build a grsecurity-patched kernel:
-
-```
-vagrant up grsec-build
-vagrant ssh
-cd linux/linux-<version>
-make menuconfig
-export CONCURRENCY_LEVEL="$(nproc)"
-export PATH="/usr/lib/ccache:$PATH" # recommended if you plan to recompile
-fakeroot make-kpkg --initrd kernel_image
-```
-
-When the build is finished, copy the .deb file in `~/linux` back to
-your host machine. You can then use the install role to apply it.
-Make sure to update the `examples/install-grsecurity-kernel.yml` playbook
-and set the `grsecurity_install_deb_package` variable to the path
-where you saved the deb package.
-
-```
-vagrant up grsec-install
-```
-
-The role will automatically fail if the desired kernel version (inferred
-from the package name) with grsecurity patches was not installed.
 
 ## Further reading
 
