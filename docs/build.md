@@ -1,6 +1,20 @@
 Ubuntu kernel with grsecurity
 =============================
 
+------------------------------------------------------------------------
+
+**Note:** This document is deprecated in favor of the [automated
+Ansible roles](https://github.com/freedomofpress/ansible-role-grsecurity)
+for building and installing grsecurity-patched kernels.
+If you want to compile the kernel by hand, consider reading through
+the Ansible playbooks in depth. They're YAML, and liberally commented.
+
+FPF staff should refer to the `securedrop_metapackage.md` document
+for step-by-step instructions on compiling the kernel packages
+used for SecureDrop instances.
+
+------------------------------------------------------------------------
+
 This guide outlines the steps required to compile a kernel for
 [Ubuntu Server 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/)
 with [Grsecurity](https://grsecurity.net/), specifically for use
