@@ -21,6 +21,8 @@ declares dependencies on the real kernel packages, then bootstrap
 the build host for a manual compilation. Ansible will stop
 immediately before configuring and compiling the kernel package.
 
+## Configuring the kernel
+
 Log in to build host and configure the kernel:
 
 ```
@@ -58,7 +60,6 @@ fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image kernel_
 ```
 
 When the compilation finishes, you'll have two .deb packages:
-
 
 ```
 linux-headers-3.14.21-grsec_3.2.61-grsec-10.00.Custom_amd64.deb
