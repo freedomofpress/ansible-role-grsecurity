@@ -3,15 +3,7 @@
 # requires authentication to download. See the grsecurity
 # blog for more information:
 # https://grsecurity.net/announce.php
-grsecurity_patch_type: test
-
-# Declaring a list of supported distributions
-# for package dependency lists. Role will fail
-# if playbook attempts to compile under a different OS,
-# with a helpful message soliciting a PR. =)
-supported_linux_distributions:
-  - Debian
-  - Ubuntu
+grsecurity_build_patch_type: test
 
 # The default "manual" strategy will prep a machine for
 # for compilation, but stop short of configuring and running
@@ -31,14 +23,14 @@ grsecurity_build_strategy: manual
 # When targeting an Ubuntu host, there are a few tricks
 # that should be pulled in via the ubuntu-overlay, mostly
 # just postinstall scripts. Off by default.
-include_ubuntu_overlay: false
+grsecurity_build_include_ubuntu_overlay: false
 
-download_directory: /usr/local/src
+grsecurity_build_download_directory: "{{ ansible_env.HOME }}/linux"
 
-linux_source_directory: "{{ download_directory }}/linux-{{ linux_kernel_version }}"
-gpg_keyserver: hkps.pool.sks-keyservers.net
+grsecurity_build_linux_source_directory: "{{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}"
+grsecurity_build_gpg_keyserver: hkps.pool.sks-keyservers.net
 
 # Assumes 64-bit (not reading machine architecture dynamically.)
-grsecurity_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
+grsecurity_build_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
 
-grsecurity_use_ccache: true
+grsecurity_build_use_ccache: true

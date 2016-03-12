@@ -1,4 +1,14 @@
 ---
+- name: Stop if running with elevated privileges.
+  fail:
+    msg: >
+      WARNING! You should not compile the Linux kernel with
+      superuser privileges. Doing so may create an unbootable
+      system. See Greg Kroah-Hartmann's Linux Kernel in a Nutshell
+      for anecdotes about how doing so has broken systems
+      in the past: http://www.kroah.com/lkn/
+  when: ansible_ssh_user == 'root' or ansible_user_id == 'root'
+
   # Install packages before fetching dynamic URLs, since python-requests
   # is required by the URL-fetching Ansible module.
 - include: packages.yml
@@ -7,7 +17,7 @@
   # Dynamically reference newest patch and kernel versions,
   # according to patch type 'test' or 'stable'.
   grsecurity_urls:
-    patch_type: "{{ grsecurity_patch_type }}"
+    patch_type: "{{ grsecurity_build_patch_type }}"
   # Setting task to "always" run, because other tasks will
   # without the imported vars. Usually defaults would handle ensuring
   # vars aren't missing, but we're conditionally including vars.
@@ -21,12 +31,12 @@
 - include: fetch_grsecurity_files.yml
 
 - include: fetch_ubuntu_overlay.yml
-  when: include_ubuntu_overlay == true
+  when: grsecurity_build_include_ubuntu_overlay == true
 
 - include: verify.yml
 
 - include: ccache.yml
-  when: grsecurity_use_ccache == true
+  when: grsecurity_build_use_ccache == true
 
 - include: prepare_source_directory.yml
   tags: prepare

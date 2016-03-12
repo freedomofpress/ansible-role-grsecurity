@@ -2,7 +2,7 @@
 - name: clone ubuntu overlay git repository (slow!)
   git:
     repo: git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
-    dest: "{{ download_directory }}/ubuntu-trusty"
+    dest: "{{ grsecurity_build_download_directory }}/ubuntu-trusty"
     force: yes
     # since this clone takes a long time, just grab
     # the first layer. can then pull manually to update.
@@ -15,14 +15,14 @@
     - git
 
 - name: copy kernel package files
-  command: cp -a /usr/share/kernel-package {{ download_directory }}/ubuntu-package
+  command: cp -a /usr/share/kernel-package {{ grsecurity_build_download_directory }}/ubuntu-package
   args:
-    creates: "{{ download_directory }}/ubuntu-package"
+    creates: "{{ grsecurity_build_download_directory }}/ubuntu-package"
 
 - name: copy ubuntu overlay control files
   command: >
-     cp {{ download_directory }}/ubuntu-trusty/debian/control-scripts/{{ item }}
-        {{ download_directory }}/ubuntu-package/pkg/image/
+     cp {{ grsecurity_build_download_directory }}/ubuntu-trusty/debian/control-scripts/{{ item }}
+        {{ grsecurity_build_download_directory }}/ubuntu-package/pkg/image/
   with_items:
     - postinst
     - postrm
@@ -31,5 +31,5 @@
 
 - name: copy ubuntu overlay header files
   command: >
-     cp {{ download_directory }}/ubuntu-trusty/debian/control-scripts/headers-postinst \
-        {{ download_directory }}/ubuntu-package/pkg/headers/
+     cp {{ grsecurity_build_download_directory }}/ubuntu-trusty/debian/control-scripts/headers-postinst \
+        {{ grsecurity_build_download_directory }}/ubuntu-package/pkg/headers/

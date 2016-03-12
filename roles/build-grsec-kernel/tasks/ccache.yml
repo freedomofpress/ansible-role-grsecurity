@@ -1,6 +1,6 @@
 ---
 # Separate task list for ccache-related tasks,
-# to make dynamic inclusion easier. If grsecurity_use_ccache
+# to make dynamic inclusion easier. If grsecurity_build_use_ccache
 # is set to `false`, then the package won't even be installed.
 - name: Install ccache.
   apt:

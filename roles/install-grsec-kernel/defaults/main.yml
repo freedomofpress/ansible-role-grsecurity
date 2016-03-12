@@ -12,3 +12,10 @@ grsecurity_install_deb_package: ''
 # The paxctld role isn't a dependency yet, so assume the paxctl approach is safest.
 # If you're using the paxctld role, set this to false.
 grsecurity_install_set_paxctl_flags: true
+
+grsecurity_install_download_dir: /usr/local/src
+
+# The role skip installation if the kernel version, e.g. "4.4.2-grsec", for the deb
+# packages matches that of the target host, provided the checksum for the deb file
+# is the same.
+grsecurity_install_force_install: false
