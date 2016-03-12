@@ -1,36 +1,35 @@
 ---
 # Can be "stable" or "test". Note that stable patches
 # requires authentication to download. See the grsecurity
-# blog for more information:
-# https://grsecurity.net/announce.php
+# blog for more information: https://grsecurity.net/announce.php
 grsecurity_build_patch_type: test
 
-# The default "manual" strategy will prep a machine for
-# for compilation, but stop short of configuring and running
-# `make`, to allow the admin to run `make menuconfig`.
-# By setting a specific, non-manual strategy, admins can
-# leverage the static config file shipped with this role
-# to target a given platform.
-#
-# Possible options:
-#   - aws
-#   - digitalocean
-#   - gandi
-#   - linode
-#   - manual
+# The default "manual" strategy will prep a machine for compilation,
+# but stop short of configuring and compiling. You can instead choose
+# to compile a kernel based on a static config shipped with this role,
+# for a "Look ma, no hands!" kernel compilation. See the "files" dir
+# for possible config options. The var below is interpolated as
+# "config-{{ grsecurity_build_strategy }}" when searching for files.
 grsecurity_build_strategy: manual
 
-# When targeting an Ubuntu host, there are a few tricks
-# that should be pulled in via the ubuntu-overlay, mostly
-# just postinstall scripts. Off by default.
+# When building for installation on Ubuntu, one should include the
+# overlay to ensure that Ubuntu-specific options for AppArmor work.
+# Honestly this needs a lot more testing, so leaving off by default.
 grsecurity_build_include_ubuntu_overlay: false
 
+# Parent directory for storing source tarballs and signature files.
 grsecurity_build_download_directory: "{{ ansible_env.HOME }}/linux"
 
-grsecurity_build_linux_source_directory: "{{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}"
+# Extracted source directory, where you should run `make menuconfig`.
+grsecurity_build_linux_source_directory: >-
+  {{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}
+
 grsecurity_build_gpg_keyserver: hkps.pool.sks-keyservers.net
 
 # Assumes 64-bit (not reading machine architecture dynamically.)
-grsecurity_build_deb_package: linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
+grsecurity_build_deb_package: >-
+  linux-image-{{ linux_kernel_version }}-grsec_10.00.{{ grsecurity_build_strategy }}_amd64.deb
 
+# Using ccache can dramatically speed up subsequent builds of the
+# same kernel source. Disable if you plan to build only once.
 grsecurity_build_use_ccache: true

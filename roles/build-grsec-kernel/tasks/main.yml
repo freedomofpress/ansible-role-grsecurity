@@ -4,7 +4,7 @@
     msg: >
       WARNING! You should not compile the Linux kernel with
       superuser privileges. Doing so may create an unbootable
-      system. See Greg Kroah-Hartmann's Linux Kernel in a Nutshell
+      system. See Greg Kroah-Hartman's Linux Kernel in a Nutshell
       for anecdotes about how doing so has broken systems
       in the past: http://www.kroah.com/lkn/
   when: ansible_ssh_user == 'root' or ansible_user_id == 'root'

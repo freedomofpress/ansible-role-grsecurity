@@ -1,17 +1,41 @@
 Ubuntu kernel with grsecurity
 =============================
 
-This guide outlines the steps required to compile a kernel for [Ubuntu Server 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/) with [Grsecurity](https://grsecurity.net/), specifically for use with [SecureDrop](https://freedom.press/securedrop). At the end of this guide, you will have two Debian packages that you transfer to the *App* and *Monitor* servers.
+------------------------------------------------------------------------
+
+**Note:** This document is deprecated in favor of the [automated
+Ansible roles](https://github.com/freedomofpress/ansible-role-grsecurity)
+for building and installing grsecurity-patched kernels.
+If you want to compile the kernel by hand, consider reading through
+the Ansible playbooks in depth. They're YAML, and liberally commented.
+
+FPF staff should refer to the `securedrop_metapackage.md` document
+for step-by-step instructions on compiling the kernel packages
+used for SecureDrop instances.
+
+------------------------------------------------------------------------
+
+This guide outlines the steps required to compile a kernel for
+[Ubuntu Server 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/)
+with [Grsecurity](https://grsecurity.net/), specifically for use
+with [SecureDrop](https://freedom.press/securedrop).
+At the end of this guide, you will have two Debian packages
+that you transfer to the *App* and *Monitor* servers.
 
 ## Before you begin
 
 The steps in this guide assume you have the following set up and running:
 
- * SecureDrop App and Monitor servers (see the [installation guide](https://github.com/freedomofpress/securedrop/blob/develop/docs/install.md))
- * An offline server running [Ubuntu Server 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/) that you use to compile the kernel
+ * SecureDrop App and Monitor servers (see the
+   [installation guide](https://github.com/freedomofpress/securedrop/blob/develop/docs/install.md))
+ * An offline server running
+   [Ubuntu Server 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/)
+   that you use to compile the kernel
  * An online server that you use to download package dependencies
 
-Since SecureDrop is only supported on 64-bit platforms, make sure you download a 64-bit version of Ubuntu to build the kernel. The `.iso` filename will have an `-amd64` suffix.
+Since SecureDrop is only supported on 64-bit platforms,
+make sure you download a 64-bit version of Ubuntu to build the kernel.
+The `.iso` filename will have an `-amd64` suffix.
 
 The idea is that you will use the online server to download package
 dependencies, put the files on a USB stick and transfer them to the
@@ -308,7 +332,9 @@ sudo update-grub
 sudo reboot
 ```
 
-After reboot, verify the you booted the new kernel by running `uname -a`. Confirm that the `-grsec` kernel is the one shown. If it is not, double-check the value you set for `GRUB_DEFAULT` in the previous sed command.
+After reboot, verify the you booted the new kernel by running `uname -a`.
+Confirm that the `-grsec` kernel is the one shown. If it is not,
+double-check the value you set for `GRUB_DEFAULT` in the previous sed command.
 
 ### Test SecureDrop functionality
 
