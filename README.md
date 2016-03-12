@@ -152,7 +152,9 @@ grsecurity_install_force_install: false
 
 * [Official grsecurity website](https://grsecurity.net/)
 * [Grsecurity/PaX wikibook](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options)
+* [Linux Kernel in a Nutshell](http://www.kroah.com/lkn/)
 
 [Freedom of the Press Foundation]: https://freedom.press
 [SecureDrop]: https://securedrop.org
 [grsecurity]: https://grsecurity.net/
+
