@@ -207,14 +207,14 @@ cp ubuntu-trusty/debian/control-scripts/headers-postinst ubuntu-package/pkg/head
 Verify the digital signature for Grsecurity.
 
 ```
-gpg --verify grsecurity-3.0-3.14.21-201410131959.patch.sig
+gpg --verify grsecurity-3.0-3.14.21-201410131959.patch.sig grsecurity-3.0-3.14.21-201410131959.patch
 ```
 
 Verify the digital signature for the Linux kernel.
 
 ```
 unxz linux-3.14.21.tar.xz
-gpg --verify linux-3.14.21.tar.sign
+gpg --verify linux-3.14.21.tar.sign linux-3.14.21.tar
 ```
 
 Do not move on to the next step until you have successfully verified both
