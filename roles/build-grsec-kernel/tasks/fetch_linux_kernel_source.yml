@@ -13,6 +13,9 @@
     dest: "{{ grsecurity_build_download_directory }}"
   register: linux_source_checksums
 
+  # The "sha256sums.asc" file is a signed file, so the one-argument format
+  # to gpg is correct. Compare with the `gpg --verify` tasks in the
+  # verify.yml task list, some of which must use the two-arg format.
 - name: Verify GPG signature on SHA256 checksum file.
   command: gpg --verify {{ linux_source_checksums.dest }}
   changed_when: false

@@ -8,12 +8,27 @@
     xz --decompress {{ grsecurity_build_download_directory }}/{{ linux_tarball_filename }}
     creates="{{ grsecurity_build_download_directory }}/{{ linux_tarball_filename|regex_replace('(.*)\\.xz$', '\\1') }}"
 
+  # From the gpg manpage for the --verify option:
+  #
+  #   With  more than 1 argument, the first should be a detached signature
+  #   and the remaining files ake [sic] up the the signed data.
+  #
+  # Therefore we must provide two arguments to the gpg command to ensure verification,
+  # the first being the detached signature file and the second being the file whose
+  # integrity we wish to verify.
 - name: Verify Linux tarball GPG signature.
-  command: gpg --verify {{ grsecurity_build_download_directory }}/{{ linux_tarball_signature_filename }}
+  command: >
+    gpg --verify
+    {{ grsecurity_build_download_directory }}/{{ linux_tarball_signature_filename }}
+    {{ grsecurity_build_download_directory }}/{{ linux_tarball_filename }}
   changed_when: false
 
+  # As above, use the two-arg format when calling `gpg --verify`.
 - name: Verify grsecurity patch GPG signature.
-  command: gpg --verify {{ grsecurity_build_download_directory }}/{{ grsecurity_signature_filename }}
+  command: >
+    gpg --verify
+    {{ grsecurity_build_download_directory }}/{{ grsecurity_signature_filename }}
+    {{ grsecurity_build_download_directory }}/{{ grsecurity_patch_filename }}
   changed_when: false
 
 - name: Register current release tag for Ubuntu overlay.
