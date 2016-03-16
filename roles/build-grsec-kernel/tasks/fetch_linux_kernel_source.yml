@@ -22,15 +22,15 @@
 
 - name: Read checksum for kernel tarball.
   shell: >
-    grep {{ linux_tarball_filename | quote }}
+    grep {{ linux_tarball_xz_filename | quote }}
     {{ linux_source_checksums.dest | quote }} | cut -d' ' -f1
   changed_when: false
   register: linux_tarball_checksum
 
 - name: Fetch Linux kernel tarball.
   get_url:
-      url: "{{ linux_tarball_url }}"
-      dest: "{{ grsecurity_build_download_directory }}/{{ linux_tarball_filename }}"
+      url: "{{ linux_tarball_xz_url }}"
+      dest: "{{ grsecurity_build_download_directory }}/{{ linux_tarball_xz_filename }}"
       sha256sum: "{{ linux_tarball_checksum.stdout }}"
 
 - name: Fetch Linux kernel tarball signature file.
