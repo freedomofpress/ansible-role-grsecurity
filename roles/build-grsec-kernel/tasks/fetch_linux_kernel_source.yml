@@ -2,7 +2,7 @@
 - name: Create directory for downloaded files.
   file:
     state: directory
-    dest: "{{ grsecurity_build_download_directory }}"
+    dest: "{{ grsecurity_build_download_directory }}/"
     owner: "{{ ansible_ssh_user }}"
     group: "{{ ansible_ssh_user }}"
     mode: "0755"
@@ -10,7 +10,7 @@
 - name: Fetch SHA256 checksums for Linux source files.
   get_url:
     url: "{{ linux_checksums_url }}"
-    dest: "{{ grsecurity_build_download_directory }}"
+    dest: "{{ grsecurity_build_download_directory }}/"
   register: linux_source_checksums
 
   # The "sha256sums.asc" file is a signed file, so the one-argument format
@@ -36,4 +36,4 @@
 - name: Fetch Linux kernel tarball signature file.
   get_url:
       url: "{{ linux_tarball_signature_url }}"
-      dest: "{{ grsecurity_build_download_directory }}"
+      dest: "{{ grsecurity_build_download_directory }}/"

@@ -8,7 +8,7 @@
   unarchive:
     copy: no
     src: "{{ grsecurity_build_download_directory }}/linux-{{ linux_kernel_version }}.tar"
-    dest: "{{ grsecurity_build_download_directory }}"
+    dest: "{{ grsecurity_build_download_directory }}/"
 
 - name: Apply grsecurity patch.
   patch:
