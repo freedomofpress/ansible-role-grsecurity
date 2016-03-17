@@ -3,5 +3,5 @@
   hosts: grsec-build
   roles:
     - role: build-grsec-kernel
-      grsecurity_patch_type: test
+      grsecurity_build_patch_type: test
       tags: kernel
