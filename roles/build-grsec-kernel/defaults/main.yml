@@ -33,3 +33,8 @@ grsecurity_build_deb_package: >-
 # Using ccache can dramatically speed up subsequent builds of the
 # same kernel source. Disable if you plan to build only once.
 grsecurity_build_use_ccache: true
+
+# Credentials for downloading the grsecurity "stable" pages. Requires subscription.
+# The "test" patches do not require authentication or a subscription.
+grsecurity_build_download_username: ''
+grsecurity_build_download_password: ''

@@ -64,9 +64,10 @@ class LinuxKernelURLs():
             linux_kernel_version=self.linux_kernel_version,
             linux_major_version=self.linux_major_version,
             linux_tarball_filename=self.linux_tarball_filename,
+            linux_tarball_xz_filename=self.linux_tarball_xz_filename,
             linux_tarball_signature_filename=self.linux_tarball_signature_filename,
             linux_tarball_signature_url=self.linux_tarball_signature_url,
-            linux_tarball_url=self.linux_tarball_url,
+            linux_tarball_xz_url=self.linux_tarball_xz_url,
             )
 
 
@@ -82,12 +83,15 @@ class LinuxKernelURLs():
 
     @property
     def linux_tarball_filename(self):
-        return "linux-{}.tar.xz".format(self.linux_kernel_version)
-
+        return "linux-{}.tar".format(self.linux_kernel_version)
 
     @property
-    def linux_tarball_url(self):
-        return urljoin(self.linux_base_url, self.linux_tarball_filename)
+    def linux_tarball_xz_filename(self):
+        return "{}.xz".format(self.linux_tarball_filename)
+
+    @property
+    def linux_tarball_xz_url(self):
+        return urljoin(self.linux_base_url, self.linux_tarball_xz_filename)
 
 
     @property
