@@ -3,8 +3,6 @@
   file:
     state: directory
     dest: "{{ grsecurity_build_download_directory }}/"
-    owner: "{{ ansible_ssh_user }}"
-    group: "{{ ansible_ssh_user }}"
     mode: "0755"
 
 - name: Fetch SHA256 checksums for Linux source files.
