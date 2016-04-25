@@ -1,8 +1,13 @@
 ---
 - name: Copy baseline grsecurity config template.
   copy:
-    src: config-{{ grsecurity_build_strategy }}
+    src: "{{ item }}"
     dest: "{{ grsecurity_build_linux_source_directory }}/.config"
+  # Prioritize custom config file, if specified. Fallback to prebuilt
+  # config that ships with the role.
+  with_first_found:
+    - "{{ grsecurity_build_custom_config }}"
+    - config-{{ grsecurity_build_strategy }}
 
 - name: Ensure any new options are updated with defaults.
   command: make olddefconfig
