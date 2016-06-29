@@ -13,18 +13,20 @@ requirements:
 options:
   patch_type:
     description:
-      - branch of grsecurity kernel patches. Can be "test" or "stable".
+      - Branch of grsecurity kernel patches.
+        See https://grsecurity.net/download.php for more info.
+
     default: "test"
-    choices: [ "test", "stable" ]
+    choices: [ "test", "stable", "stable2" ]
     required: no
 notes:
   - The Linux kernel version is dependent on the grsecurity patch type.
-    Using the `test`
 '''
 EXAMPLES = '''
 - action: grsecurity_urls
 - action: grsecurity_urls patch_type=test
 - action: grsecurity_urls patch_type=stable
+- action: grsecurity_urls patch_type=stable2
 '''
 
 from StringIO import StringIO
@@ -39,9 +41,9 @@ except ImportError:
 
 
 GRSECURITY_BASE_URL = 'https://grsecurity.net/'
-# The "OLD" patches use kernel version 3.2.x
-GRSECURITY_LATEST_STABLE_PATCH_OLD_URL = 'https://grsecurity.net/latest_stable_patch'
-GRSECURITY_LATEST_STABLE_PATCH_URL = 'https://grsecurity.net/latest_stable2_patch'
+GRSECURITY_LATEST_STABLE_PATCH_URL = 'https://grsecurity.net/latest_stable_patch'
+# The "stable2" patches use kernel version 4.x
+GRSECURITY_LATEST_STABLE2_PATCH_URL = 'https://grsecurity.net/latest_stable2_patch'
 GRSECURITY_LATEST_TEST_PATCH_URL = 'https://grsecurity.net/latest_test_patch'
 GRSECURITY_STABLE_URL_PREFIX = 'https://grsecurity.net/download-restrict/download-redirect.php?file='
 GRSECURITY_TEST_URL_PREFIX = 'https://grsecurity.net/test/'
@@ -158,7 +160,7 @@ class GrsecurityURLs():
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            patch_type=dict(default="test", choices=["test", "stable"]),
+            patch_type=dict(default="test", choices=["test", "stable", "stable2"]),
         ),
         supports_check_mode=False
     )
