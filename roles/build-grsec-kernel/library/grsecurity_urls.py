@@ -130,6 +130,8 @@ class GrsecurityURLs():
         url = ''
         if self.patch_type == "stable":
             url = GRSECURITY_LATEST_STABLE_PATCH_URL
+        elif self.patch_type == "stable2":
+            url = GRSECURITY_LATEST_STABLE2_PATCH_URL
         else:
             url = GRSECURITY_LATEST_TEST_PATCH_URL
         return url
@@ -146,6 +148,8 @@ class GrsecurityURLs():
         config['grsecurity_patch_filename'] = patch_name
 
         if self.patch_type == "stable":
+            config['grsecurity_patch_url'] = GRSECURITY_STABLE_URL_PREFIX+patch_name
+        elif self.patch_type == "stable2":
             config['grsecurity_patch_url'] = GRSECURITY_STABLE_URL_PREFIX+patch_name
         else:
             config['grsecurity_patch_url'] = GRSECURITY_TEST_URL_PREFIX+patch_name
