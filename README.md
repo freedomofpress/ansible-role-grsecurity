@@ -96,6 +96,10 @@ grsecurity_build_patch_type: test
 # "config-{{ grsecurity_build_strategy }}" when searching for files.
 grsecurity_build_strategy: manual
 
+# Premade config file for use during compilation. Useful if you've previously
+# run `make menuconfig` and want to restore the custom settings.
+grsecurity_build_custom_config: ''
+
 # When building for installation on Ubuntu, one should include the
 # overlay to ensure that Ubuntu-specific options for AppArmor work.
 # Honestly this needs a lot more testing, so leaving off by default.
