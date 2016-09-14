@@ -38,6 +38,15 @@ grsecurity_build_deb_package: >-
 # same kernel source. Disable if you plan to build only once.
 grsecurity_build_use_ccache: true
 
+grsecurity_build_kpkg_targets:
+  - kernel_image
+
+grsecurity_build_compile_command:
+  fakeroot make-kpkg
+  --revision 10.00.{{ grsecurity_build_strategy }}
+  {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
+  --initrd {{ grsecurity_build_kpkg_targets|join(' ') }}
+
 # Credentials for downloading the grsecurity "stable" pages. Requires subscription.
 # The "test" patches do not require authentication or a subscription.
 grsecurity_build_download_username: ''

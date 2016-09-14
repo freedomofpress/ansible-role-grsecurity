@@ -1,10 +1,12 @@
 ---
+- name: Display the build command to be used for compilation.
+  debug:
+    msg: >-
+      Now building via command:
+      `{{ grsecurity_build_compile_command }}`
+
 - name: Build the grsecurity-patched kernel.
-  command: >
-    fakeroot make-kpkg
-    --revision 10.00.{{ grsecurity_build_strategy }}
-    {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
-    --initrd kernel_image
+  command: "{{ grsecurity_build_compile_command }}"
   args:
     chdir: "{{ grsecurity_build_linux_source_directory }}"
   environment:
