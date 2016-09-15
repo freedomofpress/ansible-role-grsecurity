@@ -21,5 +21,9 @@
     dest: ./
     fail_on_missing: yes
     flat: yes
+  # Intentionally fuzzy fileglob to support fetching back multiple build targets, e.g.
+  # image, headers, src, manual, etc.
+  with_fileglob:
+    - "{{ grsecurity_build_download_directory }}/linux-*-{{ linux_kernel_version }}-grsec*.deb"
   tags:
     - fetch
