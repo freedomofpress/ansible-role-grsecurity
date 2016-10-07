@@ -153,6 +153,11 @@ grsecurity_build_download_password: ''
 # fail if this var is not updated. Use the build role to create a package first.
 grsecurity_install_deb_package: ''
 
+# Secondary list var to support multiple deb packages, e.g. image, headers, src.
+# This list will be concatenated with the scalar var above when generating the
+# the list of deb packages to be installed.
+grsecurity_install_deb_packages: []
+
 # For easier console recovery and debugging, the GRUB timeout value (default: 5)
 # can be overridden here. Without a lengthier timeout, it can be very difficult
 # to get into the GRUB menu and select a working kernel to boot. Debian uses 5
@@ -172,6 +177,10 @@ grsecurity_install_download_dir: /usr/local/src
 # for the deb file is the same. If you want to reinstall the same kernel version,
 # for example while developing a new kernel config, set this to true.
 grsecurity_install_force_install: false
+
+# If the target host is remote, assume that rebooting is desired, but don't
+# reboot if we're installing on localhost.
+grsecurity_install_reboot: "{{ false if ansible_connection == 'local' else true }}"
 ```
 
 ## Further reading
