@@ -37,8 +37,6 @@
     msg: >
       Build environment ready. Kernel source is available in
       {{ grsecurity_build_linux_source_directory }} . Run `make menuconfig` in that
-      directory to configure the build, then `make-kpkg kernel_image`
+      directory to configure the build, then `{{ grsecurity_build_compile_command }}`
       or similar to begin compiling the kernel.
   when: grsecurity_build_strategy == "manual"
-
-

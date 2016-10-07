@@ -38,9 +38,13 @@ grsecurity_build_deb_package: >-
 # same kernel source. Disable if you plan to build only once.
 grsecurity_build_use_ccache: true
 
+# Specify targets for make-kpkg, e.g. kernel_image, kernel_headers, or binary.
+# See `man make-kpkg` for details.
 grsecurity_build_kpkg_targets:
   - kernel_image
 
+# The command to run to perform the compilation. Does not include environment
+# variables, such as PATH munging for ccache and setting workers to number of VCPUs.
 grsecurity_build_compile_command:
   fakeroot make-kpkg
   --revision 10.00.{{ grsecurity_build_strategy }}
