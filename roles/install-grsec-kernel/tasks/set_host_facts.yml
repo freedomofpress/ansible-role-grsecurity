@@ -2,25 +2,36 @@
 - name: Get GRUB menu options as host facts.
   action: grub_menu_options
 
-  # Role requires that `grsecurity_install_deb_package` be defined.
+  # Role requires that at least one of `grsecurity_install_deb_package` or
+  # `grsecurity_install_deb_packages` be defined.
 - name: Check filename for deb package.
   fail:
-    msg: >
+    msg: >-
       No deb package specified for installation.
-      Define the variable 'grsecurity_install_deb_package'
-      with the filepath to the local .deb package,
+      Define the variable 'grsecurity_install_deb_packages'
+      with the filepaths to the local .deb packages,
       then rerun the playbook.
-  when: grsecurity_install_deb_package is not defined or
-        grsecurity_install_deb_package == ''
+  when: (grsecurity_install_deb_package is not defined or grsecurity_install_deb_package == '') and
+        (grsecurity_install_deb_packages == [] )
+
+# Since we may have multiple deb packages, first identify the `linux-image-*` package,
+# so we can extract the desired kernel version from that filename string.
+- name: Inspect deb packages for kernel image package
+  set_fact:
+    grsecurity_install_kernel_image_package: "{{ item }}"
+  when: (item|basename).startswith('linux-image')
+  with_flattened:
+    - ["{{ grsecurity_install_deb_package }}"]
+    - "{{ grsecurity_install_deb_packages }}"
 
 - name: Set desired kernel version as host fact.
   set_fact:
-    grsecurity_install_desired_kernel_version: "{{ grsecurity_install_deb_package | extract_kernel_version }}"
+    grsecurity_install_desired_kernel_version: "{{ grsecurity_install_kernel_image_package | extract_kernel_version }}"
 
   # Sanity check to ensure that the filter above worked.
 - name: Fail if desired kernel version as not found.
   fail:
-    msg: >
+    msg: >-
       Could not find desired grsecurity kernel version. Check the filepath
       specified by `grsecurity_install_deb_package` and make sure it matches
       the regular expression 'linux-image-[\d.]+-grsec'.
