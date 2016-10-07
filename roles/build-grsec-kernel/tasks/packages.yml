@@ -10,7 +10,7 @@
         ansible_distribution != "Ubuntu"
 
 - name: Import OS-specific dependency list.
-  include_vars: "{{ ansible_distribution }}.yml"
+  include_vars: "{{ ansible_distribution }}_{{ ansible_distribution_release }}.yml"
 
 - name: Install required packages for building kernel.
   apt:
