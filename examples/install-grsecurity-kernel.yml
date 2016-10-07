@@ -3,7 +3,13 @@
   hosts: grsec-install
   roles:
     - role: install-grsec-kernel
-      # Add the filepath to the .deb package here. The playbook will error out
+      # Add the filepaths to the .deb packages here. The playbook will error out
       # if the package can't be found. If you're referencing this playbook while it's
       # still inside the "examples" directory, you may have to precede the filename with "../".
-      # grsecurity_install_deb_package: ''
+      # grsecurity_install_deb_packages:
+      #   - ../linux-doc-4.7.6-grsec_4.7.6-grsec-10.00.Custom_all.deb
+      #   - ../linux-headers-4.7.6-grsec_4.7.6-grsec-10.00.Custom_amd64.deb
+      #   - ../linux-image-4.7.6-grsec_4.7.6-grsec-10.00.Custom_amd64.deb
+      #   - ../linux-image-4.7.6-grsec-dbg_4.7.6-grsec-10.00.Custom_amd64.deb
+      #   - ../linux-manual-4.7.6-grsec_4.7.6-grsec-10.00.Custom_all.deb
+      #   - ../linux-source-4.7.6-grsec_4.7.6-grsec-10.00.Custom_all.deb
