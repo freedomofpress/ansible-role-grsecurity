@@ -25,5 +25,6 @@
   # image, headers, src, manual, etc.
   with_fileglob:
     - "{{ grsecurity_build_download_directory }}/linux-*-{{ linux_kernel_version }}-grsec*.deb"
+  when: grsecurity_build_fetch_packages == true
   tags:
     - fetch

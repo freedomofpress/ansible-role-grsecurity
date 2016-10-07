@@ -47,6 +47,10 @@ grsecurity_build_compile_command:
   {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
   --initrd {{ grsecurity_build_kpkg_targets|join(' ') }}
 
+# Whether built .deb files should be fetched back to the Ansible controller.
+# Useful when compiling remotely, but not so much on a local workstation.
+grsecurity_build_fetch_packages: true
+
 # Credentials for downloading the grsecurity "stable" pages. Requires subscription.
 # The "test" patches do not require authentication or a subscription.
 grsecurity_build_download_username: ''
