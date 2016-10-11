@@ -55,6 +55,9 @@ grsecurity_build_compile_command:
 # Useful when compiling remotely, but not so much on a local workstation.
 grsecurity_build_fetch_packages: true
 
+# Where fetched packages should be placed. Defaults to adjacent to playbook.
+grsecurity_build_fetch_packages_dest: "./"
+
 # Credentials for downloading the grsecurity "stable" pages. Requires subscription.
 # The "test" patches do not require authentication or a subscription.
 grsecurity_build_download_username: ''
