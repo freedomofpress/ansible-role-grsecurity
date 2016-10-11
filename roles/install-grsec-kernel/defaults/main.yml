@@ -4,6 +4,11 @@
 # fail if this var is not updated. Use the build role to create a package first.
 grsecurity_install_deb_package: ''
 
+# Secondary list var to support multiple deb packages, e.g. image, headers, src.
+# This list will be concatenated with the scalar var above when generating the
+# the list of deb packages to be installed.
+grsecurity_install_deb_packages: []
+
 # For easier console recovery and debugging, the GRUB timeout value (default: 5)
 # can be overridden here. Without a lengthier timeout, it can be very difficult
 # to get into the GRUB menu and select a working kernel to boot. Debian uses 5
