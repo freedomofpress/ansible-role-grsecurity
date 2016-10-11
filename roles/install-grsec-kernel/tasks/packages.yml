@@ -5,10 +5,7 @@
     src: "{{ item }}"
     dest: "{{ grsecurity_install_download_dir }}/{{ item|basename }}"
   register: grsecurity_install_copy_deb_packages_result
-  # Support both single-item and list-var format for deb packages.
-  with_flattened:
-    - ["{{ grsecurity_install_deb_package }}"]
-    - "{{ grsecurity_install_deb_packages }}"
+  with_items: "{{ grsecurity_install_combined_deb_packages }}"
 
 - name: Install PaX utilities.
   become: yes
