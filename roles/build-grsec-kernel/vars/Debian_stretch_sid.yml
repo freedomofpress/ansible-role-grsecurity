@@ -7,3 +7,4 @@ apt_packages:
   - kernel-package
   - libncurses5-dev
   - make
+  - python-requests
