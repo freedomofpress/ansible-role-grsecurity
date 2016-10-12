@@ -1,5 +1,5 @@
 ---
-apt_packages:
+grsecurity_build_apt_packages:
   - build-essential
   - fakeroot
   - gcc-4.9

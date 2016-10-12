@@ -21,5 +21,5 @@
     state: present
     update_cache: true
     cache_valid_time: 3600
-  with_items: apt_packages
+  with_items: "{{ grsecurity_build_apt_packages }}"
   become: yes
