@@ -1,0 +1,11 @@
+---
+grsecurity_build_apt_packages:
+  - build-essential
+  - fakeroot
+  - gcc-4.8
+  - gcc-4.8-plugin-dev
+  - kernel-package
+  - libncurses5-dev
+  - libssl-dev
+  - make
+  - python-requests
