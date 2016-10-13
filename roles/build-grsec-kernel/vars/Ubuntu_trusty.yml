@@ -4,7 +4,6 @@ grsecurity_build_apt_packages:
   - fakeroot
   - gcc-4.8
   - gcc-4.8-plugin-dev
-  - git-core
   - kernel-package
   - libncurses5-dev
   - libssl-dev

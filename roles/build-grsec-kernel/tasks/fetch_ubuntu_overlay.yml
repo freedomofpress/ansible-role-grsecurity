@@ -1,4 +1,10 @@
 ---
+- name: Install git.
+  become: yes
+  apt:
+    name: git-core
+    state: present
+
 - name: clone ubuntu overlay git repository (slow!)
   git:
     repo: git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git
