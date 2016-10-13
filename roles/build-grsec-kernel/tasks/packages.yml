@@ -1,19 +1,22 @@
 ---
-- name: Validate support for compiling kernel on current OS.
-  fail:
-    msg: >
-      Cannot compile grsecurity under {{ ansible_distribution }}.
-      The problem may be as simple as a few missing package
-      dependencies. Send a pull request to add support for your distro!
-      https://github.com/freedomofpress/grsec
-  when: ansible_distribution != "Debian" and
-        ansible_distribution != "Ubuntu"
-
-- name: Import OS-specific dependency list.
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}_{{ ansible_distribution_release }}.yml"
-    - "{{ ansible_distribution }}_{{ ansible_distribution_version|replace('/', '_') }}.yml"
+- block:
+  # The distro-specific vars import serves as a validation for target OS.
+  # Catch the failure raised by a missing vars file, and display an informative
+  # message soliciting contributions.
+  - name: Import OS-specific dependency list.
+    include_vars: "{{ item }}"
+    with_first_found:
+      - "{{ ansible_distribution }}_{{ ansible_distribution_release }}.yml"
+      - "{{ ansible_distribution }}_{{ ansible_distribution_version|replace('/', '_') }}.yml"
+  rescue:
+    - name: Validate support for compiling kernel on current OS.
+      fail:
+        msg: >-
+          Cannot compile a grsecurity-patched kernel under
+          {{ ansible_distribution }} {{ ansible_distribution_release }}.
+          The problem may be as simple as a few missing package
+          dependencies. Send a pull request to add support for your distro!
+          https://github.com/freedomofpress/ansible-role-grsecurity
 
 - name: Install required packages for building kernel.
   apt:
