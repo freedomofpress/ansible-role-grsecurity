@@ -182,6 +182,11 @@ grsecurity_install_force_install: false
 # reboot if we're installing on localhost.
 grsecurity_install_reboot: "{{ false if ansible_connection == 'local' else true }}"
 ```
+## Access to stable patches
+The "stable" and "stable2" patch types are restricted to grsecurity subscribers, and require
+authentication when downloading the patches. Subscribers can also request
+automated on-demand builds for more distributions than supported by the build role.
+See the [grsecurity commercial support] page for more information.
 
 ## Further reading
 
@@ -192,4 +197,4 @@ grsecurity_install_reboot: "{{ false if ansible_connection == 'local' else true 
 [Freedom of the Press Foundation]: https://freedom.press
 [SecureDrop]: https://securedrop.org
 [grsecurity]: https://grsecurity.net/
-
+[grsecurity commercial support]: https://grsecurity.net/business_support.php
