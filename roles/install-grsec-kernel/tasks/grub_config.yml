@@ -2,7 +2,7 @@
 - name: Find the menu title for the grsecurity kernel in GRUB config.
   set_fact:
     grub_grsecurity_menu_entry: "{{ item }}"
-  with_items: grub_menu_options
+  with_items: "{{ grub_menu_options }}"
   # Check for an exact match, right-aligned, for the target kernel version
   # currently being installed. Tested on Debian. Example string to match:
   #   Debian GNU/Linux, with Linux 3.14.54-grsec
