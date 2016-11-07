@@ -2,3 +2,4 @@
 *.deb
 spec_tests/gems/*
 spec_tests/Gemfile.lock
+*.py[cod]
