@@ -4,10 +4,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.define 'grsec-build', primary: true do |build|
-    # Using Ubuntu 15.04 rather than 14.04 LTS due to a bug in kernel-package.
-    # See #30 for details: https://github.com/freedomofpress/grsec/issues/30
-    build.vm.box = "ubuntu/vivid64"
-    build.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/vivid/current/vivid-server-cloudimg-amd64-vagrant-disk1.box"
+    build.vm.box = "bento/ubuntu-14.04"
     build.vm.hostname = "grsec-build"
 
     build.vm.provision :ansible do |ansible|
@@ -37,8 +34,7 @@ Vagrant.configure("2") do |config|
     # install.vm.box = "debian/wheezy64"
     # install.vm.box = "debian/jessie64"
     # install.vm.box = "ubuntu/vivid64"
-    install.vm.box = "ubuntu/trusty64"
-    install.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    install.vm.box = "bento/ubuntu-14.04"
     install.vm.hostname = "grsec-install"
     # If grsec install works, the shared folder mount will fail.
     # Set `disabled: true` below to prevent the error post-install.
@@ -79,4 +75,3 @@ def available_vcpus
   # return available_vcpus / 2
   return available_vcpus
 end
-
