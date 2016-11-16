@@ -15,5 +15,5 @@
       tags: metapackage
 
     - role: build-grsec-kernel
-      grsecurity_build_patch_type: stable
+      grsecurity_build_patch_type: stable2
       tags: kernel
