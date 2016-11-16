@@ -21,7 +21,7 @@
 - name: Install required packages for building kernel.
   apt:
     name: "{{ item }}"
-    state: present
+    state: latest
     update_cache: true
     cache_valid_time: 3600
   with_items: "{{ grsecurity_build_apt_packages }}"
