@@ -25,4 +25,3 @@
   register: gpg_henriques_import
   changed_when: "'imported: 1' in gpg_henriques_import.stderr"
   when: grsecurity_build_include_ubuntu_overlay == true
-
