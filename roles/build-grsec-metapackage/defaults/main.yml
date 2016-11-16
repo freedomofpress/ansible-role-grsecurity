@@ -1,8 +1,8 @@
 ---
 grsec_package_name: securedrop-grsec
 grsec_build_parent_directory: /tmp/build
-grsec_kernel_version: "3.14.57"
-securedrop_version: "0.3.5"
+grsec_kernel_version: "4.4.32"
+securedrop_version: "0.3.10"
 securedrop_architecture: amd64
 
 grsec_package_name_verbose: "{{ grsec_package_name }}-{{ grsec_kernel_version }}-{{ securedrop_architecture }}"
