@@ -11,7 +11,9 @@
   become: yes
   apt:
     name: "{{ item }}"
-    state: present
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
   # Always install paxtest, but allow paxctl to be skipped, in case paxctld is used.
   with_flattened:
     - ['paxtest']

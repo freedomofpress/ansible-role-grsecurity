@@ -3,7 +3,9 @@
   become: yes
   apt:
     name: git-core
-    state: present
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
 
 - name: clone ubuntu overlay git repository (slow!)
   git:
