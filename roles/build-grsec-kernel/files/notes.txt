@@ -1,0 +1,2 @@
+* config-securedrop: Original configuration of SD kernel.
+* config-securedrop-1: Also removed wireless networking support.
