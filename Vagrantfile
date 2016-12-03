@@ -27,6 +27,10 @@ Vagrant.configure("2") do |config|
       v.memory = 2048
       v.customize ["modifyvm", :id, "--cpus", available_vcpus]
     end
+    build.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = available_vcpus
+    end
   end
 
   # Separate machine for testing installation of .deb packages.
