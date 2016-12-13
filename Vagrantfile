@@ -30,6 +30,7 @@ Vagrant.configure("2") do |config|
     build.vm.provider "libvirt" do |v|
       v.memory = 2048
       v.cpus = available_vcpus
+      v.cpu_mode = 'host-passthrough'
     end
   end
 
