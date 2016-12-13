@@ -2,6 +2,7 @@
 # Separate task list for ccache-related tasks,
 # to make dynamic inclusion easier. If grsecurity_build_use_ccache
 # is set to `false`, then the package won't even be installed.
+
 - name: Install ccache.
   apt:
     name: ccache
@@ -10,11 +11,21 @@
     cache_valid_time: 3600
   become: yes
 
-  # Increasing the cache size from 1GB (default) to 5GB.
-  # Testing of several successive compiles showed 5GB
-  # to be a reasonable limit:
-  #   $ ccache -s | grep size
-  #   cache size                           4.5 Gbytes
-  #   max cache size                       5.0 Gbytes
+- name: Read current ccache cache size.
+  shell: >
+    ccache --show-stats
+    | grep -P '^max cache size'
+    | perl -lane 'print "$F[-2] $F[-1]"'
+  changed_when: false
+  register: ccache_cache_size_result
+
+# Increasing the cache size from 1GB (default) to 5GB.
+# Testing of several successive compiles showed 5GB
+# to be a reasonable limit:
+#   $ ccache -s | grep size
+#   cache size                           4.5 Gbytes
+#   max cache size                       5.0 Gbytes
 - name: Increase ccache cache size.
-  command: ccache -M 5G
+  command: ccache --max-size 5G
+  register: ccache_set_cache_result
+  changed_when: not ccache_set_cache_result.stdout.endswith(ccache_cache_size_result.stdout)
