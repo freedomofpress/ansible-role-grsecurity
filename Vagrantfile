@@ -27,6 +27,15 @@ Vagrant.configure("2") do |config|
       v.memory = 2048
       v.customize ["modifyvm", :id, "--cpus", available_vcpus]
     end
+    build.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = available_vcpus
+      # If you are experiencing CPU-compatibility warnings (esp. regarding lack
+      # of svm) try uncommenting out the following line (see
+      # https://github.com/freedomofpress/ansible-role-grsecurity/pull/85#issuecomment-266611369
+      # for more).
+      # v.cpu_mode = 'host-passthrough'
+    end
   end
 
   # Separate machine for testing installation of .deb packages.
