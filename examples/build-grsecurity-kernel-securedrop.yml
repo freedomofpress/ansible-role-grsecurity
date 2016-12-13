@@ -1,6 +1,6 @@
 ---
 - name: Build Linux kernel for SecureDrop.
-  hosts: grsec-build
+  hosts: grsec-build-securedrop
   vars_prompt:
     - name: grsecurity_build_download_username
       prompt: "Username for grsecurity HTTP auth"

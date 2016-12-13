@@ -38,6 +38,27 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  # Using a Trusty-based VM for building SecureDrop kernels using the `stable` patches.
+  # Trusty boxes can't build `stable2` or `test` patches; see #30 for details:
+  # https://github.com/freedomofpress/grsec/issues/30
+  config.vm.define 'grsec-build-securedrop', primary: true do |build_sd|
+    build_sd.vm.box = "bento/ubuntu-14.04"
+    build_sd.vm.hostname = "grsec-build-securedrop"
+    build_sd.vm.provision :ansible do |ansible|
+      # Target the SecureDrop-specific playbook.
+      ansible.playbook = 'examples/build-grsecurity-kernel-securedrop.yml'
+      ansible.verbose = 'vv'
+    end
+    build_sd.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.customize ["modifyvm", :id, "--cpus", available_vcpus]
+    end
+    build_sd.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = available_vcpus
+    end
+  end
+
   # Separate machine for testing installation of .deb packages.
   # In case of problems, you don't want to pollute the build machine
   # with the test packages.
