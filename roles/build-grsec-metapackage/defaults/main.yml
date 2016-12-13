@@ -1,8 +1,22 @@
 ---
+# Name of the metapackage created by this role.
 grsecurity_metapackage_name: securedrop-grsec
+
+# Path to working directory for preparing build on target host.
 grsecurity_metapackage_parent_directory: /tmp/build
-grsecurity_metapackage_kernel_version: "3.14.79"
+
+# Version of the Linux kernel that was patched, reused as 'Version' in the
+# control file for this metapackage. Provides meaningful semver for upgrades.
+# The `build-grsec-kernel` role will dynamically define `linux_kernel_version`
+# based on patch type selected. If the metapackage role is called in a different
+# play, then the var won't be defined, so let's set it to a string in that case.
+grsecurity_metapackage_kernel_version: "{{ linux_kernel_version|default('3.14.79') }}"
+
+# Architecture restriction for the control file for metapackage. Should match
+# what was chosen in the build role.
 grsecurity_metapackage_architecture: amd64
 
+# Reusable vars for filepaths and filenames, so the built package can be fetched back
+# to the Ansible controller.
 grsecurity_metapackage_name_verbose: "{{ grsecurity_metapackage_name }}-{{ grsecurity_metapackage_kernel_version }}-{{ grsecurity_metapackage_architecture }}"
 grsecurity_metapackage_build_directory: "{{ grsecurity_metapackage_parent_directory }}/{{ grsecurity_metapackage_name_verbose }}"
