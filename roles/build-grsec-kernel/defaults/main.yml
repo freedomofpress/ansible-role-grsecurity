@@ -14,8 +14,7 @@ grsecurity_build_strategy: manual
 
 # Premade config file for use during compilation. Useful if you've previously
 # run `make menuconfig` and want to restore the custom settings.
-# Using `None` rather than an empty string to ensure Ansible skips by default.
-grsecurity_build_custom_config: None
+grsecurity_build_custom_config: ''
 
 # When building for installation on Ubuntu, one should include the
 # overlay to ensure that Ubuntu-specific options for AppArmor work.
