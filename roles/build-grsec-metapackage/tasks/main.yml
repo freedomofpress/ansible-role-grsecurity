@@ -2,29 +2,29 @@
 - name: Create parent build directory.
   file:
     state: directory
-    path: "{{ grsec_build_parent_directory }}"
+    path: "{{ grsecurity_metapackage_parent_directory }}"
 
 - name: Clean build subdirectory.
   file:
     state: absent
-    path: "{{ grsec_build_directory }}"
+    path: "{{ grsecurity_metapackage_build_directory }}"
 
 - name: Create build subdirectory.
   file:
     state: directory
-    path: "{{ grsec_build_directory }}/DEBIAN"
+    path: "{{ grsecurity_metapackage_build_directory }}/DEBIAN"
 
 - name: Copy DEBIAN control file.
   template:
     src: debian-control-file
-    dest: "{{ grsec_build_directory }}/DEBIAN/control"
+    dest: "{{ grsecurity_metapackage_build_directory }}/DEBIAN/control"
 
 - name: Build the Debian package.
-  command: dpkg-deb --build {{ grsec_build_directory }}
+  command: dpkg-deb --build {{ grsecurity_metapackage_build_directory }}
 
 - name: Fetch metapackage back to localhost.
   fetch:
-    src: "{{ grsec_build_parent_directory }}/{{ grsec_package_name_verbose }}.deb"
+    src: "{{ grsecurity_metapackage_parent_directory }}/{{ grsecurity_metapackage_name_verbose }}.deb"
     dest: built-packages/
     flat: yes
 
