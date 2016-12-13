@@ -45,7 +45,16 @@ Vagrant.configure("2") do |config|
     build_sd.vm.box = "bento/ubuntu-14.04"
     build_sd.vm.hostname = "grsec-build-securedrop"
     build_sd.vm.provision :ansible do |ansible|
-      # Target the SecureDrop-specific playbook.
+      # Target the SecureDrop-specific playbook. Unfortunately Ansible won't
+      # display the `vars_prompt` when run via vagrant, so you should actually
+      # invoke `ansible-playbook` directly, like so:
+      #
+      # ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory \
+      # -u vagrant \
+      # --private-key .vagrant/machines/grsec-build/libvirt/private_key \
+      # examples/build-grsecurity-kernel-securedrop.yml
+      #
+      # Wish that weren't necessary, but it is.
       ansible.playbook = 'examples/build-grsecurity-kernel-securedrop.yml'
       ansible.verbose = 'vv'
     end
