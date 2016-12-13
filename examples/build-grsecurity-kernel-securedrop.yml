@@ -23,4 +23,5 @@
       # because it depends on dynamic facts from the build role for determining
       # the appropriate kernel version, to set as dependencies.
     - role: build-grsec-metapackage
+      grsecurity_metapackage_name: securedrop-grsec
       tags: metapackage

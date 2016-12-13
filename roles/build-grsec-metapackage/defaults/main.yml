@@ -1,6 +1,6 @@
 ---
 # Name of the metapackage created by this role.
-grsecurity_metapackage_name: securedrop-grsec
+grsecurity_metapackage_name: linux-grsec-metapackage
 
 # Path to working directory for preparing build on target host.
 grsecurity_metapackage_parent_directory: /tmp/build
