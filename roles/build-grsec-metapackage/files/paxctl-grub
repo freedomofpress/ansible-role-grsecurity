@@ -6,6 +6,11 @@ set -e
 # the kernel image will fail to install.
 #
 # This script must run prior to the `zz-update-grub` kernel postinst hook,
-# 
-paxctl -Cpm /usr/sbin/grub-probe
-paxctl -Cpm /usr/sbin/grub-mkdevicemap
+# which will happen automatically due to sorting of the postinst scripts.
+#
+# Enabling EMUTRAMP on grub binaries, which requires `CONFIG_PAX_EMUTRAMP=y`
+# to be set in the kernel config. Using `-z` to clear out any other flags,
+# so the binaries will get only the intended settings, and all others
+# not maintained by this script will be removed.
+paxctl -zCE /usr/sbin/grub-probe
+paxctl -zCE /usr/sbin/grub-mkdevicemap
