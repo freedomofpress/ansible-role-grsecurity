@@ -14,3 +14,4 @@ set -e
 # not maintained by this script will be removed.
 paxctl -zCE /usr/sbin/grub-probe
 paxctl -zCE /usr/sbin/grub-mkdevicemap
+paxctl -zCE /usr/bin/grub-script-check
