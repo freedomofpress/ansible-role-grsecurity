@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+# Set PaX flags on GRUB binaries. Required when running under a grsec kernel,
+# i.e. during kernel upgrades. If the GRUB binaries do not have the proper flags,
+# the kernel image will fail to install.
+#
+# This script must run prior to the `zz-update-grub` kernel postinst hook,
+# 
+paxctl -Cpm /usr/sbin/grub-probe
+paxctl -Cpm /usr/sbin/grub-mkdevicemap

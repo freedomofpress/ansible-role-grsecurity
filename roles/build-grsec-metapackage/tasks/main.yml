@@ -5,6 +5,7 @@
     path: "{{ grsecurity_metapackage_parent_directory }}"
 
 - name: Clean build subdirectory.
+  become: yes
   file:
     state: absent
     path: "{{ grsecurity_metapackage_build_directory }}"
@@ -19,6 +20,24 @@
     src: debian-control-file
     dest: "{{ grsecurity_metapackage_build_directory }}/DEBIAN/control"
 
+- name: Create files directory for kernel postinst hook.
+  become: yes
+  file:
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+    dest: "{{ grsecurity_metapackage_build_directory }}/etc/kernel/postinst.d"
+
+- name: Copy kernel postinst hook for PaX flag maintenance.
+  become: yes
+  copy:
+    src: paxctl-grub
+    mode: "0755"
+    owner: root
+    group: root
+    dest: "{{ grsecurity_metapackage_build_directory }}/etc/kernel/postinst.d/paxctl-grub"
+
 - name: Build the Debian package.
   command: dpkg-deb --build {{ grsecurity_metapackage_build_directory }}
 
@@ -27,4 +46,3 @@
     src: "{{ grsecurity_metapackage_parent_directory }}/{{ grsecurity_metapackage_name_verbose }}.deb"
     dest: built-packages/
     flat: yes
-
