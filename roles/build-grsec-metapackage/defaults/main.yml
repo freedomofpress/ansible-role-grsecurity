@@ -12,6 +12,11 @@ grsecurity_metapackage_parent_directory: /tmp/build
 # play, then the var won't be defined, so let's set it to a string in that case.
 grsecurity_metapackage_kernel_version: "{{ linux_kernel_version|default('3.14.79') }}"
 
+# Optional appended version for chaining versions, e.g. "3.14.79+0.0.1".
+# Can be useful for shipping new versions of the metapackage without bumping
+# the underlying dependencies.
+grsecurity_metapackage_kernel_version_suffix: ''
+
 # Architecture restriction for the control file for metapackage. Should match
 # what was chosen in the build role.
 grsecurity_metapackage_architecture: amd64
