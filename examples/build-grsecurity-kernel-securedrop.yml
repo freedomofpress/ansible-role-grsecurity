@@ -24,6 +24,5 @@
       # the appropriate kernel version, to set as dependencies.
     - role: build-grsec-metapackage
       grsecurity_metapackage_name: securedrop-grsec
-      grsecurity_metapackage_kernel_version: 3.14.48
-      grsecurity_metapackage_kernel_version_suffix: r1
+      grsecurity_metapackage_kernel_version: 3.14.79
       tags: metapackage
