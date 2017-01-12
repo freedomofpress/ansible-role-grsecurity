@@ -11,9 +11,6 @@
     - name: grsecurity_build_download_password
       prompt: "Password for grsecurity HTTP auth"
   roles:
-    - role: build-grsec-metapackage
-      tags: metapackage
-
     - role: build-grsec-kernel
       grsecurity_build_patch_type: stable2
       tags: kernel
