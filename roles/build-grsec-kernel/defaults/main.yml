@@ -45,9 +45,12 @@ grsecurity_build_kpkg_targets:
 
 # The command to run to perform the compilation. Does not include environment
 # variables, such as PATH munging for ccache and setting workers to number of VCPUs.
+# The revision flag maps to the Version field in the Debian package control file.
+# For a grsecurity patch file `grsecurity-3.1-4.4.32-201611150755.patch`, it would be:
+# `4.4.32+3.1-201611150755`.
 grsecurity_build_compile_command:
   fakeroot make-kpkg
-  --revision 10.00.{{ grsecurity_build_strategy }}
+  --revision {{ linux_kernel_version }}+{{ grsecurity_version }}-{{ grsecurity_patch_timestamp }}
   {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
   --initrd {{ grsecurity_build_kpkg_targets|join(' ') }}
 
