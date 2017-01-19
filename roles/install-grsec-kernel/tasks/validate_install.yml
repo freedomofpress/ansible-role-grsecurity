@@ -17,12 +17,9 @@
     state=started
   become: false
 
-  # Adding extra wait time to prevent timeouts
-  # during debugging. Likely not necessary, but test
-  # before removing.
 - name: Wait extra time for server to come back up.
   pause:
-    seconds: 30
+    seconds: "{{ grsecurity_install_extra_wait_seconds }}"
 
   # Running the setup module will refresh the `ansible_kernel` host fact
   # with the current value. The `grsecurity_install_desired_kernel_version` host fact

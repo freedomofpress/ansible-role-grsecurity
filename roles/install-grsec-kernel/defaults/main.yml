@@ -33,3 +33,7 @@ grsecurity_install_force_install: false
 # we'll override this setting if the role is running against localhost, to prevent
 # reboots of the Ansible controller.
 grsecurity_install_reboot: true
+
+# If rebooting, wait for additional time after the SSH port reports being open.
+# Some hosts respond early to port listening before logins are accepted.
+grsecurity_install_extra_wait_seconds: 30
