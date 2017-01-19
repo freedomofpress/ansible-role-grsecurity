@@ -11,18 +11,15 @@
 
 - name: Wait for server to come back.
   local_action: wait_for
-    host={{ ansible_ssh_host }}
-    port={{ ansible_ssh_port | default('22')}}
+    host={{ ansible_ssh_host|default(ansible_host|default(inventory_hostname)) }}
+    port={{ ansible_ssh_port|default(ansible_port|default('22')) }}
     delay=30
     state=started
   become: false
 
-  # Adding extra wait time to prevent timeouts
-  # during debugging. Likely not necessary, but test
-  # before removing.
 - name: Wait extra time for server to come back up.
   pause:
-    seconds: 30
+    seconds: "{{ grsecurity_install_extra_wait_seconds }}"
 
   # Running the setup module will refresh the `ansible_kernel` host fact
   # with the current value. The `grsecurity_install_desired_kernel_version` host fact
@@ -36,3 +33,13 @@
       Grsecurity kernel is not running. Expected to find
       {{ grsecurity_install_desired_kernel_version }}. Instead, found
       kernel {{ ansible_kernel }}.
+  when: grsecurity_install_desired_kernel_version != ansible_kernel and
+        grsecurity_install_reboot == true
+
+- name: Display message about required reboot.
+  debug:
+    msg: >-
+      Installed grsecurity-patched kernel version '{{ grsecurity_install_desired_kernel_version }}'.
+      You must reboot the host to load the new kernel.
+  when: grsecurity_install_desired_kernel_version != ansible_kernel and
+        grsecurity_install_reboot == false

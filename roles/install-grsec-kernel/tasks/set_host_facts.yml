@@ -2,6 +2,13 @@
 - name: Get GRUB menu options as host facts.
   action: grub_menu_options
 
+  # Override the role default to disable reboots if running against
+  # localhost. Under no circumstances should this role reboot localhost.
+- name: Check if running against Ansible controller, to prevent reboots.
+  set_fact:
+    grsecurity_install_reboot: false
+  when: ansible_connection == 'local'
+
   # Role requires that at least one of `grsecurity_install_deb_package` or
   # `grsecurity_install_deb_packages` be defined.
 - name: Check filename for deb package.
