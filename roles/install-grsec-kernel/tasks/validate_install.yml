@@ -36,3 +36,13 @@
       Grsecurity kernel is not running. Expected to find
       {{ grsecurity_install_desired_kernel_version }}. Instead, found
       kernel {{ ansible_kernel }}.
+  when: grsecurity_install_desired_kernel_version != ansible_kernel and
+        grsecurity_install_reboot == true
+
+- name: Display message about required reboot.
+  debug:
+    msg: >-
+      Installed grsecurity-patched kernel version '{{ grsecurity_install_desired_kernel_version }}'.
+      You must reboot the host to load the new kernel.
+  when: grsecurity_install_desired_kernel_version != ansible_kernel and
+        grsecurity_install_reboot == false
