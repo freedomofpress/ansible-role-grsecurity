@@ -29,6 +29,7 @@ grsecurity_install_download_dir: /usr/local/src
 # for example while developing a new kernel config, set this to true.
 grsecurity_install_force_install: false
 
-# If the target host is remote, assume that rebooting is desired, but don't
-# reboot if we're installing on localhost.
-grsecurity_install_reboot: "{{ false if ansible_connection == 'local' else true }}"
+# If the target host is remote, assume that rebooting is desired. At the task level,
+# we'll override this setting if the role is running against localhost, to prevent
+# reboots of the Ansible controller.
+grsecurity_install_reboot: true
