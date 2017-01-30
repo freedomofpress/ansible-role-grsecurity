@@ -15,7 +15,7 @@
 
 - name: Wait for server to come back.
   local_action: wait_for
-    host={{ ansible_ssh_host|default(ansible_host|default(inventory_hostname)) }}
+    host={{ inventory_hostname|default(ansible_host) }}
     port={{ ansible_ssh_port|default(ansible_port|default('22')) }}
     delay=30
     state=started
