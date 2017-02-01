@@ -7,6 +7,10 @@
   async: 1
   poll: 0
   ignore_errors: true
+  register: reboot_result
+  changed_when: not reboot_result|skipped
+  when: grsecurity_install_desired_kernel_version != ansible_kernel and
+        grsecurity_install_reboot == true
   become: yes
 
 - name: Wait for server to come back.
@@ -16,10 +20,12 @@
     delay=30
     state=started
   become: false
+  when: reboot_result|changed
 
 - name: Wait extra time for server to come back up.
   pause:
     seconds: "{{ grsecurity_install_extra_wait_seconds }}"
+  when: reboot_result|changed
 
   # Running the setup module will refresh the `ansible_kernel` host fact
   # with the current value. The `grsecurity_install_desired_kernel_version` host fact
