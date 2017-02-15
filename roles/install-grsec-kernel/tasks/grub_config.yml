@@ -29,6 +29,7 @@
   command: grep -q GRUB_DISTRIBUTOR /etc/default/grub
   register: reg_grub_distributor_check
   ignore_errors: yes
+  changed_when: false
   when: ansible_distribution == "Debian"
 
 - name: Set submenu grub text
