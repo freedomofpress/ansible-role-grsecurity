@@ -27,14 +27,14 @@
 
 - name: Check whether GRUB DISTRIBUTOR is defined
   command: grep -q GRUB_DISTRIBUTOR /etc/default/grub
-  register: reg_grub_distributor_check
+  register: grub_distributor_check_result
   ignore_errors: yes
   changed_when: false
   when: ansible_distribution == "Debian"
 
 - name: Set submenu grub text
   set_fact:
-    grub_submenu_txt: Advanced options for {% if reg_grub_distributor_check.rc == 0 %}Debian {% endif %}GNU/Linux>
+    grub_submenu_prefix: Advanced options for {% if grub_distributor_check_result.rc == 0 %}Debian {% endif %}GNU/Linux>
   when: ansible_distribution == "Debian"
 
 - name: Set grsecurity kernel as default option in GRUB config.
@@ -52,7 +52,7 @@
     #   inux-3.14.53-grsec-advanced-fc2b679a-e448-4f54-b465-62735483
     #   f42f' (for 2.00 or later)
     line: |
-      GRUB_DEFAULT="{{ grub_submenu_txt|default('') }}{{ grub_grsecurity_menu_entry.name }}"
+      GRUB_DEFAULT="{{ grub_submenu_prefix|default('') }}{{ grub_grsecurity_menu_entry.name }}"
     dest: /etc/default/grub
   notify:
     - Update GRUB.
