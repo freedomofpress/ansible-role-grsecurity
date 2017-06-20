@@ -26,4 +26,8 @@
     - role: build-grsec-metapackage
       grsecurity_metapackage_name: securedrop-grsec
       grsecurity_metapackage_kernel_version: 3.14.79
+      # The SecureDrop project has already released a metapackage
+      # based on Linux kenrel 3.14.79 (with grsecurity patches), so we must
+      # bump the version number with a suffix to ensure apt priority.
+      grsecurity_metapackage_kernel_version_suffix: r1
       tags: metapackage
