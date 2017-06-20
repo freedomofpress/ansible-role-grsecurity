@@ -38,6 +38,24 @@
     group: root
     dest: "{{ grsecurity_metapackage_build_directory }}/etc/kernel/postinst.d/paxctl-grub"
 
+- name: Create files directory for sysctl options.
+  become: yes
+  file:
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+    dest: "{{ grsecurity_metapackage_build_directory }}/etc/sysctl.d"
+
+- name: Copy sysctl options for grsecurity kernel.
+  become: yes
+  copy:
+    dest: "{{ grsecurity_metapackage_build_directory }}/etc/sysctl.d/30-securedrop.conf"
+    src: securedrop-sysctl-options.conf
+    mode: "0644"
+    owner: root
+    group: root
+
 - name: Build the Debian package.
   command: dpkg-deb --build {{ grsecurity_metapackage_build_directory }}
 
