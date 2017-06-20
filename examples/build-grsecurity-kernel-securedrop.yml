@@ -16,6 +16,7 @@
       # Future versions of SecureDrop may depend on the 4.x series, in which case
       # the `stable2` patch type should be used.
       grsecurity_build_patch_type: stable
+      grsecurity_build_custom_config: config-securedrop
       grsecurity_build_include_ubuntu_overlay: true
       tags: kernel
 
