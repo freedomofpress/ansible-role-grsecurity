@@ -25,3 +25,9 @@
   register: gpg_henriques_import
   changed_when: "'imported: 1' in gpg_henriques_import.stderr"
   when: grsecurity_build_include_ubuntu_overlay == true
+
+- name: Import Stefan Bader GPG key (Canonical/Ubuntu Kernel Team)
+  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys E8675DEECBEECEA3
+  register: gpg_bader_import
+  changed_when: "'imported: 1' in gpg_bader_import.stderr"
+  when: grsecurity_build_include_ubuntu_overlay == true
