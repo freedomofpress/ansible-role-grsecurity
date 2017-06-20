@@ -43,14 +43,19 @@ grsecurity_build_use_ccache: true
 grsecurity_build_kpkg_targets:
   - kernel_image
 
+# Revision used for providing a unique Version field in the built packages.
+# Sometimes grsecurity patches iterate without the underlying kernel src
+# changing, so we'll include both linux and grsecurity version information.
+# The revision flag maps to the Version field in the Debian package control file.
+# For a grsecurity patch file `grsecurity-3.1-4.4.32-201611150755.patch`,
+# it would be: `4.4.32-grsec-3.1.201611150755`.
+grsecurity_build_revision: "{{ linux_kernel_version }}-grsec-{{ grsecurity_version }}.{{ grsecurity_patch_timestamp }}"
+
 # The command to run to perform the compilation. Does not include environment
 # variables, such as PATH munging for ccache and setting workers to number of VCPUs.
-# The revision flag maps to the Version field in the Debian package control file.
-# For a grsecurity patch file `grsecurity-3.1-4.4.32-201611150755.patch`, it would be:
-# `4.4.32+3.1-201611150755`.
 grsecurity_build_compile_command:
   fakeroot make-kpkg
-  --revision {{ linux_kernel_version }}+{{ grsecurity_version }}-{{ grsecurity_patch_timestamp }}
+  --revision {{ grsecurity_build_revision }}
   {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
   --initrd {{ grsecurity_build_kpkg_targets|join(' ') }}
 
