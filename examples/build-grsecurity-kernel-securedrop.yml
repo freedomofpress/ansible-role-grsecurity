@@ -20,6 +20,12 @@
       grsecurity_build_include_ubuntu_overlay: true
       # Bumping the revision from default "10" to "11" to ensure upgrades.
       grsecurity_build_revision: 3.14.79-grsec-11.00.Custom
+      # We've been maintaining both -image and -headers packages. Revisit
+      # and consider dropping support for headers and just shipping the image.
+      grsecurity_build_kpkg_targets:
+        - kernel_headers
+        - kernel_image
+        - kernel_source
       tags: kernel
 
       # Running the metapackage role *after* the build role is important,
