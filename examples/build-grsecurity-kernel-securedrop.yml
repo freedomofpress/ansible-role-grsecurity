@@ -18,6 +18,8 @@
       grsecurity_build_patch_type: stable
       grsecurity_build_custom_config: config-securedrop
       grsecurity_build_include_ubuntu_overlay: true
+      # Bumping the revision from default "10" to "11" to ensure upgrades.
+      grsecurity_build_revision: 3.14.79-grsec-11.00.Custom
       tags: kernel
 
       # Running the metapackage role *after* the build role is important,
