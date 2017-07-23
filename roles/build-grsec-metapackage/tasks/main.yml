@@ -49,9 +49,9 @@
 
 - name: Copy sysctl options for grsecurity kernel.
   become: yes
-  copy:
+  template:
     dest: "{{ grsecurity_metapackage_build_directory }}/etc/sysctl.d/30-securedrop.conf"
-    src: securedrop-sysctl-options.conf
+    src: securedrop-sysctl-options.j2
     mode: "0644"
     owner: root
     group: root
