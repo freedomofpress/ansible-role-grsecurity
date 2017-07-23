@@ -1,33 +1,13 @@
 ---
-- name: Import Greg Kroah-Hartman GPG key (Linux stable release signing key).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys 647F28654894E3BD457199BE38DBBDC86092693E
-  register: gpg_import_greg_result
-  changed_when: "'imported: 1' in gpg_import_greg_result.stderr"
+- name: Import GPG keys for building Linux kernel.
+  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys "{{ item.fingerprint }}"
+  register: gpg_import_linux_pubkeys_result
+  changed_when: "'imported: 1' in gpg_import_linux_pubkeys_result.item.stderr"
+  with_items: "{{ grsecurity_build_gpg_keys }}"
 
-- name: Import kernel.org checksum autosigner GPG key.
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys B8868C80BA62A1FFFAF5FDA9632D3A06589DA6B1
-  register: gpg_import_autosigner_result
-  changed_when: "'imported: 1' in gpg_import_autosigner_result.stderr"
-
-- name: Import Bradley Spengler GPG key (grsecurity maintainer key).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys DE9452CE46F42094907F108B44D1C0F82525FE49
-  register: gpg_import_spender_result
-  changed_when: "'imported: 1' in gpg_import_spender_result.stderr"
-
-- name: Import Brad Figg GPG key (Canonical/Ubuntu Kernel Team).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys 11D6ADA3D9E83D93ACBD837F0C7B589B105BE7F7
-  register: gpg_import_figg_result
-  changed_when: "'imported: 1' in gpg_import_figg_result.stderr"
-  when: grsecurity_build_include_ubuntu_overlay == true
-
-- name: Import Luis Henriques GPG key (Canonical/LKM).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys D4E1E31744709144B0F8101ADB74AEB8FDCE24FC
-  register: gpg_henriques_import
-  changed_when: "'imported: 1' in gpg_henriques_import.stderr"
-  when: grsecurity_build_include_ubuntu_overlay == true
-
-- name: Import Stefan Bader GPG key (Canonical/Ubuntu Kernel Team)
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys DB5D7CCAF3994E3395DA4D3EE8675DEECBEECEA3
-  register: gpg_bader_import
-  changed_when: "'imported: 1' in gpg_bader_import.stderr"
+- name: Import GPG keys for building Linux kernel.
+  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys "{{ item.fingerprint }}"
+  register: gpg_import_ubuntu_pubkeys_result
+  changed_when: "'imported: 1' in gpg_import_ubuntu_pubkeys_result.item.stderr"
+  with_items: "{{ grsecurity_build_gpg_keys_ubuntu }}"
   when: grsecurity_build_include_ubuntu_overlay == true

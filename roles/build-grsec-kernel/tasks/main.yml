@@ -25,6 +25,7 @@
     - always
 
 - include: gpg_keys.yml
+  tags: gpg
 
 - include: fetch_linux_kernel_source.yml
 
