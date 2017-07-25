@@ -16,7 +16,16 @@
       # Future versions of SecureDrop may depend on the 4.x series, in which case
       # the `stable2` patch type should be used.
       grsecurity_build_patch_type: stable
+      grsecurity_build_custom_config: config-securedrop
       grsecurity_build_include_ubuntu_overlay: true
+      # Bumping the revision from default "10" to "11" to ensure upgrades.
+      grsecurity_build_revision: 3.14.79-grsec-11.00.Custom
+      # We've been maintaining both -image and -headers packages. Revisit
+      # and consider dropping support for headers and just shipping the image.
+      grsecurity_build_kpkg_targets:
+        - kernel_headers
+        - kernel_image
+        - kernel_source
       tags: kernel
 
       # Running the metapackage role *after* the build role is important,
@@ -25,4 +34,8 @@
     - role: build-grsec-metapackage
       grsecurity_metapackage_name: securedrop-grsec
       grsecurity_metapackage_kernel_version: 3.14.79
+      # The SecureDrop project has already released a metapackage
+      # based on Linux kenrel 3.14.79 (with grsecurity patches), so we must
+      # bump the version number with a suffix to ensure apt priority.
+      grsecurity_metapackage_kernel_version_suffix: r1
       tags: metapackage

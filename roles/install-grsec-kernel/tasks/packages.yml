@@ -19,6 +19,15 @@
     - ['paxtest']
     - "{{ ['paxctl'] if grsecurity_install_set_paxctl_flags else [] }}"
 
+- name: Set kernel-img.conf parameters
+  become: yes
+  lineinfile:
+    dest: /etc/kernel-img.conf
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^{{ item.key }}"
+    create: yes
+  with_dict: "{{ grsecurity_install_kernel_img_conf }}"
+
 - name: Install grsecurity-patched kernel deb package.
   become: yes
   apt:

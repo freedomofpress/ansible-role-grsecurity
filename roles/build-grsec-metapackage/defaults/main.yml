@@ -25,3 +25,8 @@ grsecurity_metapackage_architecture: amd64
 # to the Ansible controller.
 grsecurity_metapackage_name_verbose: "{{ grsecurity_metapackage_name }}-{{ grsecurity_metapackage_kernel_version }}-{{ grsecurity_metapackage_architecture }}"
 grsecurity_metapackage_build_directory: "{{ grsecurity_metapackage_parent_directory }}/{{ grsecurity_metapackage_name_verbose }}"
+
+# Dict of sysctl options for inclusion in the metapackage. Used for managing SecureDrop
+# sysctl values on production instances.
+grsecurity_metapackage_sysctl_options:
+  vm.heap_stack_gap: 1048576

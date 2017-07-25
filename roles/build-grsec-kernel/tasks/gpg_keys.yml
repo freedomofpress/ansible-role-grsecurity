@@ -1,27 +1,13 @@
 ---
-- name: Import Greg Kroah-Hartman GPG key (Linux stable release signing key).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys 38DBBDC86092693E
-  register: gpg_import_greg_result
-  changed_when: "'imported: 1' in gpg_import_greg_result.stderr"
+- name: Import GPG keys for building Linux kernel.
+  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys "{{ item.fingerprint }}"
+  register: gpg_import_linux_pubkeys_result
+  changed_when: "'imported: 1' in gpg_import_linux_pubkeys_result.item.stderr"
+  with_items: "{{ grsecurity_build_gpg_keys }}"
 
-- name: Import kernel.org checksum autosigner GPG key.
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys 632D3A06589DA6B1
-  register: gpg_import_autosigner_result
-  changed_when: "'imported: 1' in gpg_import_autosigner_result.stderr"
-
-- name: Import Bradley Spengler GPG key (grsecurity maintainer key).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys 44D1C0F82525FE49
-  register: gpg_import_spender_result
-  changed_when: "'imported: 1' in gpg_import_spender_result.stderr"
-
-- name: Import Brad Figg GPG key (Canonical/Ubuntu Kernel Team).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys 0C7B589B105BE7F7
-  register: gpg_import_figg_result
-  changed_when: "'imported: 1' in gpg_import_figg_result.stderr"
-  when: grsecurity_build_include_ubuntu_overlay == true
-
-- name: Import Luis Henriques GPG key (Canonical/LKM).
-  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys DB74AEB8FDCE24FC
-  register: gpg_henriques_import
-  changed_when: "'imported: 1' in gpg_henriques_import.stderr"
+- name: Import GPG keys for building Linux kernel.
+  command: gpg --keyserver {{ grsecurity_build_gpg_keyserver }} --recv-keys "{{ item.fingerprint }}"
+  register: gpg_import_ubuntu_pubkeys_result
+  changed_when: "'imported: 1' in gpg_import_ubuntu_pubkeys_result.item.stderr"
+  with_items: "{{ grsecurity_build_gpg_keys_ubuntu }}"
   when: grsecurity_build_include_ubuntu_overlay == true

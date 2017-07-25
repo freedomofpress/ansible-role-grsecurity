@@ -37,3 +37,10 @@ grsecurity_install_reboot: true
 # If rebooting, wait for additional time after the SSH port reports being open.
 # Some hosts respond early to port listening before logins are accepted.
 grsecurity_install_extra_wait_seconds: 30
+
+# Set kernel-img.conf parameters on the system. Anything you set here might
+# affect future installs so make sure you know what you are doing. See
+# `man kernel-img.conf` for all available options.
+grsecurity_install_kernel_img_conf: {}
+#  clobber_modules: "yes"
+#  do_symlinks: "yes"
