@@ -1,8 +1,7 @@
 ---
-# Can be "stable" or "test". Note that stable patches
-# requires authentication to download. See the grsecurity
-# blog for more information: https://grsecurity.net/announce.php
-grsecurity_build_patch_type: test
+# Can be "stable" or "stable2". Defaults to "stable2" because "stable"
+# applies to the 3.14.79 kernel source, which has been EOL'd.
+grsecurity_build_patch_type: stable2
 
 # The default "manual" strategy will prep a machine for compilation,
 # but stop short of configuring and compiling. You can instead choose

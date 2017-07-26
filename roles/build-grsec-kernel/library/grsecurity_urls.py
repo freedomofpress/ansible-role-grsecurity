@@ -16,15 +16,14 @@ options:
       - Branch of grsecurity kernel patches.
         See https://grsecurity.net/download.php for more info.
 
-    default: "test"
-    choices: [ "test", "stable", "stable2" ]
+    default: "stable2"
+    choices: [ "stable", "stable2" ]
     required: no
 notes:
   - The Linux kernel version is dependent on the grsecurity patch type.
 '''
 EXAMPLES = '''
 - action: grsecurity_urls
-- action: grsecurity_urls patch_type=test
 - action: grsecurity_urls patch_type=stable
 - action: grsecurity_urls patch_type=stable2
 '''
@@ -44,9 +43,7 @@ GRSECURITY_BASE_URL = 'https://grsecurity.net/'
 GRSECURITY_LATEST_STABLE_PATCH_URL = 'https://grsecurity.net/latest_stable_patch'
 # The "stable2" patches use kernel version 4.x
 GRSECURITY_LATEST_STABLE2_PATCH_URL = 'https://grsecurity.net/latest_stable2_patch'
-GRSECURITY_LATEST_TEST_PATCH_URL = 'https://grsecurity.net/latest_test_patch'
 GRSECURITY_STABLE_URL_PREFIX = 'https://grsecurity.net/download-restrict/download-redirect.php?file='
-GRSECURITY_TEST_URL_PREFIX = 'https://grsecurity.net/test/'
 GRSECURITY_FILENAME_REGEX = re.compile(r'''
                                         grsecurity-
                                         (?P<grsecurity_version>\d+\.\d+)-
@@ -130,10 +127,8 @@ class GrsecurityURLs():
         url = ''
         if self.patch_type == "stable":
             url = GRSECURITY_LATEST_STABLE_PATCH_URL
-        elif self.patch_type == "stable2":
-            url = GRSECURITY_LATEST_STABLE2_PATCH_URL
         else:
-            url = GRSECURITY_LATEST_TEST_PATCH_URL
+            url = GRSECURITY_LATEST_STABLE2_PATCH_URL
         return url
 
 
@@ -147,12 +142,8 @@ class GrsecurityURLs():
         config = dict()
         config['grsecurity_patch_filename'] = patch_name
 
-        if self.patch_type == "stable":
-            config['grsecurity_patch_url'] = GRSECURITY_STABLE_URL_PREFIX+patch_name
-        elif self.patch_type == "stable2":
-            config['grsecurity_patch_url'] = GRSECURITY_STABLE_URL_PREFIX+patch_name
-        else:
-            config['grsecurity_patch_url'] = GRSECURITY_TEST_URL_PREFIX+patch_name
+        # Filename changes between 'stable' and 'stable2', but base URL does not.
+        config['grsecurity_patch_url'] = GRSECURITY_STABLE_URL_PREFIX+patch_name
 
         config['grsecurity_signature_filename'] = config['grsecurity_patch_filename'] + '.sig'
         config['grsecurity_signature_url'] = config['grsecurity_patch_url'] + '.sig'
@@ -164,7 +155,7 @@ class GrsecurityURLs():
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            patch_type=dict(default="test", choices=["test", "stable", "stable2"]),
+            patch_type=dict(default="stable2", choices=["stable", "stable2"]),
         ),
         supports_check_mode=False
     )
