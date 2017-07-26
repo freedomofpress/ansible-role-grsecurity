@@ -89,3 +89,5 @@ grsecurity_build_gpg_keys_ubuntu:
     fingerprint: D4E1E31744709144B0F8101ADB74AEB8FDCE24FC
   - name: Stefan Bader GPG key (Canonical/Ubuntu Kernel Team)
     fingerprint: DB5D7CCAF3994E3395DA4D3EE8675DEECBEECEA3
+  - name: Thadeu Lima de Souza Cascardo (Canonical)
+    fingerprint: 279357DB6127376E6D1DF1BCAAD56799FBFD0D3E
