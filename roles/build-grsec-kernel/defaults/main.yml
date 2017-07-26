@@ -67,8 +67,8 @@ grsecurity_build_fetch_packages_dest: "./"
 
 # Credentials for downloading the grsecurity "stable" pages. Requires subscription.
 # The "test" patches do not require authentication or a subscription.
-grsecurity_build_download_username: ''
-grsecurity_build_download_password: ''
+grsecurity_build_download_username: "{{ lookup('env', 'GRSECURITY_USERNAME')|default('') }}"
+grsecurity_build_download_password: "{{ lookup('env', 'GRSECURITY_PASSWORD')|default('') }}"
 
 # List of GPG keys required for building grsecurity-patched kernel.
 grsecurity_build_gpg_keys:

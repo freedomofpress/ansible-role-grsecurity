@@ -1,15 +1,19 @@
 ---
 - name: Build Linux kernel for SecureDrop.
   hosts: grsec-build-securedrop
-  vars_prompt:
-    - name: grsecurity_build_download_username
-      prompt: "Username for grsecurity HTTP auth"
-      # Warning: setting `private: no` for username entry
-      # should cause the entered text to echo back, but
-      # won't work when provisioning with Vagrant. See here:
-      # https://github.com/mitchellh/vagrant/issues/2924
-    - name: grsecurity_build_download_password
-      prompt: "Password for grsecurity HTTP auth"
+  pre_tasks:
+    # You can set these values via env vars:
+    #
+    #   * GRSECURITY_USERNAME
+    #   * GRSECURITY_PASSWORD
+    #
+    # The role will then automatically pick them up and these assert
+    # statements will pass.
+    - name: Check for grsecurity login credentials.
+      assert:
+        that:
+          - grsecurity_build_download_username != ''
+          - grsecurity_build_download_password != ''
   roles:
     - role: build-grsec-kernel
       # Use 3.x stable kernel series for now, since we're running under Trusty.
