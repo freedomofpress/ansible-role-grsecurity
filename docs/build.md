@@ -7,7 +7,8 @@ and is intended for two use cases:
   * SecureDrop Admins recompiling a kernel from source
 
 Users trying to recompile grsecurity-patched kernels for contexts other
-than SecureDrop should look elsewhere.
+than SecureDrop should look elsewhere. Make sure to review the requirements
+in the README (such as 30GB free disk space) before continuing.
 
 ## Building the SecureDrop-specific packages for release
 The automated build logic for preparing source directories will streamline most

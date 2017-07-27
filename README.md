@@ -12,11 +12,15 @@ Build documentation can be found in the `docs/build.md` file.
 
 ## Requirements
 
+### Resources
 Only Debian and Ubuntu are supported, due to the use of make-kpkg.
 For compiling the kernel, 2GB and 2 VCPUs is plenty. Depending on the config options
 you specify, the compilation should take two to three hours on that hardware.
 Naturally, you can speed up the build by providing more resources.
 
+As for disk space, make sure you have at least 30GB to run the full kernel compile.
+
+### Credentials
 Furthermore, you must have a [grsecurity subscription] and export the
 following environment variables:
 
