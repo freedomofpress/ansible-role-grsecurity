@@ -3,7 +3,40 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.define 'grsec-build', primary: true do |build|
+  # Using a Trusty-based VM for building SecureDrop kernels using the `stable` patches.
+  # Trusty boxes can't build `stable2` or `test` patches; see #30 for details:
+  # https://github.com/freedomofpress/grsec/issues/30
+  config.vm.define 'grsec-build-securedrop', primary: true do |build_sd|
+    build_sd.vm.box = "bento/ubuntu-14.04"
+    build_sd.vm.hostname = "grsec-build-securedrop"
+    build_sd.vm.provision :ansible do |ansible|
+      # Target the SecureDrop-specific playbook. Unfortunately Ansible won't
+      # display the `vars_prompt` when run via vagrant, so you should actually
+      # invoke `ansible-playbook` directly, like so:
+      #
+      # ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory \
+      # -u vagrant \
+      # --private-key .vagrant/machines/grsec-build/libvirt/private_key \
+      # examples/build-grsecurity-kernel-securedrop.yml
+      #
+      # Wish that weren't necessary, but it is.
+      ansible.playbook = 'examples/build-grsecurity-kernel-securedrop.yml'
+      ansible.verbose = 'vv'
+    end
+    build_sd.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.customize ["modifyvm", :id, "--cpus", available_vcpus]
+    end
+    build_sd.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = available_vcpus
+    end
+  end
+
+  # Deprecated machine intended to test grsecurity patches generally,
+  # not specifically in the SecureDrop context. Vivid is EOL, so changes
+  # are required to get this machine running again.
+  config.vm.define 'grsec-build', autostart: false do |build|
     # Using Ubuntu 15.04 rather than 14.04 LTS due to a bug in kernel-package.
     # See #30 for details: https://github.com/freedomofpress/grsec/issues/30
     build.vm.box = "ubuntu/vivid64"
@@ -35,36 +68,6 @@ Vagrant.configure("2") do |config|
       # https://github.com/freedomofpress/ansible-role-grsecurity/pull/85#issuecomment-266611369
       # for more).
       # v.cpu_mode = 'host-passthrough'
-    end
-  end
-
-  # Using a Trusty-based VM for building SecureDrop kernels using the `stable` patches.
-  # Trusty boxes can't build `stable2` or `test` patches; see #30 for details:
-  # https://github.com/freedomofpress/grsec/issues/30
-  config.vm.define 'grsec-build-securedrop', primary: true do |build_sd|
-    build_sd.vm.box = "bento/ubuntu-14.04"
-    build_sd.vm.hostname = "grsec-build-securedrop"
-    build_sd.vm.provision :ansible do |ansible|
-      # Target the SecureDrop-specific playbook. Unfortunately Ansible won't
-      # display the `vars_prompt` when run via vagrant, so you should actually
-      # invoke `ansible-playbook` directly, like so:
-      #
-      # ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory \
-      # -u vagrant \
-      # --private-key .vagrant/machines/grsec-build/libvirt/private_key \
-      # examples/build-grsecurity-kernel-securedrop.yml
-      #
-      # Wish that weren't necessary, but it is.
-      ansible.playbook = 'examples/build-grsecurity-kernel-securedrop.yml'
-      ansible.verbose = 'vv'
-    end
-    build_sd.vm.provider "virtualbox" do |v|
-      v.memory = 2048
-      v.customize ["modifyvm", :id, "--cpus", available_vcpus]
-    end
-    build_sd.vm.provider "libvirt" do |v|
-      v.memory = 2048
-      v.cpus = available_vcpus
     end
   end
 

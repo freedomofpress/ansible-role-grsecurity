@@ -83,10 +83,9 @@ to discuss how such a change might affect your workflow.
 
 ### build-grsec-kernel
 ```yaml
-# Can be "stable" or "test". Note that stable patches
-# requires authentication to download. See the grsecurity
-# blog for more information: https://grsecurity.net/announce.php
-grsecurity_build_patch_type: test
+# Can be "stable" or "stable2". Defaults to "stable2" because "stable"
+# applies to the 3.14.79 kernel source, which has been EOL'd.
+grsecurity_build_patch_type: stable2
 
 # The default "manual" strategy will prep a machine for compilation,
 # but stop short of configuring and compiling. You can instead choose
@@ -143,6 +142,27 @@ grsecurity_build_fetch_packages: true
 # The "test" patches do not require authentication or a subscription.
 grsecurity_build_download_username: ''
 grsecurity_build_download_password: ''
+
+# List of GPG keys required for building grsecurity-patched kernel.
+grsecurity_build_gpg_keys:
+  - name: Greg Kroah-Hartman GPG key (Linux stable release signing key)
+    fingerprint: 647F28654894E3BD457199BE38DBBDC86092693E
+  - name: kernel.org checksum autosigner GPG key
+    fingerprint: B8868C80BA62A1FFFAF5FDA9632D3A06589DA6B1
+  - name: Bradley Spengler GPG key (grsecurity maintainer key)
+    fingerprint: DE9452CE46F42094907F108B44D1C0F82525FE49
+
+# List of GPG keys required for building grsecurity-patched kernel with the ubuntu-overlay.
+# Only imported if the ubuntu-overlay is included via the `grsecurity_build_include_ubuntu_overlay` var.
+grsecurity_build_gpg_keys_ubuntu:
+  - name: Brad Figg GPG key (Canonical/Ubuntu Kernel Team)
+    fingerprint: 11D6ADA3D9E83D93ACBD837F0C7B589B105BE7F7
+  - name: Luis Henriques GPG key (Canonical/LKM)
+    fingerprint: D4E1E31744709144B0F8101ADB74AEB8FDCE24FC
+  - name: Stefan Bader GPG key (Canonical/Ubuntu Kernel Team)
+    fingerprint: DB5D7CCAF3994E3395DA4D3EE8675DEECBEECEA3
+  - name: Thadeu Lima de Souza Cascardo (Canonical)
+    fingerprint: 279357DB6127376E6D1DF1BCAAD56799FBFD0D3E
 ```
 
 ### install-grsec-kernel
