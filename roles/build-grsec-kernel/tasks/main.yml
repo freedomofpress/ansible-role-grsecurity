@@ -12,6 +12,7 @@
   # Install packages before fetching dynamic URLs, since python-requests
   # is required by the URL-fetching Ansible module.
 - include: packages.yml
+  tags: apt
 
 - name: Include grsecurity download URLs.
   # Dynamically reference newest patch and kernel versions,
@@ -32,6 +33,7 @@
 - include: fetch_grsecurity_files.yml
 
 - include: fetch_ubuntu_overlay.yml
+  tags: ubuntu_overlay
   when: grsecurity_build_include_ubuntu_overlay == true
 
 - include: verify.yml

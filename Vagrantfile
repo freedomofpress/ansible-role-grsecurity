@@ -23,6 +23,32 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  # Using a Trusty-based VM for rebuilding SecureDrop kernels from source.
+  # This is the same machine as `grsec-build-securedrop`, except we must skip
+  # fetching the grsecurity patches, since Admins won't have credentials.
+  # So we'll reuse the package logic from the role to install dependencies,
+  # then leave the configuration and build commands to be run manually.
+  config.vm.define 'grsec-rebuild-securedrop', autostart: false do |rebuild_sd|
+    rebuild_sd.vm.box = "bento/ubuntu-14.04"
+    rebuild_sd.vm.hostname = "grsec-rebuild-securedrop"
+    rebuild_sd.vm.provision :ansible do |ansible|
+      ansible.playbook = 'examples/rebuild-grsecurity-kernel-securedrop.yml'
+      ansible.raw_arguments = [
+        # Target only select tasks within the role to reproduce the build env.
+        '--tags', 'apt,gpg,ubuntu_overlay,rebuild'
+      ]
+      ansible.verbose = 'vv'
+    end
+    rebuild_sd.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.customize ["modifyvm", :id, "--cpus", available_vcpus]
+    end
+    rebuild_sd.vm.provider "libvirt" do |v|
+      v.memory = 2048
+      v.cpus = available_vcpus
+    end
+  end
+
   # Deprecated machine intended to test grsecurity patches generally,
   # not specifically in the SecureDrop context. Vivid is EOL, so changes
   # are required to get this machine running again.
@@ -69,8 +95,7 @@ Vagrant.configure("2") do |config|
     # install.vm.box = "debian/wheezy64"
     # install.vm.box = "debian/jessie64"
     # install.vm.box = "ubuntu/vivid64"
-    install.vm.box = "ubuntu/trusty64"
-    install.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    install.vm.box = "bento/ubuntu-14.04"
     install.vm.hostname = "grsec-install"
     # If grsec install works, the shared folder mount will fail.
     # Set `disabled: true` below to prevent the error post-install.
