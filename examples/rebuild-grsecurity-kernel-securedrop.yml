@@ -1,0 +1,65 @@
+---
+- name: Prepare machine for rebuilding Linux kernel for SecureDrop.
+  hosts: grsec-rebuild-securedrop
+  roles:
+    - role: build-grsec-kernel
+      # The Ubuntu overlay is not included in the source tarball,
+      # so it must be redownloaded for an accurate rebuild.
+      grsecurity_build_include_ubuntu_overlay: yes
+  tasks:
+
+    - name: Find source package.
+      find:
+        paths:
+          - /vagrant
+        patterns:
+          - 'linux-source-*.deb'
+      register: linux_source_package_find_result
+      tags: rebuild
+
+    - name: Check that source package was found.
+      assert:
+        that:
+          - linux_source_package_find_result.matched == 1
+        fail_msg: >-
+          Failed to find linux-source-*.deb package. Make sure it
+          exists in /vagrant, and that only one source file exists there.
+      tags: rebuild
+
+    - name: Create working dir.
+      file:
+        state: directory
+        path: "{{ grsecurity_build_download_directory }}"
+      tags: rebuild
+
+    - name: Extract source package.
+      command: >
+        dpkg-deb --extract
+        "{{ linux_source_package_find_result.files.0.path }}"
+        "{{ grsecurity_build_download_directory }}"
+      tags: rebuild
+
+    - name: Find tarball from SecureDrop kernel package.
+      find:
+        paths:
+          - "{{ grsecurity_build_download_directory }}/usr/src"
+        patterns:
+          - 'linux-source-*.tar.bz2'
+      register: kernel_source_tarball_find_result
+      tags: rebuild
+
+    - name: Extract SecureDrop kernel source tarball.
+      unarchive:
+        src: "{{ kernel_source_tarball_find_result.files.0.path }}"
+        remote_src: yes
+        dest: "{{ grsecurity_build_download_directory }}/"
+      tags: rebuild
+
+    - name: Display build command.
+      debug:
+        msg: >-
+          SecureDrop kernel source successfully extracted. You should
+          cd to ~/linux/linux-source-<version>-grsec/ and continue with
+          configuration and manual compilation. Recommended compile command is
+          `fakeroot make-kpkg --initrd --overlay-dir=../ubuntu-package kernel_image kernel_headers kernel_source`.
+      tags: rebuild

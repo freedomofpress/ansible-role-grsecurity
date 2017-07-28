@@ -1,46 +1,38 @@
 # ansible-role-grsecurity
 
 Build and install Linux kernels with the grsecurity patches applied.
-Supports "test" and "stable" grsecurity patches. Using the "stable"
-patches will [require subscription](https://grsecurity.net/business_support.php).
+Supports "stable" and "stable2" grsecurity patches. You must have
+a [grsecurity subscription] in order to fetch the patches for use in building.
 
 These configurations were developed by [Freedom of the Press Foundation] for
 use in all [SecureDrop] instances. Experienced sysadmins can leverage these
 roles to compile custom kernels for SecureDrop or non-SecureDrop projects.
 
+Build documentation can be found in the `docs/build.md` file.
+
 ## Requirements
 
-Only Debian and Ubuntu are supported, but that's mostly due to lack of testing,
-rather than an inherent deficiency in the configs.
+### Resources
+Only Debian and Ubuntu are supported, due to the use of make-kpkg.
 For compiling the kernel, 2GB and 2 VCPUs is plenty. Depending on the config options
 you specify, the compilation should take two to three hours on that hardware.
 Naturally, you can speed up the build by providing more resources.
 
-## Quickstart
-Use the Vagrant VMs to build a grsecurity-patched kernel:
+As for disk space, make sure you have at least 30GB to run the full kernel compile.
 
-```
-vagrant up grsec-build
-vagrant ssh
-cd linux/linux-<version>
-make menuconfig
-export CONCURRENCY_LEVEL="$(nproc)"
-export PATH="/usr/lib/ccache:$PATH" # recommended if you plan to recompile
-fakeroot make-kpkg --initrd kernel_image
-```
+### Credentials
+Furthermore, you must have a [grsecurity subscription] and export the
+following environment variables:
 
-When the build is finished, copy the .deb file in `~/linux` back to
-your host machine. You can then use the install role to apply it.
-Make sure to update the `examples/install-grsecurity-kernel.yml` playbook
-and set the `grsecurity_install_deb_package` variable to the path
-where you saved the deb package.
+  * `GRSECURITY_USERNAME`
+  * `GRSECURITY_PASSWORD`
 
-```
-vagrant up grsec-install
-```
+Alternatively you can override the corresponding default role vars:
 
-The role will automatically fail if the desired kernel version (inferred
-from the package name) with grsecurity patches was not installed.
+  * `grsecurity_build_download_username`
+  * `grsecurity_build_download_password`
+
+The build role will use those credentials to fetch the most recent patches.
 
 ## Role structure
 
@@ -58,12 +50,6 @@ file back to your host machine.
 
 The install role expects a .deb package filepath on the Ansible controller, the same
 file that was created by the build role, and will install that package on the target host.
-
-To add this role to an existing Ansible project:
-
-```
-ansible-galaxy install freedomofpress.grsecurity
-```
 
 Since there are multiple roles in this repository, you will need to
 specify the path to the specific role in your playbook include:
@@ -126,17 +112,28 @@ grsecurity_build_use_ccache: true
 grsecurity_build_kpkg_targets:
   - kernel_image
 
+# Revision used for providing a unique Version field in the built packages.
+# Sometimes grsecurity patches iterate without the underlying kernel src
+# changing, so we'll include both linux and grsecurity version information.
+# The revision flag maps to the Version field in the Debian package control file.
+# For a grsecurity patch file `grsecurity-3.1-4.4.32-201611150755.patch`,
+# it would be: `4.4.32-grsec-3.1.201611150755`.
+grsecurity_build_revision: "{{ linux_kernel_version }}-grsec-{{ grsecurity_version }}.{{ grsecurity_patch_timestamp }}"
+
 # The command to run to perform the compilation. Does not include environment
 # variables, such as PATH munging for ccache and setting workers to number of VCPUs.
 grsecurity_build_compile_command:
   fakeroot make-kpkg
-  --revision 10.00.{{ grsecurity_build_strategy }}
+  --revision {{ grsecurity_build_revision }}
   {% if grsecurity_build_include_ubuntu_overlay == true %} --overlay-dir=../ubuntu-package {% endif %}
   --initrd {{ grsecurity_build_kpkg_targets|join(' ') }}
 
 # Whether built .deb files should be fetched back to the Ansible controller.
 # Useful when compiling remotely, but not so much on a local workstation.
 grsecurity_build_fetch_packages: true
+
+# Where fetched packages should be placed. Defaults to adjacent to playbook.
+grsecurity_build_fetch_packages_dest: "./"
 
 # Credentials for downloading the grsecurity "stable" pages. Requires subscription.
 # The "test" patches do not require authentication or a subscription.
@@ -202,11 +199,6 @@ grsecurity_install_force_install: false
 # reboot if we're installing on localhost.
 grsecurity_install_reboot: "{{ false if ansible_connection == 'local' else true }}"
 ```
-## Access to stable patches
-The "stable" and "stable2" patch types are restricted to grsecurity subscribers, and require
-authentication when downloading the patches. Subscribers can also request
-automated on-demand builds for more distributions than supported by the build role.
-See the [grsecurity commercial support] page for more information.
 
 ## Further reading
 
@@ -217,4 +209,4 @@ See the [grsecurity commercial support] page for more information.
 [Freedom of the Press Foundation]: https://freedom.press
 [SecureDrop]: https://securedrop.org
 [grsecurity]: https://grsecurity.net/
-[grsecurity commercial support]: https://grsecurity.net/business_support.php
+[grsecurity subscription]: https://grsecurity.net/business_support.php
