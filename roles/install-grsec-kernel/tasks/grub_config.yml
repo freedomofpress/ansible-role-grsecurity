@@ -10,7 +10,7 @@
   #   Debian GNU/Linux, with Linux 3.14.54-grsec (recovery mode)
   when: "{{ item.name | match('.*'+grsecurity_install_desired_kernel_version+'$') }}"
 
-- name: Update GRUB timeout for easier console recovery and debugging           
+- name: Update GRUB timeout for easier console recovery and debugging
   become: yes
   lineinfile:
     regexp: '^GRUB_TIMEOUT=.*$'
@@ -24,6 +24,12 @@
       Try installing manually via `dpkg -i <package_name>` and verifying the menu
       entry exists in the GRUB config file.
   when: grub_grsecurity_menu_entry is not defined
+
+- name: Set custom GRUB submenu prefix text.
+  set_fact:
+    # We've only seen the custom prefix required on AWS EC2 instances.
+    grub_submenu_prefix: Advanced options for {% if 'amazon' not in ansible_product_version %}Debian {% endif %}GNU/Linux>
+  when: ansible_distribution == "Debian"
 
 - name: Set grsecurity kernel as default option in GRUB config.
   become: yes
@@ -39,11 +45,12 @@
     #   `gnulinux-advanced-fc2b679a-e448-4f54-b465-62735483f42f>gnul
     #   inux-3.14.53-grsec-advanced-fc2b679a-e448-4f54-b465-62735483
     #   f42f' (for 2.00 or later)
-    line: 'GRUB_DEFAULT="{% if ansible_distribution == "Debian" %}Advanced options for Debian GNU/Linux>{% endif %}{{ grub_grsecurity_menu_entry.name }}"'
+    line: >-
+      GRUB_DEFAULT="{{ grub_submenu_prefix|default('') }}{{ grub_grsecurity_menu_entry.name }}"
     dest: /etc/default/grub
   notify:
     - Update GRUB.
     - Update host facts.
 
-  # Force handlers to run immediatley, so grub config is updated.
+  # Force handlers to run immediately, so grub config is updated.
 - meta: flush_handlers
