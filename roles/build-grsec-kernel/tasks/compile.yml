@@ -15,15 +15,27 @@
     # to PATH, which will override the system gcc and and g++ binaries.
     PATH: "{% if grsecurity_build_use_ccache == true %}/usr/lib/ccache:{% endif %}{{ ansible_env.PATH }}"
 
+- name: Find newly build kernel packages.
+  find:
+    paths:
+      - "{{ grsecurity_build_download_directory }}"
+    patterns:
+      # Intentionally fuzzy fileglob to support fetching back multiple
+      # build targets, e.g. image, headers, src, manual, etc.
+      - linux-*-{{ linux_kernel_version }}-grsec*.deb
+  register: grsecurity_build_find_packages_result
+  tags: fetch
+
+- debug: var=grsecurity_build_find_packages_result
+  tags: fetch
+
 - name: Fetch built kernel package back to localhost.
   fetch:
-    src: "{{ grsecurity_build_download_directory }}/{{ grsecurity_build_deb_package }}"
+    src: "{{ item }}"
     dest: "{{ grsecurity_build_fetch_packages_dest }}"
     flat: yes
-  # Intentionally fuzzy fileglob to support fetching back multiple build targets, e.g.
-  # image, headers, src, manual, etc.
-  with_fileglob:
-    - "{{ grsecurity_build_download_directory }}/linux-*-{{ linux_kernel_version }}-grsec*.deb"
+    fail_on_missing: yes
+  with_items: "{{ grsecurity_build_find_packages_result.files|map(attribute='path')|list }}"
   when: grsecurity_build_fetch_packages == true
   tags:
     - fetch
