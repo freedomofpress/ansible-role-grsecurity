@@ -43,13 +43,30 @@ All files listed should be copied back to the host. Then proceed
 with uploading to the apt server and performing the signing ceremony.
 
 ## Rebuilding the SecureDrop-specific packages from source
+
 Administrators of SecureDrop may wish to compile the binary kernel image
-package from the original source code. To do so, first request the
-`linux-source-*.deb` package from FPF as described in the
-[SecureDrop source offer]. Once you have obtained that file, follow
+package from the original source code. To do so, first request corresponding
+source from FPF as described in the [SecureDrop source offer].
+Make sure to include the exact kernel version you're requesting the source for,
+to avoid confusion. Once you have obtained the source, follow
 the instructions below.
 
-[SecureDrop source offer]: (https://github.com/freedomofpress/securedrop/blob/develop/SOURCE_OFFER)
+[SecureDrop source offer]: https://github.com/freedomofpress/securedrop/blob/develop/SOURCE_OFFER
+
+### 4.x kernel image
+Recent versions of the SecureDrop kernels are based on the `4.x` kernel series.
+FPF will provide a `linux-*.orig.tar.gz` tarball including the original source
+and config.
+
+There is convenient rebuild logic in the [grsecurity-build] repository.
+Once you have received the source tarball, clone that repository,
+and run `make securedrop-rebuild`.
+
+[grsecurity-build]: https://github.com/freedomofpress/ansible-role-grsecurity-build
+
+### 3.x kernel image
+For the `3.x` kernel series, e.g. `3.14.79-grsec`, FPF will provide a
+`linux-source-*.deb` package. Once you have received that package, then:
 
 1. Place the deb package in the repo root.
 2. Run `vagrant up grsec-rebuild-securedrop`.
@@ -58,7 +75,7 @@ The Ansible playbook will bootstrap the build environment, and pull down all
 necessary dependencies, including the Ubuntu Trusty kernel overlay. You still
 need to configure the source, then build.
 
-### Configuring the kernel
+#### Configuring the kernel (3.x)
 
 Log in to build host and configure the kernel:
 
@@ -85,7 +102,7 @@ the grsecurity settings to remove all virtualization types:
 
 Configuration complete.
 
-### Building the kernel image and headers
+#### Building the kernel image and headers (3.x)
 
 Now that the kernel if configured, proceed with compiling:
 
