@@ -20,12 +20,12 @@
     delay=30
     state=started
   become: false
-  when: reboot_result|changed
+  when: reboot_result is changed
 
 - name: Wait extra time for server to come back up.
   pause:
     seconds: "{{ grsecurity_install_extra_wait_seconds }}"
-  when: reboot_result|changed
+  when: reboot_result is changed
 
   # Running the setup module will refresh the `ansible_kernel` host fact
   # with the current value. The `grsecurity_install_desired_kernel_version` host fact
